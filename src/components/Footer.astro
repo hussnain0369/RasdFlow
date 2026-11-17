@@ -1,0 +1,127 @@
+---
+import { Image } from 'astro:assets';
+import logo from '../assets/brand/leakfix-logo.png';
+import { path, type Lang } from '../i18n/routes';
+import { t } from '../i18n/ui';
+import { business, contact, whatsappHref } from '../config/business';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const ui = t(lang);
+const wa = whatsappHref(lang);
+const year = new Date().getFullYear();
+---
+<footer class="site-footer">
+  <div class="wrap footer-grid">
+    <div class="footer-brand">
+      <a href={path('home', lang)} class="footer-logo">
+        <Image src={logo} alt="LeakFix" width={150} densities={[1, 2]} />
+      </a>
+      <p>{ui.footerAbout}</p>
+    </div>
+
+    <nav aria-labelledby="footer-services">
+      <h2 id="footer-services">{ui.footerServices}</h2>
+      <ul>
+        <li><a href={path('detection', lang)}>{ui.nav.detection}</a></li>
+        <li><a href={path('repair', lang)}>{ui.nav.repair}</a></li>
+        <li><a href={path('areas', lang)}>{ui.nav.areas}</a></li>
+      </ul>
+    </nav>
+
+    <nav aria-labelledby="footer-company">
+      <h2 id="footer-company">{ui.footerCompany}</h2>
+      <ul>
+        <li><a href={path('about', lang)}>{ui.nav.about}</a></li>
+        <li><a href={path('contact', lang)}>{ui.nav.contact}</a></li>
+        <li><a href={path('privacy', lang)}>{ui.nav.privacy}</a></li>
+      </ul>
+    </nav>
+
+    <div>
+      <h2>{ui.footerContact}</h2>
+      <ul>
+        {contact.phone && (
+          <li>{ui.phoneLabel}: <a href={contact.phone.href}><span class="ltr">{contact.phone.display}</span></a></li>
+        )}
+        {wa && contact.whatsapp && (
+          <li>{ui.whatsappLabel}: <a href={wa} rel="noopener" target="_blank"><span class="ltr">{contact.whatsapp.display}</span></a></li>
+        )}
+        {contact.email && (
+          <li>{ui.emailLabel}: <a href={contact.email.href}><span class="ltr">{contact.email.display}</span></a></li>
+        )}
+        {business.hours && <li>{ui.hoursLabel}: {business.hours[lang]}</li>}
+        {!contact.phone && !wa && !contact.email && (
+          <li><a href={path('contact', lang)}>{ui.footerContactFallback}</a></li>
+        )}
+      </ul>
+    </div>
+  </div>
+  <div class="wrap footer-base">
+    <p>© {year} {ui.rights}</p>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    background: var(--mist);
+    border-block-start: 4px solid var(--navy);
+    padding-block: 3.5rem 1.5rem;
+    font-size: 0.97rem;
+  }
+  .footer-grid {
+    display: grid;
+    gap: 2.25rem;
+    grid-template-columns: 1fr;
+  }
+  @media (min-width: 40rem) {
+    .footer-grid {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+  @media (min-width: 64rem) {
+    .footer-grid {
+      grid-template-columns: 1.6fr 1fr 1fr 1.3fr;
+    }
+  }
+  .footer-logo {
+    display: inline-block;
+    margin-block-end: 1rem;
+  }
+  .footer-logo img {
+    width: 150px;
+  }
+  .footer-brand p {
+    max-width: 22rem;
+  }
+  h2 {
+    font-size: 1rem;
+    font-weight: 700;
+    font-stretch: 100%;
+    margin-block-end: 0.75rem;
+    letter-spacing: 0;
+  }
+  ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  li + li {
+    margin-block-start: 0.5rem;
+  }
+  a {
+    color: var(--navy);
+  }
+  a:hover {
+    color: var(--blue-text);
+  }
+  .footer-base {
+    margin-block-start: 3rem;
+    padding-block-start: 1.25rem;
+    border-block-start: 1px solid var(--line);
+    color: var(--ink-soft);
+    font-size: 0.875rem;
+  }
+</style>

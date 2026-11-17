@@ -1,0 +1,69 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHero from '../PageHero.astro';
+import ContactMethods from '../ContactMethods.astro';
+import EnquiryForm from '../EnquiryForm.astro';
+import { content } from '../../content/pages';
+import type { Lang } from '../../i18n/routes';
+import { formEnabled } from '../../config/site';
+import { hasDirectContact } from '../../config/business';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const c = content[lang].contact;
+---
+<BaseLayout lang={lang} page="contact" title={c.meta.title} description={c.meta.description}>
+  <PageHero lang={lang} page="contact" h1={c.h1} intro={c.intro} />
+  <section class="section">
+    <div class:list={['wrap', 'contact-grid', { 'with-form': formEnabled }]}>
+      <div class="side">
+        <ContactMethods lang={lang} notice={!formEnabled} />
+        {
+          (hasDirectContact || formEnabled) && (
+            <div class="tips">
+              <h2>{c.tipsTitle}</h2>
+              <ul>
+                {c.tips.map((tip) => <li>{tip}</li>)}
+              </ul>
+            </div>
+          )
+        }
+      </div>
+      {formEnabled && <div><EnquiryForm lang={lang} /></div>}
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .contact-grid {
+    display: grid;
+    gap: 3rem;
+    align-items: start;
+  }
+  @media (min-width: 60rem) {
+    .contact-grid.with-form {
+      grid-template-columns: 1fr 1.3fr;
+      gap: 4rem;
+    }
+  }
+  .side {
+    display: grid;
+    gap: 2.5rem;
+  }
+  .tips h2 {
+    font-size: var(--step-1);
+    margin-block-end: 0.75rem;
+  }
+  .tips ul {
+    padding-inline-start: 1.25rem;
+    margin: 0;
+  }
+  .tips li + li {
+    margin-block-start: 0.4rem;
+  }
+  .tips li::marker {
+    color: var(--blue);
+  }
+</style>

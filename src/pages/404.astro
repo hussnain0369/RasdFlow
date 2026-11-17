@@ -1,0 +1,52 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { ui } from '../i18n/ui';
+import { path } from '../i18n/routes';
+const en = ui.en;
+const ar = ui.ar;
+const links = ['home', 'detection', 'repair', 'contact'] as const;
+---
+<BaseLayout lang="en" page={null} title={en.notFound.title} description={en.notFound.description} noindex>
+  <section class="section">
+    <div class="wrap nf">
+      <div>
+        <h1>{en.notFound.h1}</h1>
+        <p class="lede">{en.notFound.body}</p>
+        <ul>{links.map((k) => <li><a href={path(k, 'en')}>{en.nav[k]}</a></li>)}</ul>
+      </div>
+      <div lang="ar" dir="rtl">
+        <h2>{ar.notFound.h1}</h2>
+        <p class="lede">{ar.notFound.body}</p>
+        <ul>{links.map((k) => <li><a href={path(k, 'ar')}>{ar.nav[k]}</a></li>)}</ul>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .nf {
+    display: grid;
+    gap: 3rem;
+  }
+  @media (min-width: 56rem) {
+    .nf {
+      grid-template-columns: 1fr 1fr;
+      gap: 5rem;
+    }
+  }
+  [lang='ar'] {
+    font-family: var(--font-ar);
+  }
+  .lede {
+    margin-block: 1.25rem;
+  }
+  ul {
+    padding-inline-start: 1.25rem;
+  }
+  li + li {
+    margin-block-start: 0.5rem;
+  }
+  h2 {
+    font-size: var(--step-4);
+  }
+</style>

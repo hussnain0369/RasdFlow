@@ -1,0 +1,61 @@
+---
+import ContactActions from './ContactActions.astro';
+import type { Lang } from '../i18n/routes';
+interface Props {
+  lang: Lang;
+  title: string;
+  text: string;
+  id?: string;
+}
+const { lang, title, text, id = 'cta' } = Astro.props;
+---
+<section class="cta-band" aria-labelledby={`${id}-title`}>
+  <div class="wrap cta-inner">
+    <div>
+      <h2 id={`${id}-title`}>{title}</h2>
+      <p>{text}</p>
+    </div>
+    <ContactActions lang={lang} tone="dark" />
+  </div>
+</section>
+
+<style>
+  .cta-band {
+    background: var(--navy);
+    color: #d9e6f2;
+    padding-block: clamp(3.5rem, 2.5rem + 4vw, 6rem);
+    position: relative;
+    overflow: hidden;
+  }
+  /* A single water-blue pipe run along the top edge, matching the steps diagram */
+  .cta-band::before {
+    content: '';
+    position: absolute;
+    inset-block-start: 0;
+    inset-inline: 0;
+    height: 6px;
+    background: var(--blue);
+  }
+  .cta-inner {
+    display: grid;
+    gap: 2rem;
+    align-items: end;
+  }
+  @media (min-width: 56rem) {
+    .cta-inner {
+      grid-template-columns: 1.4fr 1fr;
+      gap: 4rem;
+    }
+    .cta-inner :global(.btn-row) {
+      justify-content: flex-end;
+    }
+  }
+  h2 {
+    color: var(--white);
+  }
+  p {
+    margin-block-start: 1rem;
+    font-size: var(--step-1);
+    max-width: 36rem;
+  }
+</style>

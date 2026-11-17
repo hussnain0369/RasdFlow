@@ -1,0 +1,58 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHero from '../PageHero.astro';
+import Sections from '../Sections.astro';
+import Icon from '../Icon.astro';
+import { content } from '../../content/pages';
+import { path, type Lang } from '../../i18n/routes';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const c = content[lang].about;
+const sections = [
+  ...c.sections,
+];
+---
+<BaseLayout lang={lang} page="about" title={c.meta.title} description={c.meta.description}>
+  <PageHero lang={lang} page="about" h1={c.h1} intro={c.intro} actions={false} />
+  <div class="section">
+    <div class="wrap">
+      <Sections sections={sections} />
+      <section class="row-contact" aria-labelledby="about-contact">
+        <h2 id="about-contact">{c.contactTitle}</h2>
+        <div>
+          <p>{c.contactText}</p>
+          <a class="link-arrow" href={path('contact', lang)}>
+            <span>{c.contactLink}</span>
+            <Icon name="arrow" />
+          </a>
+        </div>
+      </section>
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  .row-contact {
+    display: grid;
+    gap: 1.25rem;
+    padding-block: 2.75rem 0;
+    border-block-start: 1px solid var(--line);
+  }
+  .row-contact h2 {
+    font-size: var(--step-2);
+    font-stretch: 106%;
+  }
+  .row-contact p {
+    margin-block-end: 1.25rem;
+    max-width: 40rem;
+  }
+  @media (min-width: 64rem) {
+    .row-contact {
+      grid-template-columns: 1fr 2fr;
+      gap: 4rem;
+    }
+  }
+</style>

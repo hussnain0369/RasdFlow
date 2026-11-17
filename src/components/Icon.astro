@@ -1,0 +1,56 @@
+---
+/** Simple line icons drawn for LeakFix on a 24px grid. Decorative unless `label` is given. */
+interface Props {
+  name:
+    | 'phone' | 'chat' | 'mail' | 'arrow' | 'menu' | 'close' | 'globe'
+    | 'usage' | 'damp' | 'fixture' | 'paint' | 'pressure' | 'sound'
+    | 'detect' | 'repair' | 'pin' | 'clock';
+  label?: string;
+  class?: string;
+}
+const { name, label, class: className } = Astro.props;
+
+const paths: Record<Props['name'], string> = {
+  phone:
+    '<path d="M5 3.5h3.2l1.6 4.2-2.1 1.4a11 11 0 0 0 7.2 7.2l1.4-2.1 4.2 1.6V19a2 2 0 0 1-2.2 2A16.5 16.5 0 0 1 3 5.7 2 2 0 0 1 5 3.5Z"/>',
+  chat:
+    '<path d="M4 19.5 5.3 15.6A8 8 0 1 1 8.6 18.9Z"/><path d="M9.2 8.6c.2 2.6 3.6 6 6.2 6.2l1-1.3-1.8-1-1 .8a5 5 0 0 1-2.9-2.9l.8-1-1-1.8Z"/>',
+  mail: '<rect x="3" y="5.5" width="18" height="13" rx="1.5"/><path d="m3.5 6.5 8.5 7 8.5-7"/>',
+  arrow: '<path d="M4 12h15"/><path d="m13.5 6.5 5.5 5.5-5.5 5.5"/>',
+  menu: '<path d="M4 7h16M4 12h16M4 17h16"/>',
+  close: '<path d="M6 6l12 12M18 6 6 18"/>',
+  globe: '<circle cx="12" cy="12" r="8.5"/><path d="M3.5 12h17M12 3.5c2.4 2.4 3.5 5.2 3.5 8.5s-1.1 6.1-3.5 8.5c-2.4-2.4-3.5-5.2-3.5-8.5s1.1-6.1 3.5-8.5Z"/>',
+  // Water meter dial with rising needle
+  usage: '<circle cx="12" cy="13" r="7.5"/><path d="M12 13l3.6-3.6"/><path d="M8 17h8"/><path d="M12 3v2.5"/>',
+  // Wall with damp patch
+  damp: '<path d="M3 21V3h18v18"/><path d="M3 21h18"/><path d="M10 8.5c-2 2.6-3 4.3-3 5.6a3 3 0 0 0 6 0c0-1.3-1-3-3-5.6Z"/><path d="M15 12.5c1.5.3 2.5 1.2 2.5 2.4"/>',
+  // Pipe elbow with drip
+  fixture: '<path d="M3 6h9a4 4 0 0 1 4 4v3"/><path d="M3 10h8.5a.5.5 0 0 1 .5.5V13"/><path d="M11 13h6"/><path d="M14 16.5c-.9 1.2-1.4 2-1.4 2.6a1.4 1.4 0 0 0 2.8 0c0-.6-.5-1.4-1.4-2.6Z"/>',
+  // Peeling paint corner
+  paint: '<path d="M3 3h18v18H3z"/><path d="M14 3c0 3 1.5 5 4.5 5.5L21 9"/><path d="M14 3c-.5 3.5-2.5 5.5-5.5 6.5"/>',
+  // Pressure gauge reading low
+  pressure: '<circle cx="12" cy="12" r="8.5"/><path d="M12 12 7.5 14.5"/><path d="M6.5 9.2l1 .5M12 5.5v1.2M17.5 9.2l-1 .5"/><circle cx="12" cy="12" r="1"/>',
+  // Closed tap with sound waves
+  sound: '<path d="M3 9h7v4H3z"/><path d="M6.5 9V6.5M4.5 6.5h4"/><path d="M14 8.5a5 5 0 0 1 0 5"/><path d="M17 6.5a8 8 0 0 1 0 9"/><path d="M20 4.5a11 11 0 0 1 0 13"/>',
+  // Magnifier over a drop
+  detect: '<circle cx="10.5" cy="10.5" r="6.5"/><path d="m15.5 15.5 5 5"/><path d="M10.5 7c-1.5 2-2.2 3.2-2.2 4.2a2.2 2.2 0 0 0 4.4 0c0-1-.7-2.2-2.2-4.2Z"/>',
+  // Open-ended spanner
+  repair: '<path d="M14.5 4.2a4.5 4.5 0 0 0-5 6.2L3.6 16.3a1.8 1.8 0 0 0 2.5 2.5L12 12.9a4.5 4.5 0 0 0 6.2-5l-2.6 2.6-2.3-.6-.6-2.3Z"/>',
+  pin: '<path d="M12 21s-6.5-6.2-6.5-11a6.5 6.5 0 0 1 13 0c0 4.8-6.5 11-6.5 11Z"/><circle cx="12" cy="10" r="2.3"/>',
+  clock: '<circle cx="12" cy="12" r="8.5"/><path d="M12 7v5l3 2"/>',
+};
+---
+<svg
+  class={className}
+  viewBox="0 0 24 24"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="1.7"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+  aria-hidden={label ? undefined : 'true'}
+  role={label ? 'img' : undefined}
+  aria-label={label}
+  focusable="false"
+  set:html={paths[name]}
+/>

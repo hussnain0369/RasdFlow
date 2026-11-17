@@ -1,0 +1,102 @@
+---
+import '@fontsource-variable/archivo/wdth.css';
+import '@fontsource-variable/readex-pro/index.css';
+import '../styles/global.css';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import ContactBar from '../components/ContactBar.astro';
+import { path, type Lang, type PageKey } from '../i18n/routes';
+import { t } from '../i18n/ui';
+import { absoluteUrl, indexable, siteUrl } from '../config/site';
+import { business, contact } from '../config/business';
+
+interface Props {
+  lang: Lang;
+  /** null for pages without a language equivalent mapping (404). */
+  page: PageKey | null;
+  title: string;
+  description: string;
+  /** Extra JSON-LD objects built only from visible, verified content. */
+  jsonLd?: Record<string, unknown>[];
+  noindex?: boolean;
+}
+
+const { lang, page, title, description, jsonLd = [], noindex = false } = Astro.props;
+const ui = t(lang);
+const dir = lang === 'ar' ? 'rtl' : 'ltr';
+const robots = !indexable || noindex ? 'noindex, nofollow' : 'index, follow';
+
+const canonical = page ? absoluteUrl(path(page, lang)) : undefined;
+const alternates = page
+  ? {
+      en: absoluteUrl(path(page, 'en')),
+      ar: absoluteUrl(path(page, 'ar')),
+    }
+  : undefined;
+const ogImage = absoluteUrl('/og-image.jpg');
+
+const organization = siteUrl
+  ? {
+      '@context': 'https://schema.org',
+      '@type': 'Organization',
+      '@id': `${siteUrl}/#organization`,
+      name: business.name,
+      url: `${siteUrl}/`,
+      logo: `${siteUrl}/icon-512.png`,
+      description: lang === 'ar' ? business.taglineAr : business.taglineEn,
+      areaServed: { '@type': 'City', name: 'Riyadh' },
+      ...(contact.phone ? { telephone: contact.phone.display } : {}),
+      ...(contact.email ? { email: contact.email.display } : {}),
+    }
+  : null;
+const structured = [...(page === 'home' && organization ? [organization] : []), ...jsonLd];
+const hasBar = Boolean(contact.phone || contact.whatsapp);
+---
+<!doctype html>
+<html lang={lang} dir={dir} class:list={['no-js', { 'has-contact-bar': hasBar }]}>
+  <head>
+    <meta charset="utf-8" />
+    <script is:inline>document.documentElement.classList.replace('no-js', 'js');</script>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta name="robots" content={robots} />
+    {canonical && <link rel="canonical" href={canonical} />}
+    {
+      alternates?.en && alternates.ar && (
+        <>
+          <link rel="alternate" hreflang="en" href={alternates.en} />
+          <link rel="alternate" hreflang="ar" href={alternates.ar} />
+          <link rel="alternate" hreflang="x-default" href={alternates.en} />
+        </>
+      )
+    }
+    <meta name="theme-color" content="#072641" />
+    <link rel="icon" href="/favicon.png" type="image/png" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="LeakFix" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:locale" content={lang === 'ar' ? 'ar_SA' : 'en_GB'} />
+    <meta property="og:locale:alternate" content={lang === 'ar' ? 'en_GB' : 'ar_SA'} />
+    {canonical && <meta property="og:url" content={canonical} />}
+    {ogImage && <meta property="og:image" content={ogImage} />}
+    {ogImage && <meta property="og:image:width" content="1200" />}
+    {ogImage && <meta property="og:image:height" content="630" />}
+    {ogImage && <meta property="og:image:alt" content={lang === 'ar' ? 'فنّي يفحص التمديدات أسفل مغسلة' : 'A technician inspects pipework beneath a washbasin'} />}
+    <meta name="twitter:card" content="summary_large_image" />
+
+    {structured.map((data) => <script type="application/ld+json" set:html={JSON.stringify(data)} />)}
+  </head>
+  <body>
+    <a class="skip-link" href="#main">{ui.skip}</a>
+    <Header lang={lang} page={page} />
+    <main id="main" tabindex="-1">
+      <slot />
+    </main>
+    <Footer lang={lang} />
+    <ContactBar lang={lang} />
+  </body>
+</html>

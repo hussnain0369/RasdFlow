@@ -1,0 +1,106 @@
+---
+/** Lists only the contact methods that are configured. */
+import Icon from './Icon.astro';
+import { business, contact, whatsappHref } from '../config/business';
+import type { Lang } from '../i18n/routes';
+import { t } from '../i18n/ui';
+
+interface Props {
+  lang: Lang;
+  /** Show a pending notice when no method is configured. */
+  notice?: boolean;
+}
+const { lang, notice = true } = Astro.props;
+const ui = t(lang);
+const wa = whatsappHref(lang);
+const any = contact.phone || wa || contact.email;
+---
+{
+  any ? (
+    <div class="methods">
+      <h2>{ui.contactMethodsTitle}</h2>
+      <ul>
+        {contact.phone && (
+          <li>
+            <Icon name="phone" />
+            <div>
+              <span class="label">{ui.phoneLabel}</span>
+              <a href={contact.phone.href}><span class="ltr">{contact.phone.display}</span></a>
+            </div>
+          </li>
+        )}
+        {wa && contact.whatsapp && (
+          <li>
+            <Icon name="chat" />
+            <div>
+              <span class="label">{ui.whatsappLabel}</span>
+              <a href={wa} rel="noopener" target="_blank"><span class="ltr">{contact.whatsapp.display}</span></a>
+            </div>
+          </li>
+        )}
+        {contact.email && (
+          <li>
+            <Icon name="mail" />
+            <div>
+              <span class="label">{ui.emailLabel}</span>
+              <a href={contact.email.href}><span class="ltr">{contact.email.display}</span></a>
+            </div>
+          </li>
+        )}
+        {business.hours && (
+          <li>
+            <Icon name="clock" />
+            <div>
+              <span class="label">{ui.hoursLabel}</span>
+              <span>{business.hours[lang]}</span>
+            </div>
+          </li>
+        )}
+      </ul>
+    </div>
+  ) : (
+    notice && <p class="pending" role="note">{ui.noContactYet}</p>
+  )
+}
+
+<style>
+  .methods h2 {
+    font-size: var(--step-2);
+    margin-block-end: 1.25rem;
+  }
+  ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    border-block-start: 2px solid var(--navy);
+  }
+  li {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    padding-block: 1.1rem;
+    border-block-end: 1px solid var(--line);
+  }
+  li :global(svg) {
+    width: 1.6rem;
+    height: 1.6rem;
+    color: var(--blue);
+    flex: none;
+  }
+  .label {
+    display: block;
+    font-size: var(--step--1);
+    color: var(--ink-soft);
+  }
+  li a {
+    font-size: var(--step-1);
+    font-weight: 650;
+    color: var(--navy);
+  }
+  .pending {
+    padding: 1.25rem 1.5rem;
+    border-inline-start: 4px solid var(--blue);
+    background: var(--white);
+    max-width: 36rem;
+  }
+</style>

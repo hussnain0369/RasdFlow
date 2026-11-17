@@ -1,0 +1,328 @@
+---
+/**
+ * Rendered only when a delivery service is configured (see src/config/site.ts).
+ * Works without JavaScript (plain POST); with JavaScript it validates inline
+ * and shows the real result returned by the server.
+ */
+import { path, type Lang } from '../i18n/routes';
+import { t } from '../i18n/ui';
+import { LIMITS } from '../lib/enquiry';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const f = t(lang).form;
+---
+<form
+  id="enquiry"
+  class="enquiry"
+  method="post"
+  action="/api/enquiry/"
+  novalidate
+  data-errors={JSON.stringify(f.errors)}
+  data-msg-summary={f.errorSummary}
+  data-msg-send={f.errorSend}
+  data-msg-rate={f.errorRate}
+  data-msg-sending={f.sending}
+  aria-labelledby="enquiry-title"
+>
+  <h2 id="enquiry-title">{f.title}</h2>
+  <p class="form-intro">{f.intro}</p>
+
+  <div class="status" role="alert" aria-live="assertive" tabindex="-1" hidden></div>
+
+  <input type="hidden" name="lang" value={lang} />
+  <input type="hidden" name="started_at" value="" />
+  <div class="hp" aria-hidden="true">
+    <label for="website">{f.honeypot}</label>
+    <input id="website" name="website" type="text" tabindex="-1" autocomplete="off" />
+  </div>
+
+  <div class="field">
+    <label for="f-name">{f.name} <span class="req">({f.required})</span></label>
+    <input id="f-name" name="name" type="text" autocomplete="name" required maxlength={LIMITS.name} aria-describedby="e-name" />
+    <p class="error" id="e-name" hidden></p>
+  </div>
+
+  <div class="field">
+    <label for="f-phone">{f.phone} <span class="req">({f.required})</span></label>
+    <p class="hint" id="h-phone">{f.phoneHint}</p>
+    <input id="f-phone" name="phone" type="tel" inputmode="tel" autocomplete="tel" dir="ltr" required maxlength={LIMITS.phone} aria-describedby="h-phone e-phone" />
+    <p class="error" id="e-phone" hidden></p>
+  </div>
+
+  <div class="field">
+    <label for="f-district">{f.district} <span class="req">({f.required})</span></label>
+    <p class="hint" id="h-district">{f.districtHint}</p>
+    <input id="f-district" name="district" type="text" autocomplete="address-level3" required maxlength={LIMITS.district} aria-describedby="h-district e-district" />
+    <p class="error" id="e-district" hidden></p>
+  </div>
+
+  <fieldset class="field" aria-describedby="e-service">
+    <legend>{f.service} <span class="req">({f.required})</span></legend>
+    <div class="choices">
+      {
+        (['detection', 'repair', 'unsure'] as const).map((v) => (
+          <label class="choice">
+            <input type="radio" name="service" value={v} required />
+            <span>{f.serviceOptions[v]}</span>
+          </label>
+        ))
+      }
+    </div>
+    <p class="error" id="e-service" hidden></p>
+  </fieldset>
+
+  <div class="field">
+    <label for="f-message">{f.message} <span class="req">({f.required})</span></label>
+    <p class="hint" id="h-message">{f.messageHint}</p>
+    <textarea id="f-message" name="message" rows="6" required maxlength={LIMITS.message} aria-describedby="h-message e-message"></textarea>
+    <p class="error" id="e-message" hidden></p>
+  </div>
+
+  <p class="privacy">
+    {f.privacy} <a href={path('privacy', lang)}>{f.privacyLink}</a>.
+  </p>
+
+  <button class="btn btn--blue submit" type="submit">{f.submit}</button>
+</form>
+
+<div id="enquiry-done" class="done" role="status" tabindex="-1" hidden>
+  <h2>{f.successTitle}</h2>
+  <p>{f.success}</p>
+</div>
+
+<script>
+  import { validateEnquiry } from '../lib/enquiry';
+
+  const form = document.querySelector<HTMLFormElement>('form.enquiry');
+  if (form) {
+    const started = form.querySelector<HTMLInputElement>('input[name="started_at"]');
+    if (started) started.value = String(Date.now());
+
+    const messages = JSON.parse(form.dataset.errors ?? '{}') as Record<string, string>;
+    const status = form.querySelector<HTMLElement>('.status')!;
+    const button = form.querySelector<HTMLButtonElement>('button[type="submit"]')!;
+    const buttonText = button.textContent ?? '';
+    const fields = ['name', 'phone', 'district', 'service', 'message'] as const;
+
+    const showStatus = (kind: 'error' | 'success', html: string) => {
+      status.hidden = false;
+      status.className = `status status--${kind}`;
+      status.textContent = '';
+      const p = document.createElement('p');
+      p.textContent = html;
+      status.append(p);
+      status.focus();
+    };
+
+    const setFieldErrors = (errors: Record<string, string | undefined>) => {
+      let first: HTMLElement | null = null;
+      for (const name of fields) {
+        const errorEl = form.querySelector<HTMLElement>(`#e-${name}`);
+        const inputs = form.querySelectorAll<HTMLInputElement | HTMLTextAreaElement>(`[name="${name}"]`);
+        const code = errors[name];
+        if (errorEl) {
+          errorEl.hidden = !code;
+          errorEl.textContent = code ? messages[code] ?? '' : '';
+        }
+        inputs.forEach((el) => el.setAttribute('aria-invalid', code ? 'true' : 'false'));
+        if (code && !first) first = inputs[0] ?? null;
+      }
+      return first as HTMLElement | null;
+    };
+
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      const raw = Object.fromEntries(new FormData(form));
+      const { errors } = validateEnquiry(raw);
+      const first = setFieldErrors(errors);
+      if (first) {
+        showStatus('error', form.dataset.msgSummary ?? '');
+        first.focus();
+        return;
+      }
+
+      button.disabled = true;
+      button.textContent = form.dataset.msgSending ?? '';
+      try {
+        const res = await fetch(form.action, {
+          method: 'POST',
+          headers: { accept: 'application/json' },
+          body: new FormData(form),
+        });
+        const body = await res.json().catch(() => ({}));
+        if (res.ok && body.ok === true) {
+          form.reset();
+          const done = document.getElementById('enquiry-done');
+          if (done) {
+            form.hidden = true;
+            done.hidden = false;
+            done.focus();
+          }
+          return;
+        }
+        if (res.status === 400 && body.fields) {
+          setFieldErrors(body.fields);
+          showStatus('error', form.dataset.msgSummary ?? '');
+        } else if (res.status === 429) {
+          showStatus('error', form.dataset.msgRate ?? '');
+        } else {
+          showStatus('error', form.dataset.msgSend ?? '');
+        }
+      } catch {
+        showStatus('error', form.dataset.msgSend ?? '');
+      } finally {
+        button.disabled = false;
+        button.textContent = buttonText;
+      }
+    });
+  }
+</script>
+
+<style>
+  .enquiry {
+    background: var(--white);
+    border: 1px solid var(--line);
+    border-block-start: 4px solid var(--navy);
+    border-radius: 0 0 var(--radius-m) var(--radius-m);
+    padding: clamp(1.25rem, 0.75rem + 2vw, 2.5rem);
+  }
+  h2 {
+    font-size: var(--step-2);
+  }
+  .form-intro {
+    margin-block: 0.5rem 1.5rem;
+    color: var(--ink-soft);
+    font-size: var(--step--1);
+  }
+  .field {
+    margin: 0 0 1.4rem;
+    padding: 0;
+    border: 0;
+    min-width: 0;
+  }
+  label,
+  legend {
+    display: block;
+    font-weight: 650;
+    color: var(--navy);
+    margin-block-end: 0.35rem;
+    padding: 0;
+  }
+  .req {
+    font-weight: 400;
+    color: var(--ink-soft);
+    font-size: var(--step--1);
+  }
+  .hint {
+    font-size: var(--step--1);
+    color: var(--ink-soft);
+    margin-block-end: 0.4rem;
+  }
+  input[type='text'],
+  input[type='tel'],
+  textarea {
+    width: 100%;
+    font: inherit;
+    color: var(--ink);
+    padding: 0.75rem 0.85rem;
+    min-height: 3rem;
+    border: 1.5px solid #8ea1b2;
+    border-radius: var(--radius-s);
+    background: var(--white);
+  }
+  input[type='tel'] {
+    text-align: start;
+  }
+  [dir='rtl'] input[type='tel'] {
+    text-align: right;
+  }
+  textarea {
+    resize: vertical;
+    min-height: 9rem;
+  }
+  input:focus-visible,
+  textarea:focus-visible {
+    outline: 3px solid var(--blue);
+    outline-offset: 1px;
+    border-color: var(--navy);
+  }
+  [aria-invalid='true'] {
+    border-color: var(--error) !important;
+  }
+  .choices {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+  }
+  .choice {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55rem;
+    min-height: 3rem;
+    padding: 0.5rem 1rem;
+    border: 1.5px solid #8ea1b2;
+    border-radius: var(--radius-m);
+    font-weight: 500;
+    color: var(--ink);
+    cursor: pointer;
+    margin: 0;
+  }
+  .choice:has(input:checked) {
+    border-color: var(--navy);
+    background: var(--blue-tint);
+    color: var(--navy);
+  }
+  .choice input {
+    width: 1.15rem;
+    height: 1.15rem;
+    accent-color: var(--navy);
+    margin: 0;
+  }
+  .error {
+    color: var(--error);
+    font-size: var(--step--1);
+    font-weight: 600;
+    margin-block-start: 0.4rem;
+  }
+  .status {
+    padding: 1rem 1.25rem;
+    margin-block-end: 1.5rem;
+    border-radius: var(--radius-s);
+    border-inline-start: 4px solid var(--error);
+    background: #fdf0ef;
+    color: var(--error);
+    font-weight: 600;
+  }
+  .privacy {
+    font-size: var(--step--1);
+    margin-block: 0.5rem 1.5rem;
+  }
+  .submit {
+    width: 100%;
+  }
+  @media (min-width: 40rem) {
+    .submit {
+      width: auto;
+      min-width: 14rem;
+    }
+  }
+  .done {
+    border: 1px solid var(--line);
+    border-block-start: 4px solid var(--success);
+    padding: clamp(1.25rem, 0.75rem + 2vw, 2.5rem);
+    background: var(--white);
+  }
+  .done p {
+    margin-block-start: 0.75rem;
+  }
+  .hp {
+    position: absolute;
+    inset-inline-start: -10000px;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+  }
+</style>

@@ -1,0 +1,92 @@
+---
+import { Picture } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+import ContactActions from './ContactActions.astro';
+import { path, type Lang, type PageKey } from '../i18n/routes';
+import { t } from '../i18n/ui';
+
+interface Props {
+  lang: Lang;
+  page: PageKey;
+  h1: string;
+  intro: string;
+  image?: ImageMetadata;
+  imageAlt?: string;
+  actions?: boolean;
+}
+const { lang, page, h1, intro, image, imageAlt = '', actions = true } = Astro.props;
+const ui = t(lang);
+---
+<section class:list={['page-hero', { 'has-image': image }]} aria-labelledby="page-title">
+  <div class="wrap page-hero-grid">
+    <div>
+      <nav class="crumbs" aria-label={lang === 'ar' ? 'مسار التنقل' : 'Breadcrumb'}>
+        <a href={path('home', lang)}>{ui.breadcrumbHome}</a>
+        <span aria-hidden="true">/</span>
+        <span aria-current="page">{ui.nav[page]}</span>
+      </nav>
+      <h1 id="page-title">{h1}</h1>
+      <p class="lede">{intro}</p>
+      {actions && <div class="hero-actions"><ContactActions lang={lang} fallback={false} /></div>}
+    </div>
+    {
+      image && (
+        <Picture
+          src={image}
+          alt={imageAlt}
+          widths={[480, 760, 1100]}
+          sizes="(min-width: 64rem) 42vw, 100vw"
+          formats={['avif', 'webp']}
+          loading="eager"
+          fetchpriority="high"
+          class="page-hero-img"
+        />
+      )
+    }
+  </div>
+</section>
+
+<style>
+  .page-hero {
+    padding-block: clamp(2rem, 1.25rem + 3vw, 4rem) clamp(2.5rem, 1.5rem + 3vw, 4.5rem);
+    background: var(--mist);
+    border-block-end: 1px solid var(--line);
+  }
+  .page-hero-grid {
+    display: grid;
+    gap: 2.5rem;
+    align-items: center;
+  }
+  @media (min-width: 64rem) {
+    .has-image .page-hero-grid {
+      grid-template-columns: 1.15fr 1fr;
+      gap: 4rem;
+    }
+  }
+  .crumbs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    font-size: var(--step--1);
+    color: var(--ink-soft);
+    margin-block-end: 1.5rem;
+  }
+  .crumbs a {
+    color: var(--ink-soft);
+  }
+  h1 {
+    max-width: 16ch;
+  }
+  .lede {
+    margin-block-start: 1.25rem;
+  }
+  .hero-actions {
+    margin-block-start: 2rem;
+  }
+  .page-hero :global(.page-hero-img) {
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+    border-radius: var(--radius-m);
+  }
+</style>

@@ -1,0 +1,51 @@
+---
+/**
+ * Call / WhatsApp buttons. Only configured methods render.
+ * When neither is configured, falls back to a link to the contact page
+ * (unless `fallback` is false), so no fake numbers or broken links appear.
+ */
+import Icon from './Icon.astro';
+import { contact, whatsappHref } from '../config/business';
+import { path, type Lang } from '../i18n/routes';
+import { t } from '../i18n/ui';
+
+interface Props {
+  lang: Lang;
+  tone?: 'light' | 'dark';
+  callLabel?: string;
+  whatsappLabel?: string;
+  fallback?: string | false;
+}
+const { lang, tone = 'light', callLabel, whatsappLabel, fallback } = Astro.props;
+const ui = t(lang);
+const wa = whatsappHref(lang);
+const primary = tone === 'dark' ? 'btn btn--on-dark' : 'btn';
+const secondary = tone === 'dark' ? 'btn btn--ghost-dark' : 'btn btn--ghost';
+const fallbackLabel = fallback === undefined ? ui.nav.contact : fallback;
+---
+{
+  (contact.phone || wa) ? (
+    <div class="btn-row">
+      {contact.phone && (
+        <a class={primary} href={contact.phone.href}>
+          <Icon name="phone" />
+          <span>{callLabel ?? ui.call}</span>
+        </a>
+      )}
+      {wa && (
+        <a class={contact.phone ? secondary : primary} href={wa} rel="noopener" target="_blank">
+          <Icon name="chat" />
+          <span>{whatsappLabel ?? ui.whatsapp}</span>
+        </a>
+      )}
+    </div>
+  ) : (
+    fallbackLabel && (
+      <div class="btn-row">
+        <a class={primary} href={path('contact', lang)}>
+          <span>{fallbackLabel}</span>
+        </a>
+      </div>
+    )
+  )
+}

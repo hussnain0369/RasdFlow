@@ -1,0 +1,83 @@
+---
+/** Compact bottom contact bar for small screens. Renders only when real numbers are configured. */
+import Icon from './Icon.astro';
+import { contact, whatsappHref } from '../config/business';
+import { t } from '../i18n/ui';
+import type { Lang } from '../i18n/routes';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const ui = t(lang);
+const wa = whatsappHref(lang);
+---
+{
+  (contact.phone || wa) && (
+    <nav class="contact-bar" aria-label={ui.contactBarLabel}>
+      {contact.phone && (
+        <a href={contact.phone.href} class="bar-call">
+          <Icon name="phone" />
+          <span>{ui.call}</span>
+        </a>
+      )}
+      {wa && (
+        <a href={wa} class="bar-wa" rel="noopener" target="_blank">
+          <Icon name="chat" />
+          <span>{ui.whatsapp}</span>
+        </a>
+      )}
+    </nav>
+  )
+}
+
+<style>
+  .contact-bar {
+    display: none;
+  }
+  @media (max-width: 47.99rem) {
+    :global(html.has-contact-bar) {
+      --contact-bar-h: calc(4rem + env(safe-area-inset-bottom, 0px));
+      scroll-padding-bottom: 5rem;
+    }
+    .contact-bar {
+      position: fixed;
+      inset-inline: 0;
+      inset-block-end: 0;
+      z-index: 50;
+      display: flex;
+      gap: 0.5rem;
+      padding: 0.5rem 0.75rem calc(0.5rem + env(safe-area-inset-bottom, 0px));
+      background: var(--navy);
+      box-shadow: 0 -1px 0 rgba(255, 255, 255, 0.08);
+    }
+    .contact-bar a {
+      flex: 1;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      min-height: 3rem;
+      border-radius: var(--radius-m);
+      font-weight: 650;
+      text-decoration: none;
+    }
+    .contact-bar :global(svg) {
+      width: 1.2rem;
+      height: 1.2rem;
+    }
+    .bar-call {
+      background: var(--white);
+      color: var(--navy);
+    }
+    .bar-wa {
+      border: 2px solid rgba(255, 255, 255, 0.75);
+      color: var(--white);
+    }
+    .bar-wa:only-child {
+      background: var(--white);
+      color: var(--navy);
+      border: 0;
+    }
+  }
+</style>

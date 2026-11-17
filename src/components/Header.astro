@@ -1,0 +1,264 @@
+---
+import { Image } from 'astro:assets';
+import logo from '../assets/brand/leakfix-logo.png';
+import Icon from './Icon.astro';
+import { path, otherLang, type Lang, type PageKey } from '../i18n/routes';
+import { t } from '../i18n/ui';
+import { contact } from '../config/business';
+
+interface Props {
+  lang: Lang;
+  page: PageKey | null;
+}
+const { lang, page } = Astro.props;
+const ui = t(lang);
+const alt = otherLang(lang);
+const navKeys: PageKey[] = ['home', 'detection', 'repair', 'areas', 'about', 'contact'];
+const switchHref = path(page ?? 'home', alt);
+---
+<header class="site-header">
+  <div class="wrap header-inner">
+    <a class="brand" href={path('home', lang)}>
+      <Image src={logo} alt="LeakFix" width={168} densities={[1, 2]} loading="eager" class="brand-logo" />
+      <span class="brand-tag">{lang === 'ar' ? 'كشف تسربات المياه وإصلاحها' : 'Water Leak Detection & Repair'}</span>
+    </a>
+
+    <div class="header-actions">
+      <a class="lang-switch" href={switchHref} hreflang={alt} lang={alt} aria-label={ui.switchLabel}>
+        <Icon name="globe" />
+        <span>{ui.switchTo}</span>
+      </a>
+      {
+        contact.phone && (
+          <a class="btn btn--blue header-call" href={contact.phone.href}>
+            <Icon name="phone" />
+            <span>{ui.call}</span>
+          </a>
+        )
+      }
+      <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="site-nav" data-open-label={ui.menu} data-close-label={ui.menuClose}>
+        <Icon name="menu" class="icon-open" />
+        <Icon name="close" class="icon-close" />
+        <span class="menu-label">{ui.menu}</span>
+      </button>
+    </div>
+
+    <nav id="site-nav" class="site-nav" aria-label={ui.mainNav}>
+      <ul>
+        {
+          navKeys.map((key) => (
+            <li>
+              <a href={path(key, lang)} aria-current={key === page ? 'page' : undefined}>
+                {ui.nav[key]}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<script>
+  const toggle = document.querySelector<HTMLButtonElement>('.menu-toggle');
+  const nav = document.getElementById('site-nav');
+  if (toggle && nav) {
+    const label = toggle.querySelector('.menu-label');
+    const setOpen = (open: boolean) => {
+      toggle.setAttribute('aria-expanded', String(open));
+      nav.classList.toggle('is-open', open);
+      if (label) label.textContent = (open ? toggle.dataset.closeLabel : toggle.dataset.openLabel) ?? '';
+    };
+    toggle.addEventListener('click', () => setOpen(toggle.getAttribute('aria-expanded') !== 'true'));
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape' && toggle.getAttribute('aria-expanded') === 'true') {
+        setOpen(false);
+        toggle.focus();
+      }
+    });
+    window.matchMedia('(min-width: 64rem)').addEventListener('change', (e) => e.matches && setOpen(false));
+  }
+</script>
+
+<style>
+  .site-header {
+    position: sticky;
+    inset-block-start: 0;
+    z-index: 40;
+    background: rgba(255, 255, 255, 0.97);
+    border-block-end: 1px solid var(--line);
+  }
+  .header-inner {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.75rem 1.5rem;
+    min-height: 4.5rem;
+    padding-block: 0.6rem;
+  }
+  .brand {
+    display: flex;
+    flex-direction: column;
+    gap: 0.1rem;
+    text-decoration: none;
+    margin-inline-end: auto;
+  }
+  .brand-logo {
+    width: 132px;
+    height: auto;
+  }
+  .brand-tag {
+    font-size: 0.72rem;
+    color: var(--ink-soft);
+    letter-spacing: 0.01em;
+    white-space: nowrap;
+  }
+  .header-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    order: 2;
+  }
+  .lang-switch {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    min-height: 2.75rem;
+    padding-inline: 0.75rem;
+    border-radius: var(--radius-m);
+    color: var(--navy);
+    font-weight: 600;
+    text-decoration: none;
+    border: 1px solid var(--line);
+  }
+  .lang-switch:lang(ar) {
+    font-family: var(--font-ar);
+  }
+  .lang-switch:lang(en) {
+    font-family: var(--font);
+  }
+  .lang-switch:hover {
+    border-color: var(--navy);
+    color: var(--navy);
+  }
+  .lang-switch :global(svg) {
+    width: 1.1rem;
+    height: 1.1rem;
+  }
+  .header-call {
+    min-height: 2.75rem;
+    padding-block: 0.5rem;
+  }
+  .menu-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    min-height: 2.75rem;
+    padding-inline: 0.75rem;
+    border: 1px solid var(--navy);
+    border-radius: var(--radius-m);
+    background: var(--white);
+    color: var(--navy);
+    font: inherit;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  .menu-toggle :global(svg) {
+    width: 1.25rem;
+    height: 1.25rem;
+  }
+  .menu-toggle :global(.icon-close),
+  .menu-toggle[aria-expanded='true'] :global(.icon-open) {
+    display: none;
+  }
+  .menu-toggle[aria-expanded='true'] :global(.icon-close) {
+    display: block;
+  }
+  .site-nav {
+    order: 3;
+    flex-basis: 100%;
+  }
+  /* Without JavaScript the menu stays visible; with it, the toggle controls it. */
+  :global(.js) .site-nav:not(.is-open) {
+    display: none;
+  }
+  :global(.no-js) .menu-toggle {
+    display: none;
+  }
+  .site-nav ul {
+    list-style: none;
+    margin: 0;
+    padding: 0.25rem 0 0.75rem;
+  }
+  .site-nav a {
+    display: block;
+    padding: 0.8rem 0.25rem;
+    border-block-end: 1px solid var(--line);
+    color: var(--navy);
+    font-weight: 600;
+    text-decoration: none;
+  }
+  .site-nav a[aria-current='page'] {
+    color: var(--blue-text);
+    box-shadow: inset 3px 0 0 var(--blue);
+    padding-inline-start: 0.75rem;
+  }
+  [dir='rtl'] .site-nav a[aria-current='page'] {
+    box-shadow: inset -3px 0 0 var(--blue);
+  }
+
+  /* Phone call button is in the bottom contact bar on small screens */
+  @media (max-width: 47.99rem) {
+    .header-call {
+      display: none;
+    }
+    .brand-tag {
+      display: none;
+    }
+    .brand-logo {
+      width: 118px;
+    }
+  }
+
+  @media (max-width: 22rem) {
+    .menu-label {
+      display: none;
+    }
+  }
+
+  @media (min-width: 64rem) {
+    .header-inner {
+      flex-wrap: nowrap;
+    }
+    .menu-toggle {
+      display: none;
+    }
+    .site-nav,
+    :global(.js) .site-nav:not(.is-open) {
+      display: block;
+      order: 1;
+      flex-basis: auto;
+    }
+    .site-nav ul {
+      display: flex;
+      gap: 0.15rem;
+      padding: 0;
+    }
+    .site-nav a {
+      border: 0;
+      padding: 0.5rem 0.7rem;
+      border-radius: var(--radius-s);
+      font-size: 0.97rem;
+      white-space: nowrap;
+    }
+    .site-nav a:hover {
+      color: var(--blue-text);
+    }
+    .site-nav a[aria-current='page'],
+    [dir='rtl'] .site-nav a[aria-current='page'] {
+      box-shadow: inset 0 -3px 0 var(--blue);
+      padding-inline-start: 0.7rem;
+      border-radius: 0;
+    }
+  }
+</style>

@@ -1,0 +1,50 @@
+---
+import type { Section } from '../content/pages';
+interface Props {
+  sections: Section[];
+  /** Index of the section after whose text the default slot is rendered. */
+  slotAfter?: number;
+}
+const { sections, slotAfter = -1 } = Astro.props;
+---
+<div class="sections">
+  {
+    sections.map((s, i) => (
+      <section class="row" aria-labelledby={`s-${i}`}>
+        <h2 id={`s-${i}`}>{s.title}</h2>
+        <div class="prose">
+          {s.body?.map((p) => <p>{p}</p>)}
+          {s.list && (
+            <ul>
+              {s.list.map((li) => <li>{li}</li>)}
+            </ul>
+          )}
+          {s.after?.map((p) => <p>{p}</p>)}
+          {i === slotAfter && <slot />}
+        </div>
+      </section>
+    ))
+  }
+</div>
+
+<style>
+  .row {
+    display: grid;
+    gap: 1.25rem;
+    padding-block: 2.75rem;
+    border-block-start: 1px solid var(--line);
+  }
+  .row:first-child {
+    border-block-start: 2px solid var(--navy);
+  }
+  h2 {
+    font-size: var(--step-2);
+    font-stretch: 106%;
+  }
+  @media (min-width: 64rem) {
+    .row {
+      grid-template-columns: 1fr 2fr;
+      gap: 4rem;
+    }
+  }
+</style>

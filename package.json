@@ -1,0 +1,28 @@
+{
+  "name": "leakfix-website",
+  "private": true,
+  "type": "module",
+  "version": "0.1.0",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro check && astro build",
+    "preview": "node ./dist/server/entry.mjs",
+    "check": "astro check",
+    "verify": "node scripts/verify-build.mjs"
+  },
+  "engines": {
+    "node": ">=20.3.0"
+  },
+  "dependencies": {
+    "@astrojs/node": "^9.5.5",
+    "@fontsource-variable/archivo": "^5.3.0",
+    "@fontsource-variable/readex-pro": "^5.3.0",
+    "astro": "^5.18.2",
+    "sharp": "^0.35.5"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.12",
+    "@types/node": "^22.20.5",
+    "typescript": "^5.9.3"
+  }
+}

@@ -1,0 +1,172 @@
+---
+/**
+ * Plain-language privacy policy DRAFT. Each statement reflects how this
+ * website actually handles data, derived from the configuration, so it
+ * stays accurate as settings change. Sections marked "being confirmed"
+ * need business input before launch (see README).
+ */
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHero from '../PageHero.astro';
+import Sections from '../Sections.astro';
+import type { Section } from '../../content/pages';
+import type { Lang } from '../../i18n/routes';
+import { formEnabled } from '../../config/site';
+import { business, contact } from '../../config/business';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const ar = lang === 'ar';
+
+const privacyContact = business.privacyEmail ?? contact.email?.display ?? null;
+const directMethods = [contact.phone && (ar ? 'الهاتف' : 'telephone'), contact.whatsapp && (ar ? 'واتساب' : 'WhatsApp'), contact.email && (ar ? 'البريد الإلكتروني' : 'email')].filter(Boolean) as string[];
+
+const en = {
+  meta: {
+    title: 'Privacy Policy | LeakFix',
+    description: 'How LeakFix handles the information you share through this website when you enquire about a water leak in Riyadh.',
+  },
+  h1: 'Privacy Policy',
+  intro: 'This page explains what information LeakFix receives through this website, why, and who handles it.',
+  sections: [
+    {
+      title: 'Who we are',
+      body: [
+        'This website is operated by LeakFix, which provides water leak detection and repair in Riyadh, Saudi Arabia.',
+        ...(business.legalName ? [`The business is registered as ${business.legalName}${business.registrationNumber ? ` (registration number ${business.registrationNumber})` : ''}.`] : []),
+      ],
+    },
+    {
+      title: 'Information you share with us',
+      body: [
+        ...(formEnabled
+          ? ['If you use the enquiry form, we receive your name, telephone number, Riyadh district, the service you are asking about and your description of the issue.']
+          : []),
+        directMethods.length
+          ? `If you contact us by ${directMethods.join(' or ')}, we receive your contact details and whatever you choose to tell us or send us, such as photos of the affected area.`
+          : 'When you contact us, we receive your contact details and whatever you choose to tell us or send us, such as photos of the affected area.',
+      ],
+    },
+    {
+      title: 'How we use it',
+      body: [
+        'We use this information to respond to your enquiry, discuss the problem with you and, if you ask, arrange a visit to your property.',
+      ],
+    },
+    {
+      title: 'Services that handle your information',
+      body: [
+        ...(formEnabled
+          ? ['Enquiries sent through the form are delivered to LeakFix by email using Resend, an email delivery service.']
+          : []),
+        business.hostingProvider
+          ? `This website is hosted by ${business.hostingProvider}, which processes the technical information needed to deliver web pages, such as your IP address.`
+          : 'The website hosting provider processes the technical information needed to deliver web pages, such as your IP address. The provider’s name is being confirmed and will be added here.',
+        ...(contact.whatsapp
+          ? ['If you message us on WhatsApp, your messages are also handled by WhatsApp under its own terms and privacy policy.']
+          : []),
+      ],
+    },
+    {
+      title: 'How long we keep it',
+      body: [
+        business.enquiryRetention
+          ? business.enquiryRetention.en
+          : 'We are confirming how long enquiry information is kept. This section will be updated with that period.',
+      ],
+    },
+    {
+      title: 'Cookies and analytics',
+      body: [
+        'This website does not set cookies and does not use analytics or advertising trackers. Fonts and images are served from this website rather than from third parties.',
+      ],
+    },
+    {
+      title: 'Your requests',
+      body: [
+        privacyContact
+          ? `To ask what information we hold about you, or to ask us to correct or delete it, email ${privacyContact}.`
+          : 'To ask what information we hold about you, or to ask us to correct or delete it, contact LeakFix using the details on our contact page. A dedicated contact for privacy requests is being confirmed.',
+      ],
+    },
+    {
+      title: 'Changes to this policy',
+      body: ['We will update this page if the way the website handles information changes.'],
+    },
+  ] as Section[],
+};
+
+const arText: typeof en = {
+  meta: {
+    title: 'سياسة الخصوصية | LeakFix',
+    description: 'كيف تتعامل LeakFix مع المعلومات التي تشاركها عبر هذا الموقع عند الاستفسار عن تسرب مياه في الرياض.',
+  },
+  h1: 'سياسة الخصوصية',
+  intro: 'توضّح هذه الصفحة المعلومات التي تصل إلى LeakFix عبر هذا الموقع، وسبب جمعها، والجهات التي تتعامل معها.',
+  sections: [
+    {
+      title: 'من نحن',
+      body: [
+        'يُدار هذا الموقع من قِبل LeakFix، التي تقدّم خدمة كشف تسربات المياه وإصلاحها في الرياض بالمملكة العربية السعودية.',
+        ...(business.legalName ? [`الاسم المسجّل للمنشأة: ${business.legalName}${business.registrationNumber ? ` (رقم السجل ${business.registrationNumber})` : ''}.`] : []),
+      ],
+    },
+    {
+      title: 'المعلومات التي تشاركها معنا',
+      body: [
+        ...(formEnabled
+          ? ['عند استخدام نموذج الاستفسار، يصلنا اسمك ورقم جوالك والحي الذي يقع فيه العقار في الرياض والخدمة التي تسأل عنها ووصفك للمشكلة.']
+          : []),
+        directMethods.length
+          ? `عند تواصلك معنا عبر ${directMethods.join(' أو ')}، تصلنا بيانات التواصل الخاصة بك وأي معلومات تختار مشاركتها، مثل صور المكان المتضرر.`
+          : 'عند تواصلك معنا، تصلنا بيانات التواصل الخاصة بك وأي معلومات تختار مشاركتها، مثل صور المكان المتضرر.',
+      ],
+    },
+    {
+      title: 'كيف نستخدمها',
+      body: ['نستخدم هذه المعلومات للرد على استفسارك ومناقشة المشكلة معك، وترتيب زيارة لعقارك إذا طلبت ذلك.'],
+    },
+    {
+      title: 'الخدمات التي تتعامل مع معلوماتك',
+      body: [
+        ...(formEnabled ? ['تُرسَل الاستفسارات المقدَّمة عبر النموذج إلى LeakFix بالبريد الإلكتروني باستخدام Resend، وهي خدمة لإرسال البريد الإلكتروني.'] : []),
+        business.hostingProvider
+          ? `يستضيف هذا الموقعَ ${business.hostingProvider}، ويعالج المعلومات التقنية اللازمة لعرض الصفحات، مثل عنوان IP الخاص بك.`
+          : 'يعالج مزوّد استضافة الموقع المعلومات التقنية اللازمة لعرض الصفحات، مثل عنوان IP الخاص بك. جارٍ تأكيد اسم المزوّد وسيُضاف هنا.',
+        ...(contact.whatsapp ? ['إذا راسلتنا عبر واتساب، فإن رسائلك تخضع أيضًا لشروط واتساب وسياسة الخصوصية الخاصة به.'] : []),
+      ],
+    },
+    {
+      title: 'مدة الاحتفاظ بالمعلومات',
+      body: [business.enquiryRetention ? business.enquiryRetention.ar : 'جارٍ تأكيد مدة الاحتفاظ بمعلومات الاستفسارات، وسيُحدَّث هذا القسم بها.'],
+    },
+    {
+      title: 'ملفات تعريف الارتباط والتحليلات',
+      body: ['لا يستخدم هذا الموقع ملفات تعريف الارتباط (الكوكيز)، ولا أدوات تحليلات أو تتبّع إعلاني. وتُحمَّل الخطوط والصور من هذا الموقع نفسه وليس من جهات خارجية.'],
+    },
+    {
+      title: 'طلباتك',
+      body: [
+        privacyContact
+          ? `لمعرفة المعلومات التي نحتفظ بها عنك، أو لطلب تصحيحها أو حذفها، راسلنا على ⁦${privacyContact}⁩.`
+          : 'لمعرفة المعلومات التي نحتفظ بها عنك، أو لطلب تصحيحها أو حذفها، تواصل مع LeakFix عبر بيانات التواصل في صفحة التواصل. جارٍ تأكيد جهة اتصال مخصّصة لطلبات الخصوصية.',
+      ],
+    },
+    {
+      title: 'التغييرات على هذه السياسة',
+      body: ['سنحدّث هذه الصفحة إذا تغيّرت طريقة تعامل الموقع مع المعلومات.'],
+    },
+  ],
+};
+
+const c = ar ? arText : en;
+---
+<BaseLayout lang={lang} page="privacy" title={c.meta.title} description={c.meta.description}>
+  <PageHero lang={lang} page="privacy" h1={c.h1} intro={c.intro} actions={false} />
+  <div class="section">
+    <div class="wrap">
+      <Sections sections={c.sections} />
+    </div>
+  </div>
+</BaseLayout>

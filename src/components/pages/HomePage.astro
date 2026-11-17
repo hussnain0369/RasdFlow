@@ -1,0 +1,404 @@
+---
+import { Picture } from 'astro:assets';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Icon from '../Icon.astro';
+import Faq from '../Faq.astro';
+import CtaBand from '../CtaBand.astro';
+import heroPhoto from '../../assets/photos/inspection-under-sink.jpg';
+import repairPhoto from '../../assets/photos/repair-valve.jpg';
+import { content } from '../../content/pages';
+import { path, type Lang } from '../../i18n/routes';
+import { t } from '../../i18n/ui';
+import { whatsappHref } from '../../config/business';
+import { faqJsonLd } from '../../lib/structured';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const c = content[lang].home;
+const ui = t(lang);
+const wa = whatsappHref(lang);
+---
+<BaseLayout lang={lang} page="home" title={c.meta.title} description={c.meta.description} jsonLd={[faqJsonLd(c.faqs, lang)]}>
+  <section class="hero" aria-labelledby="hero-title">
+    <div class="wrap hero-grid">
+      <div class="hero-copy">
+        <p class="eyebrow">{c.eyebrow}</p>
+        <h1 id="hero-title">{c.h1}</h1>
+        <p class="lede">{c.intro}</p>
+        <div class="btn-row hero-ctas">
+          <a class="btn" href={path('contact', lang)}>{c.ctaPrimary}</a>
+          {
+            wa && (
+              <a class="btn btn--ghost" href={wa} rel="noopener" target="_blank">
+                <Icon name="chat" />
+                <span>{c.ctaWhatsapp}</span>
+              </a>
+            )
+          }
+        </div>
+      </div>
+      <div class="hero-media">
+        <Picture
+          src={heroPhoto}
+          alt={c.heroAlt}
+          widths={[480, 760, 1100, 1448]}
+          sizes="(min-width: 64rem) 50vw, 100vw"
+          formats={['avif', 'webp']}
+          loading="eager"
+          fetchpriority="high"
+          class="hero-img"
+        />
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--mist" aria-labelledby="signs-title">
+    <div class="wrap">
+      <div class="section-head">
+        <h2 id="signs-title">{c.signs.title}</h2>
+        <p>{c.signs.intro}</p>
+      </div>
+      <ul class="signs">
+        {
+          c.signs.items.map((item) => (
+            <li>
+              <span class="sign-icon">
+                <Icon name={item.icon} />
+              </span>
+              <span>{item.text}</span>
+            </li>
+          ))
+        }
+      </ul>
+      <p class="signs-closing">{c.signs.closing}</p>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="services-title">
+    <div class="wrap">
+      <h2 id="services-title" class="services-title">{c.services.title}</h2>
+      <div class="services">
+        <article class="service">
+          <Icon name="detect" class="service-icon" />
+          <h3>{c.services.detection.title}</h3>
+          <p>{c.services.detection.text}</p>
+          <a class="link-arrow" href={path('detection', lang)}>
+            <span>{c.services.detection.link}</span>
+            <Icon name="arrow" />
+          </a>
+        </article>
+        <article class="service">
+          <Icon name="repair" class="service-icon" />
+          <h3>{c.services.repair.title}</h3>
+          <p>{c.services.repair.text}</p>
+          <a class="link-arrow" href={path('repair', lang)}>
+            <span>{c.services.repair.link}</span>
+            <Icon name="arrow" />
+          </a>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--mist" aria-labelledby="steps-title">
+    <div class="wrap">
+      <h2 id="steps-title" class="steps-title">{c.steps.title}</h2>
+      <ol class="pipe-steps">
+        {
+          c.steps.items.map((step, i) => (
+            <li>
+              <span class="joint" aria-hidden="true">{i + 1}</span>
+              <h3>{step.title}</h3>
+              <p>{step.text}</p>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </section>
+
+  <section class="section coverage" aria-labelledby="coverage-title">
+    <div class="wrap coverage-grid">
+      <Picture
+        src={repairPhoto}
+        alt={c.services.repair.alt}
+        widths={[480, 760, 1100]}
+        sizes="(min-width: 56rem) 45vw, 100vw"
+        formats={['avif', 'webp']}
+        class="coverage-img"
+      />
+      <div class="coverage-copy">
+        <Icon name="pin" class="coverage-icon" />
+        <h2 id="coverage-title">{c.coverage.title}</h2>
+        <p>{c.coverage.text}</p>
+        <a class="link-arrow" href={path('areas', lang)}>
+          <span>{c.coverage.link}</span>
+          <Icon name="arrow" />
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <Faq faqs={c.faqs} title={ui.faqTitle} />
+
+  <CtaBand lang={lang} title={c.finalCta.title} text={c.finalCta.text} />
+</BaseLayout>
+
+<style>
+  /* ---------- Hero ---------- */
+  .hero {
+    padding-block: clamp(2.5rem, 1.5rem + 4vw, 5rem) clamp(3rem, 2rem + 4vw, 6rem);
+    border-block-end: 1px solid var(--line);
+  }
+  .hero-grid {
+    display: grid;
+    gap: 2.5rem;
+    align-items: center;
+  }
+  .eyebrow {
+    color: var(--blue-text);
+    font-weight: 700;
+    font-size: var(--step--1);
+    margin-block-end: 1.25rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+  .eyebrow:lang(en) {
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+  /* short pipe stub leading into the eyebrow */
+  .eyebrow::before {
+    content: '';
+    width: 2.25rem;
+    height: 4px;
+    border-radius: 2px;
+    background: var(--blue);
+  }
+  .hero h1 {
+    max-width: 14ch;
+  }
+  .hero h1:lang(ar) {
+    max-width: 16ch;
+  }
+  .hero .lede {
+    margin-block-start: 1.5rem;
+  }
+  .hero-ctas {
+    margin-block-start: 2rem;
+  }
+  .hero-media :global(.hero-img) {
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+    object-position: 60% 50%;
+    border-radius: var(--radius-m);
+  }
+  @media (min-width: 64rem) {
+    .hero-grid {
+      grid-template-columns: 1.05fr 1fr;
+      gap: 4rem;
+    }
+    .hero-media :global(.hero-img) {
+      aspect-ratio: 5 / 6;
+      object-position: 62% 50%;
+    }
+  }
+
+  /* ---------- Signs ---------- */
+  .signs {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: 1fr;
+    border-block-start: 1px solid var(--line);
+  }
+  .signs li {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    padding: 1.25rem 0;
+    border-block-end: 1px solid var(--line);
+    font-size: var(--step-1);
+    color: var(--navy);
+    font-weight: 550;
+    line-height: 1.4;
+  }
+  .sign-icon {
+    flex: none;
+    display: grid;
+    place-items: center;
+    width: 3rem;
+    height: 3rem;
+    border-radius: 50%;
+    background: var(--white);
+    color: var(--blue-text);
+    border: 1px solid var(--line);
+  }
+  .sign-icon :global(svg) {
+    width: 1.6rem;
+    height: 1.6rem;
+  }
+  @media (min-width: 48rem) {
+    .signs {
+      grid-template-columns: 1fr 1fr;
+      column-gap: 3rem;
+    }
+  }
+  @media (min-width: 72rem) {
+    .signs {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+  .signs-closing {
+    margin-block-start: 2rem;
+    max-width: 40rem;
+    color: var(--ink);
+  }
+
+  /* ---------- Services ---------- */
+  .services-title {
+    max-width: 18ch;
+    margin-block-end: 3rem;
+  }
+  .services {
+    display: grid;
+    gap: 3rem;
+  }
+  .service {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+    padding-block-start: 1.75rem;
+    border-block-start: 4px solid var(--navy);
+  }
+  .service h3 {
+    font-size: var(--step-2);
+    font-stretch: 106%;
+  }
+  .service p {
+    max-width: 34rem;
+  }
+  .service .link-arrow {
+    margin-block-start: 0.5rem;
+  }
+  .service :global(.service-icon) {
+    width: 2.75rem;
+    height: 2.75rem;
+    color: var(--blue);
+    stroke-width: 1.5;
+  }
+  @media (min-width: 52rem) {
+    .services {
+      grid-template-columns: 1fr 1fr;
+      gap: 4rem;
+    }
+  }
+
+  /* ---------- Pipe steps: the one bold device on the page ---------- */
+  .steps-title {
+    margin-block-end: 3rem;
+  }
+  .pipe-steps {
+    --joint: 3.5rem;
+    --pipe: 6px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 2.5rem;
+    position: relative;
+  }
+  /* vertical pipe on small screens */
+  .pipe-steps::before {
+    content: '';
+    position: absolute;
+    inset-block: calc(var(--joint) / 2) calc(var(--joint) / 2);
+    inset-inline-start: calc(var(--joint) / 2 - var(--pipe) / 2);
+    width: var(--pipe);
+    background: var(--blue);
+    border-radius: var(--pipe);
+  }
+  .pipe-steps li {
+    position: relative;
+    padding-inline-start: calc(var(--joint) + 1.25rem);
+    min-height: var(--joint);
+  }
+  .joint {
+    position: absolute;
+    inset-inline-start: 0;
+    inset-block-start: 0;
+    width: var(--joint);
+    height: var(--joint);
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    background: var(--navy);
+    color: var(--white);
+    font-weight: 800;
+    font-size: 1.35rem;
+    font-stretch: 112%;
+    box-shadow: 0 0 0 6px var(--mist), 0 0 0 9px var(--blue);
+  }
+  .pipe-steps h3 {
+    font-size: var(--step-1);
+    padding-block-start: 0.7rem;
+    margin-block-end: 0.6rem;
+  }
+  .pipe-steps p {
+    max-width: 30rem;
+  }
+  @media (min-width: 56rem) {
+    .pipe-steps {
+      grid-template-columns: repeat(3, 1fr);
+      gap: 3rem;
+    }
+    .pipe-steps::before {
+      inset-block: calc(var(--joint) / 2 - var(--pipe) / 2) auto;
+      inset-inline: calc(var(--joint) / 2) calc((100% - 6rem) / 3 - var(--joint) / 2);
+      width: auto;
+      height: var(--pipe);
+    }
+    .pipe-steps li {
+      padding-inline-start: 0;
+      padding-block-start: calc(var(--joint) + 1.25rem);
+    }
+    .pipe-steps h3 {
+      padding-block-start: 0;
+    }
+  }
+
+  /* ---------- Coverage ---------- */
+  .coverage-grid {
+    display: grid;
+    gap: 2.5rem;
+    align-items: center;
+  }
+  .coverage :global(.coverage-img) {
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+    border-radius: var(--radius-m);
+  }
+  .coverage-copy p {
+    margin-block: 1.25rem 1.75rem;
+    max-width: 34rem;
+  }
+  .coverage-copy :global(.coverage-icon) {
+    width: 2.25rem;
+    height: 2.25rem;
+    color: var(--blue);
+    margin-block-end: 1rem;
+  }
+  @media (min-width: 56rem) {
+    .coverage-grid {
+      grid-template-columns: 1fr 1fr;
+      gap: 4.5rem;
+    }
+  }
+</style>

@@ -1,0 +1,108 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHero from '../PageHero.astro';
+import ContactActions from '../ContactActions.astro';
+import Icon from '../Icon.astro';
+import { content } from '../../content/pages';
+import { path, type Lang } from '../../i18n/routes';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const c = content[lang].areas;
+---
+<BaseLayout lang={lang} page="areas" title={c.meta.title} description={c.meta.description}>
+  <PageHero lang={lang} page="areas" h1={c.h1} intro={c.intro} actions={false} />
+
+  <section class="section" aria-labelledby="include-title">
+    <div class="wrap areas-grid">
+      <div class="prose">
+        <p class="body">{c.body}</p>
+      </div>
+      <div>
+        <h2 id="include-title">{c.checklistTitle}</h2>
+        <ul class="checklist">
+          {c.checklist.map((item) => <li><Icon name="pin" /><span>{item}</span></li>)}
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--mist" aria-labelledby="availability-title">
+    <div class="wrap enquiry-band">
+      <div>
+        <h2 id="availability-title">{c.enquiryTitle}</h2>
+        <p>{c.enquiryText}</p>
+      </div>
+      <div class="band-actions">
+        <ContactActions lang={lang} fallback={false} />
+        <a class="link-arrow" href={path('contact', lang)}>
+          <span>{c.enquiryLink}</span>
+          <Icon name="arrow" />
+        </a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .areas-grid {
+    display: grid;
+    gap: 3rem;
+  }
+  @media (min-width: 56rem) {
+    .areas-grid {
+      grid-template-columns: 1fr 1fr;
+      gap: 5rem;
+    }
+  }
+  .body {
+    font-size: var(--step-1);
+    line-height: 1.6;
+  }
+  h2 {
+    font-size: var(--step-2);
+  }
+  .checklist {
+    list-style: none;
+    margin: 1.5rem 0 0;
+    padding: 0;
+    border-block-start: 2px solid var(--navy);
+  }
+  .checklist li {
+    display: flex;
+    gap: 0.9rem;
+    align-items: flex-start;
+    padding-block: 1rem;
+    border-block-end: 1px solid var(--line);
+  }
+  .checklist :global(svg) {
+    width: 1.4rem;
+    height: 1.4rem;
+    color: var(--blue);
+    flex: none;
+    margin-block-start: 0.2rem;
+  }
+  .enquiry-band {
+    display: grid;
+    gap: 2rem;
+    align-items: end;
+  }
+  .enquiry-band p {
+    margin-block-start: 1rem;
+    max-width: 34rem;
+  }
+  .band-actions {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1.25rem;
+  }
+  @media (min-width: 56rem) {
+    .enquiry-band {
+      grid-template-columns: 1.3fr 1fr;
+      gap: 4rem;
+    }
+  }
+</style>

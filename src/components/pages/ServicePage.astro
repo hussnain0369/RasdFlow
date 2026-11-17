@@ -1,0 +1,83 @@
+---
+import { Picture } from 'astro:assets';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHero from '../PageHero.astro';
+import Sections from '../Sections.astro';
+import Faq from '../Faq.astro';
+import CtaBand from '../CtaBand.astro';
+import inspectionPhoto from '../../assets/photos/inspection-under-sink.jpg';
+import repairPhoto from '../../assets/photos/repair-valve.jpg';
+import thermalPhoto from '../../assets/photos/equipment-thermal.jpg';
+import acousticPhoto from '../../assets/photos/equipment-acoustic.jpg';
+import { content } from '../../content/pages';
+import type { Lang } from '../../i18n/routes';
+import { t } from '../../i18n/ui';
+import { business } from '../../config/business';
+import { faqJsonLd } from '../../lib/structured';
+
+interface Props {
+  lang: Lang;
+  kind: 'detection' | 'repair';
+}
+const { lang, kind } = Astro.props;
+const c = content[lang][kind];
+const ui = t(lang);
+const image = kind === 'detection' ? inspectionPhoto : repairPhoto;
+const showEquipment = kind === 'detection' && business.equipmentPhotosConfirmed;
+const equipment = [
+  {
+    src: thermalPhoto,
+    alt: lang === 'ar' ? 'فنّي يفحص جدار حمّام بكاميرا حرارية محمولة' : 'A technician scans a bathroom wall with a handheld thermal camera',
+  },
+  {
+    src: acousticPhoto,
+    alt: lang === 'ar' ? 'فنّي يستمع عبر سماعات إلى جهاز موضوع على أرضية خارجية' : 'A technician wearing headphones listens through a ground sensor placed on outdoor paving',
+  },
+];
+---
+<BaseLayout lang={lang} page={kind} title={c.meta.title} description={c.meta.description} jsonLd={[faqJsonLd(c.faqs, lang)]}>
+  <PageHero lang={lang} page={kind} h1={c.h1} intro={c.intro} image={image} imageAlt={c.imageAlt} />
+
+  <div class="section">
+    <div class="wrap">
+      <Sections sections={c.sections} slotAfter={2}>
+        {
+          showEquipment && (
+            <div class="equipment">
+              {equipment.map((e) => (
+                <Picture src={e.src} alt={e.alt} widths={[400, 700]} sizes="(min-width: 64rem) 22vw, 50vw" formats={['avif', 'webp']} />
+              ))}
+            </div>
+          )
+        }
+      </Sections>
+    </div>
+  </div>
+
+  <div class="faq-wrap">
+    <Faq faqs={c.faqs} title={ui.faqTitle} />
+  </div>
+
+  <CtaBand lang={lang} title={c.cta.title} text={c.cta.text} />
+</BaseLayout>
+
+<style>
+  .section {
+    padding-block-end: 0;
+  }
+  .faq-wrap :global(.section) {
+    padding-block-start: 3rem;
+  }
+  .equipment {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin-block-start: 1.75rem;
+  }
+  .equipment :global(img) {
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+    border-radius: var(--radius-m);
+  }
+</style>
