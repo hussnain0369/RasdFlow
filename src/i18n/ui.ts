@@ -27,6 +27,11 @@ export const ui = {
     contactBarLabel: 'Quick contact',
     topbar: 'Water leak detection and repair across Riyadh.',
     topbarCall: 'Call',
+    trialBar: 'Trial preview: contact details shown are placeholders.',
+    trialTitle: 'Trial preview',
+    trialText:
+      'This is a trial version of the LeakFix website. The phone, WhatsApp and email details are placeholders and will be replaced with LeakFix’s real contact details before launch.',
+    trialClose: 'Close',
     footerAbout: 'Water leak detection and repair for homes and businesses in Riyadh.',
     footerServices: 'Services',
     footerCompany: 'LeakFix',
@@ -110,6 +115,11 @@ export const ui = {
     contactBarLabel: 'تواصل سريع',
     topbar: 'كشف تسربات المياه وإصلاحها في أنحاء الرياض.',
     topbarCall: 'اتصل على',
+    trialBar: 'نسخة تجريبية: بيانات التواصل المعروضة مؤقتة.',
+    trialTitle: 'نسخة تجريبية',
+    trialText:
+      'هذه نسخة تجريبية من موقع LeakFix. بيانات الهاتف وواتساب والبريد الإلكتروني مؤقتة، وستُستبدل ببيانات التواصل الفعلية لـ LeakFix قبل إطلاق الموقع.',
+    trialClose: 'إغلاق',
     footerAbout: 'كشف تسربات المياه وإصلاحها للمنازل والمنشآت في الرياض.',
     footerServices: 'الخدمات',
     footerCompany: 'LeakFix',

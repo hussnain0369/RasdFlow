@@ -76,6 +76,8 @@ For the real launch on a custom domain, set `BASE_PATH` to `/` (or remove it), `
 
 ## Before launch
 
+**Trial contacts are on.** `demoContact: true` in `src/config/business.ts` shows placeholder contact buttons (+966 5X XXX XXXX, info@leakfix.example) that open a "trial preview" message. Set it to `false` once real details are entered. Real numbers always take over automatically.
+
 The business needs to supply or confirm:
 
 1. Business telephone number and WhatsApp number (international format).

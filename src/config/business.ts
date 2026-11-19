@@ -31,6 +31,12 @@ export interface BusinessConfig {
   enquiryRetention: { en: string; ar: string } | null;
   /** Name of the website hosting provider, for the privacy policy. */
   hostingProvider: string | null;
+  /**
+   * TRIAL ONLY. While true, any contact method that is still null is shown with an
+   * obvious placeholder (+966 5X XXX XXXX, info@leakfix.example). Tapping it opens a
+   * "trial preview" message instead of calling anyone. Set to false before launch.
+   */
+  demoContact: boolean;
   /** Team member shown on the Our Engineer page. Only facts the business has supplied. */
   engineer: {
     name: { en: string; ar: string };
@@ -55,6 +61,7 @@ export const business: BusinessConfig = {
   hours: null,
   enquiryRetention: null,
   hostingProvider: null,
+  demoContact: true,
   engineer: {
     name: { en: 'Engineer Muhammad Faisal', ar: 'المهندس محمد فيصل' },
     trainedIn: { en: 'Pakistan', ar: 'باكستان' },
@@ -70,30 +77,45 @@ function isInternational(value: string | null): value is string {
   return !!value && /^\+\d{8,15}$/.test(value.replace(/[\s-]/g, ''));
 }
 
-export const contact = {
+export interface ContactMethod {
+  href: string;
+  display: string;
+  /** True for trial placeholders; never used in structured data or the privacy policy. */
+  demo?: boolean;
+}
+
+/** Link target for trial placeholders; a script opens the trial notice instead. */
+export const DEMO_HREF = '#trial-contact';
+const demo = (display: string): ContactMethod | null =>
+  business.demoContact ? { href: DEMO_HREF, display, demo: true } : null;
+
+export const contact: Record<'phone' | 'whatsapp' | 'email', ContactMethod | null> = {
   phone: isInternational(business.phone)
-    ? {
-        href: `tel:+${digits(business.phone)}`,
-        display: business.phone.trim(),
-      }
-    : null,
+    ? { href: `tel:+${digits(business.phone)}`, display: business.phone.trim() }
+    : demo('+966 5X XXX XXXX'),
   whatsapp: isInternational(business.whatsapp)
-    ? {
-        href: `https://wa.me/${digits(business.whatsapp)}`,
-        display: business.whatsapp.trim(),
-      }
-    : null,
+    ? { href: `https://wa.me/${digits(business.whatsapp)}`, display: business.whatsapp.trim() }
+    : demo('+966 5X XXX XXXX'),
   email:
     business.email && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(business.email)
       ? { href: `mailto:${business.email}`, display: business.email }
-      : null,
+      : demo('info@leakfix.example'),
 };
+
+/** Only real, configured methods: for structured data and the privacy policy. */
+export const realContact = {
+  phone: contact.phone?.demo ? null : contact.phone,
+  whatsapp: contact.whatsapp?.demo ? null : contact.whatsapp,
+  email: contact.email?.demo ? null : contact.email,
+};
+export const isDemoContact = Boolean(contact.phone?.demo || contact.whatsapp?.demo || contact.email?.demo);
 
 export const hasDirectContact = Boolean(contact.phone || contact.whatsapp || contact.email);
 
 /** Pre-filled WhatsApp text so the business knows where the enquiry came from. */
 export function whatsappHref(lang: 'en' | 'ar'): string | null {
   if (!contact.whatsapp) return null;
+  if (contact.whatsapp.demo) return contact.whatsapp.href;
   const text =
     lang === 'ar'
       ? 'السلام عليكم، أبي أستفسر عن تسرب مياه في الرياض.'

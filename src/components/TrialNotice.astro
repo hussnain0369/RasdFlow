@@ -1,0 +1,58 @@
+---
+/** Shown only while trial placeholder contacts are on. Explains them instead of dialling anyone. */
+import { t } from '../i18n/ui';
+import type { Lang } from '../i18n/routes';
+import { DEMO_HREF } from '../config/business';
+
+interface Props {
+  lang: Lang;
+}
+const ui = t(Astro.props.lang);
+---
+<dialog id="trial-contact" class="trial" aria-labelledby="trial-title">
+  <h2 id="trial-title">{ui.trialTitle}</h2>
+  <p>{ui.trialText}</p>
+  <form method="dialog">
+    <button class="btn" type="submit">{ui.trialClose}</button>
+  </form>
+</dialog>
+
+<script define:vars={{ href: DEMO_HREF }}>
+  const dialog = document.getElementById('trial-contact');
+  document.addEventListener('click', (event) => {
+    const link = event.target instanceof Element ? event.target.closest(`a[href="${href}"]`) : null;
+    if (!link || !dialog || typeof dialog.showModal !== 'function') return;
+    event.preventDefault();
+    dialog.showModal();
+  });
+  dialog?.addEventListener('click', (event) => {
+    if (event.target === dialog) dialog.close();
+  });
+</script>
+
+<style>
+  .trial {
+    max-width: min(28rem, calc(100vw - 2rem));
+    padding: 1.75rem;
+    border: 0;
+    border-block-start: 6px solid var(--blue);
+    border-radius: var(--radius-m);
+    color: var(--ink);
+    box-shadow: 0 20px 60px rgba(7, 38, 65, 0.35);
+  }
+  .trial::backdrop {
+    background: rgba(4, 26, 46, 0.6);
+  }
+  h2 {
+    font-size: var(--step-2);
+  }
+  p {
+    margin-block: 0.75rem 1.5rem;
+  }
+  /* Without JavaScript the link jumps here, so show the notice as a page section */
+  .trial:target {
+    display: block;
+    position: relative;
+    margin: 2rem auto;
+  }
+</style>

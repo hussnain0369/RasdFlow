@@ -4,7 +4,7 @@ import logo from '../assets/brand/leakfix-logo.png';
 import Icon from './Icon.astro';
 import { path, otherLang, type Lang, type PageKey } from '../i18n/routes';
 import { t } from '../i18n/ui';
-import { contact } from '../config/business';
+import { contact, isDemoContact } from '../config/business';
 
 interface Props {
   lang: Lang;
@@ -20,9 +20,9 @@ const switchHref = path(page ?? 'home', alt);
   <div class="wrap topbar-inner">
     <Icon name="pin" class="topbar-icon" />
     <p>
-      <span>{ui.topbar}</span>
+      <span>{isDemoContact ? ui.trialBar : ui.topbar}</span>
       {
-        contact.phone && (
+        contact.phone && !contact.phone.demo && (
           <>
             {' '}
             <a href={contact.phone.href}>
