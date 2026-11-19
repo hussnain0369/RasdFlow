@@ -220,6 +220,19 @@ const switchHref = path(page ?? 'home', alt);
     }
   }
 
+  /* Keep logo, language switch and menu on one row on narrow phones */
+  @media (max-width: 30rem) {
+    .header-inner {
+      gap: 0.5rem 0.75rem;
+    }
+    .lang-switch :global(svg) {
+      display: none;
+    }
+    .lang-switch,
+    .menu-toggle {
+      padding-inline: 0.6rem;
+    }
+  }
   @media (max-width: 22rem) {
     .menu-label {
       display: none;

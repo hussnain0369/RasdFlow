@@ -35,7 +35,9 @@
   --space-section: clamp(4rem, 3rem + 4vw, 7rem);
   --gutter: clamp(1rem, 0.5rem + 2.5vw, 2.5rem);
   --max: 76rem;
-  --contact-bar-h: 0px;
+  /* Height taken by the floating contact buttons; the footer reserves it. */
+  --fab-count: 0;
+  --contact-bar-h: calc(var(--fab-count) * 4.25rem + 1rem);
 
   color-scheme: light;
 }
@@ -50,6 +52,10 @@ html {
   -webkit-text-size-adjust: 100%;
   text-size-adjust: 100%;
   scroll-padding-top: 6rem;
+}
+/* Keep focused form fields clear of the floating contact buttons */
+html.has-contact-bar {
+  scroll-padding-bottom: 5rem;
 }
 
 @media (prefers-reduced-motion: no-preference) {
@@ -67,7 +73,6 @@ body {
   line-height: 1.6;
   font-stretch: 100%;
   overflow-x: clip;
-  padding-block-end: var(--contact-bar-h);
 }
 
 :lang(ar) body,

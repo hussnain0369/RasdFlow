@@ -1,5 +1,9 @@
 ---
-/** Compact bottom contact bar for small screens. Renders only when real numbers are configured. */
+/**
+ * Floating contact buttons (email, telephone, WhatsApp), stacked in the
+ * bottom corner on every screen size. Only configured methods render.
+ * The footer reserves space underneath so the buttons never hide the end of the page.
+ */
 import Icon from './Icon.astro';
 import { contact, whatsappHref } from '../config/business';
 import { t } from '../i18n/ui';
@@ -13,18 +17,21 @@ const ui = t(lang);
 const wa = whatsappHref(lang);
 ---
 {
-  (contact.phone || wa) && (
-    <nav class="contact-bar" aria-label={ui.contactBarLabel}>
+  (contact.phone || wa || contact.email) && (
+    <nav class="fab-stack" aria-label={ui.contactBarLabel}>
+      {contact.email && (
+        <a href={contact.email.href} class="fab fab--email" aria-label={ui.email} title={ui.email}>
+          <Icon name="mail" />
+        </a>
+      )}
       {contact.phone && (
-        <a href={contact.phone.href} class="bar-call">
+        <a href={contact.phone.href} class="fab fab--call" aria-label={ui.call} title={ui.call}>
           <Icon name="phone" />
-          <span>{ui.call}</span>
         </a>
       )}
       {wa && (
-        <a href={wa} class="bar-wa" rel="noopener" target="_blank">
+        <a href={wa} class="fab fab--wa" rel="noopener" target="_blank" aria-label={ui.whatsapp} title={ui.whatsapp}>
           <Icon name="chat" />
-          <span>{ui.whatsapp}</span>
         </a>
       )}
     </nav>
@@ -32,52 +39,57 @@ const wa = whatsappHref(lang);
 }
 
 <style>
-  .contact-bar {
-    display: none;
+  .fab-stack {
+    --fab: 3.5rem;
+    position: fixed;
+    inset-inline-end: max(1rem, env(safe-area-inset-right, 0px));
+    inset-block-end: calc(1rem + env(safe-area-inset-bottom, 0px));
+    z-index: 50;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
   }
-  @media (max-width: 47.99rem) {
-    :global(html.has-contact-bar) {
-      --contact-bar-h: calc(4rem + env(safe-area-inset-bottom, 0px));
-      scroll-padding-bottom: 5rem;
-    }
-    .contact-bar {
-      position: fixed;
-      inset-inline: 0;
-      inset-block-end: 0;
-      z-index: 50;
-      display: flex;
-      gap: 0.5rem;
-      padding: 0.5rem 0.75rem calc(0.5rem + env(safe-area-inset-bottom, 0px));
-      background: var(--navy);
-      box-shadow: 0 -1px 0 rgba(255, 255, 255, 0.08);
-    }
-    .contact-bar a {
-      flex: 1;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0.5rem;
-      min-height: 3rem;
-      border-radius: var(--radius-m);
-      font-weight: 650;
-      text-decoration: none;
-    }
-    .contact-bar :global(svg) {
-      width: 1.2rem;
-      height: 1.2rem;
-    }
-    .bar-call {
-      background: var(--white);
-      color: var(--navy);
-    }
-    .bar-wa {
-      border: 2px solid rgba(255, 255, 255, 0.75);
-      color: var(--white);
-    }
-    .bar-wa:only-child {
-      background: var(--white);
-      color: var(--navy);
-      border: 0;
+  .fab {
+    display: grid;
+    place-items: center;
+    width: var(--fab);
+    height: var(--fab);
+    border-radius: 50%;
+    color: var(--white);
+    box-shadow: 0 4px 14px rgba(7, 38, 65, 0.28);
+    transition: transform 0.15s ease, background-color 0.15s ease;
+  }
+  .fab:hover {
+    color: var(--white);
+    transform: scale(1.06);
+  }
+  .fab:focus-visible {
+    outline: 3px solid var(--navy);
+    outline-offset: 3px;
+    border-radius: 50%;
+  }
+  .fab :global(svg) {
+    width: 1.6rem;
+    height: 1.6rem;
+    stroke-width: 1.9;
+  }
+  .fab--email {
+    background: var(--blue-text);
+  }
+  .fab--call {
+    background: var(--navy);
+  }
+  /* WhatsApp green, darkened so the white icon keeps at least 3:1 contrast */
+  .fab--wa {
+    background: #138b4f;
+  }
+  .fab--wa:hover {
+    background: #0f7542;
+  }
+  @media (min-width: 64rem) {
+    .fab-stack {
+      inset-inline-end: 1.5rem;
+      inset-block-end: 1.5rem;
     }
   }
 </style>
