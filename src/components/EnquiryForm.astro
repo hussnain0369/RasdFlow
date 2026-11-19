@@ -4,7 +4,7 @@
  * Works without JavaScript (plain POST); with JavaScript it validates inline
  * and shows the real result returned by the server.
  */
-import { path, type Lang } from '../i18n/routes';
+import { path, withBase, type Lang } from '../i18n/routes';
 import { t } from '../i18n/ui';
 import { LIMITS } from '../lib/enquiry';
 
@@ -18,7 +18,7 @@ const f = t(lang).form;
   id="enquiry"
   class="enquiry"
   method="post"
-  action="/api/enquiry/"
+  action={withBase('/api/enquiry/')}
   novalidate
   data-errors={JSON.stringify(f.errors)}
   data-msg-summary={f.errorSummary}

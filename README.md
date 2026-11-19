@@ -65,6 +65,14 @@ Any Node host works: run `node dist/server/entry.mjs` behind HTTPS, with the env
 
 To host as fully static files (no form), deploy `dist/client/` and leave the form variables unset.
 
+## GitHub Pages preview
+
+`.github/workflows/deploy-pages.yml` builds the site and publishes it to https://hussnain0369.github.io/RasdFlow/ on every push to the working branch, or when run by hand from the Actions tab. It builds with `BASE_PATH=/RasdFlow/` and without `DEPLOY_ENV=production`, so every page is noindex. GitHub Pages only serves static files, so the enquiry form is not available there.
+
+One-time setup: in the repository, open **Settings → Pages** and set **Source** to **GitHub Actions**.
+
+For the real launch on a custom domain, set `BASE_PATH` to `/` (or remove it), `SITE_URL` to the domain and `DEPLOY_ENV=production`.
+
 ## Before launch
 
 The business needs to supply or confirm:

@@ -1,0 +1,49 @@
+# Builds the site and publishes it to GitHub Pages as a hidden preview.
+# Pages are served with noindex (DEPLOY_ENV is not "production"), so this
+# deployment stays out of search results until the business details are added.
+name: Deploy preview to GitHub Pages
+
+on:
+  push:
+    branches: [claude/install-frontend-design-skill-enkwhy]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      SITE_URL: https://hussnain0369.github.io
+      BASE_PATH: /RasdFlow/
+      DEPLOY_ENV: preview
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run build
+      - run: npm run verify
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist/client
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

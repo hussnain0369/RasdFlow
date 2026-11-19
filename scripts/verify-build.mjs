@@ -12,6 +12,8 @@ import { readFileSync, readdirSync, statSync, existsSync } from 'node:fs';
 import { join, relative } from 'node:path';
 
 const root = process.argv[2] ?? 'dist/client';
+// Same BASE_PATH the site was built with, e.g. /RasdFlow/ for GitHub Pages.
+const base = (process.env.BASE_PATH ?? '/').trim().replace(/\/+$/, '');
 const problems = [];
 const fail = (file, msg) => problems.push(`${file}: ${msg}`);
 
@@ -22,7 +24,7 @@ const walk = (dir) =>
   });
 
 const htmlFiles = walk(root).filter((f) => f.endsWith('.html'));
-const toUrlPath = (file) => '/' + relative(root, file).replace(/index\.html$/, '').replace(/\\/g, '/');
+const toUrlPath = (file) => base + '/' + relative(root, file).replace(/index\.html$/, '').replace(/\\/g, '/');
 const pages = new Map(htmlFiles.map((f) => [toUrlPath(f), readFileSync(f, 'utf8')]));
 
 const titles = new Map();
@@ -30,8 +32,12 @@ const descriptions = new Map();
 const hreflangs = new Map();
 
 const resolves = (href) => {
-  const clean = decodeURI(href.split('#')[0].split('?')[0]);
+  let clean = decodeURI(href.split('#')[0].split('?')[0]);
   if (!clean) return true;
+  if (base) {
+    if (!clean.startsWith(base + '/')) return false;
+    clean = clean.slice(base.length);
+  }
   if (clean.startsWith('/api/')) return true;
   const target = join(root, clean);
   return existsSync(target) && statSync(target).isFile()
@@ -41,10 +47,10 @@ const resolves = (href) => {
 
 for (const [url, html] of pages) {
   const file = url;
-  const isErrorPage = url === '/404.html';
+  const isErrorPage = url === `${base}/404.html`;
   const lang = html.match(/<html[^>]*\blang="([^"]+)"/)?.[1];
   const dir = html.match(/<html[^>]*\bdir="([^"]+)"/)?.[1];
-  const expectAr = url.startsWith('/ar/');
+  const expectAr = url.startsWith(`${base}/ar/`);
   if (lang !== (expectAr ? 'ar' : 'en')) fail(file, `lang is ${lang}`);
   if (dir !== (expectAr ? 'rtl' : 'ltr')) fail(file, `dir is ${dir}`);
 
@@ -98,7 +104,7 @@ const robots = existsSync(join(root, 'robots.txt')) ? readFileSync(join(root, 'r
 const indexable = /Allow: \//.test(robots);
 for (const [url, html] of pages) {
   const robotsMeta = html.match(/<meta name="robots" content="([^"]+)"/)?.[1] ?? '';
-  if (url === '/404.html') {
+  if (url === `${base}/404.html`) {
     if (!robotsMeta.includes('noindex')) fail(url, '404 page should be noindex');
   } else if (indexable === robotsMeta.includes('noindex')) {
     fail(url, `robots meta "${robotsMeta}" disagrees with robots.txt`);

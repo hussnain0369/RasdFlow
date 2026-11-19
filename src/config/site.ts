@@ -7,7 +7,7 @@ const env = (key: string): string | undefined => {
   return value ? value : undefined;
 };
 
-/** Production origin, e.g. https://www.example.sa — no trailing slash. */
+/** Origin only, e.g. https://www.example.sa — no path, no trailing slash. Sub-folders go in BASE_PATH. */
 const rawSiteUrl = env('SITE_URL');
 export const siteUrl = rawSiteUrl ? rawSiteUrl.replace(/\/+$/, '') : undefined;
 

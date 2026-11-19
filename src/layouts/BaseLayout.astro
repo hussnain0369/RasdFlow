@@ -5,7 +5,7 @@ import '../styles/global.css';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import ContactBar from '../components/ContactBar.astro';
-import { path, type Lang, type PageKey } from '../i18n/routes';
+import { path, withBase, type Lang, type PageKey } from '../i18n/routes';
 import { t } from '../i18n/ui';
 import { absoluteUrl, indexable, siteUrl } from '../config/site';
 import { business, contact } from '../config/business';
@@ -33,7 +33,7 @@ const alternates = page
       ar: absoluteUrl(path(page, 'ar')),
     }
   : undefined;
-const ogImage = absoluteUrl('/og-image.jpg');
+const ogImage = absoluteUrl(withBase('/og-image.jpg'));
 
 const organization = siteUrl
   ? {
@@ -41,8 +41,8 @@ const organization = siteUrl
       '@type': 'Organization',
       '@id': `${siteUrl}/#organization`,
       name: business.name,
-      url: `${siteUrl}/`,
-      logo: `${siteUrl}/icon-512.png`,
+      url: absoluteUrl(path('home', 'en')),
+      logo: absoluteUrl(withBase('/icon-512.png')),
       description: lang === 'ar' ? business.taglineAr : business.taglineEn,
       areaServed: { '@type': 'City', name: 'Riyadh' },
       ...(contact.phone ? { telephone: contact.phone.display } : {}),
@@ -72,8 +72,8 @@ const hasBar = Boolean(contact.phone || contact.whatsapp);
       )
     }
     <meta name="theme-color" content="#072641" />
-    <link rel="icon" href="/favicon.png" type="image/png" />
-    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="icon" href={withBase('/favicon.png')} type="image/png" />
+    <link rel="apple-touch-icon" href={withBase('/apple-touch-icon.png')} />
 
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="LeakFix" />
