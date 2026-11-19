@@ -35,14 +35,15 @@ SITE_URL=https://www.example.com DEPLOY_ENV=production npm run build && npm run 
 | --- | --- |
 | Business facts (phone, WhatsApp, email, hours, legal name, retention…) | `src/config/business.ts` |
 | Deployment settings (domain, indexing, form delivery) | environment variables, see `.env.example`, read in `src/config/site.ts` |
-| Page copy, English and Arabic | `src/content/pages.ts` |
+| Page copy, English and Arabic | `src/content/pages.ts`, plus `src/content/extra.ts` for How It Works, the Leak Guide and Our Engineer |
+| Engineer details and portrait | `engineer` in `src/config/business.ts`; put the photo in `src/assets/team/` and set `photo` to its file name |
 | Shared interface text (navigation, buttons, form, validation) | `src/i18n/ui.ts` |
 | Privacy policy draft | `src/components/pages/PrivacyPage.astro` |
 | Page templates | `src/components/pages/` |
 | URL map | `src/i18n/routes.ts` |
 | Photos and logo | `src/assets/` |
 
-English pages: `/`, `/water-leak-detection/`, `/water-leak-repair/`, `/areas-we-cover/`, `/about/`, `/contact/`, `/privacy-policy/`.
+English pages (10): `/`, `/water-leak-detection/`, `/water-leak-repair/`, `/how-it-works/`, `/water-leak-guide/`, `/areas-we-cover/`, `/about/`, `/our-engineer/`, `/contact/`, `/privacy-policy/`.
 Arabic pages use the same paths under `/ar/`. Each page links to its equivalent through the language switcher and reciprocal `hreflang` tags.
 
 ## How missing information is handled
@@ -87,3 +88,4 @@ The business needs to supply or confirm:
 8. How long enquiry data is kept, and who handles it.
 9. A review of the privacy policy draft by the business, with legal advice where needed.
 10. Confirmation that the supplied photos are licensed for use on the website.
+11. A portrait of Engineer Muhammad Faisal (the page shows an initials badge until one is added), and confirmation of how the "Engineer" title and the Pakistan training should be described, such as the qualification or institution.

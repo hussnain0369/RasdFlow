@@ -5,6 +5,8 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import Icon from '../Icon.astro';
 import Faq from '../Faq.astro';
 import CtaBand from '../CtaBand.astro';
+import EngineerTeaser from '../EngineerTeaser.astro';
+import { guideTeaser } from '../../content/extra';
 import heroPhoto from '../../assets/photos/inspection-under-sink.jpg';
 import repairPhoto from '../../assets/photos/repair-valve.jpg';
 import { content } from '../../content/pages';
@@ -93,6 +95,12 @@ const wa = whatsappHref(lang);
         }
       </ul>
       <p class="signs-closing">{c.signs.closing}</p>
+      <p class="signs-link">
+        <a class="link-arrow" href={path('guide', lang)}>
+          <span>{guideTeaser[lang]}</span>
+          <Icon name="arrow" />
+        </a>
+      </p>
     </div>
   </section>
 
@@ -158,6 +166,12 @@ const wa = whatsappHref(lang);
           <Icon name="arrow" />
         </a>
       </div>
+    </div>
+  </section>
+
+  <section class="section section--mist engineer-band">
+    <div class="wrap">
+      <EngineerTeaser lang={lang} />
     </div>
   </section>
 
@@ -349,6 +363,9 @@ const wa = whatsappHref(lang);
     .signs {
       grid-template-columns: repeat(3, 1fr);
     }
+  }
+  .signs-link {
+    margin-block-start: 1.25rem;
   }
   .signs-closing {
     margin-block-start: 2rem;

@@ -1,0 +1,128 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Sections from '../Sections.astro';
+import EngineerBadge from '../EngineerBadge.astro';
+import CtaBand from '../CtaBand.astro';
+import Icon from '../Icon.astro';
+import { extra } from '../../content/extra';
+import { path, type Lang } from '../../i18n/routes';
+import { t } from '../../i18n/ui';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const c = extra[lang].engineer;
+const ui = t(lang);
+---
+<BaseLayout lang={lang} page="engineer" title={c.meta.title} description={c.meta.description}>
+  <section class="profile" aria-labelledby="page-title">
+    <div class="wrap profile-grid">
+      <div class="profile-media">
+        <EngineerBadge lang={lang} />
+      </div>
+      <div>
+        <nav class="crumbs" aria-label={lang === 'ar' ? 'مسار التنقل' : 'Breadcrumb'}>
+          <a href={path('home', lang)}>{ui.breadcrumbHome}</a>
+          <span aria-hidden="true">/</span>
+          <a href={path('about', lang)}>{ui.nav.about}</a>
+          <span aria-hidden="true">/</span>
+          <span aria-current="page">{ui.nav.engineer}</span>
+        </nav>
+        <h1 id="page-title">{c.h1}</h1>
+        <p class="role">{c.role}</p>
+        <p class="lede">{c.intro}</p>
+        <dl class="facts">
+          {c.facts.map((f) => (
+            <div>
+              <dt>{f.label}</dt>
+              <dd>{f.value}</dd>
+            </div>
+          ))}
+        </dl>
+      </div>
+    </div>
+  </section>
+
+  <div class="section">
+    <div class="wrap">
+      <Sections sections={c.sections} />
+      <p class="more">
+        <a class="link-arrow" href={path('howItWorks', lang)}>
+          <span>{ui.nav.howItWorks}</span>
+          <Icon name="arrow" />
+        </a>
+      </p>
+    </div>
+  </div>
+
+  <CtaBand lang={lang} title={c.cta.title} text={c.cta.text} />
+</BaseLayout>
+
+<style>
+  .profile {
+    background: var(--mist);
+    border-block-end: 1px solid var(--line);
+    padding-block: clamp(2.5rem, 1.5rem + 4vw, 5rem);
+  }
+  .profile-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 2.5rem;
+    align-items: center;
+  }
+  @media (min-width: 56rem) {
+    .profile-grid {
+      grid-template-columns: auto 1fr;
+      gap: 4.5rem;
+    }
+  }
+  .profile-media {
+    display: flex;
+    justify-content: center;
+    padding: 0.75rem;
+  }
+  .crumbs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    font-size: var(--step--1);
+    color: var(--ink-soft);
+    margin-block-end: 1.25rem;
+  }
+  .crumbs a {
+    color: var(--ink-soft);
+  }
+  .role {
+    margin-block-start: 0.75rem;
+    color: var(--blue-text);
+    font-weight: 650;
+  }
+  .lede {
+    margin-block-start: 1.25rem;
+  }
+  .facts {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(10rem, 100%), 1fr));
+    gap: 1rem 2rem;
+    margin: 2rem 0 0;
+    padding-block-start: 1.5rem;
+    border-block-start: 2px solid var(--navy);
+    max-width: 40rem;
+  }
+  dt {
+    font-size: var(--step--1);
+    color: var(--ink-soft);
+  }
+  dd {
+    margin: 0.2rem 0 0;
+    font-weight: 700;
+    color: var(--navy);
+  }
+  .section {
+    padding-block-end: var(--space-section);
+  }
+  .more {
+    margin-block-start: 2.5rem;
+  }
+</style>

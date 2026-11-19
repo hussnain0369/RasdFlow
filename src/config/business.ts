@@ -37,6 +37,14 @@ export interface BusinessConfig {
    * confirms it does; the photos are then shown on the leak detection page.
    */
   equipmentPhotosConfirmed: boolean;
+  /** Team member shown on the Our Engineer page. Only facts the business has supplied. */
+  engineer: {
+    name: { en: string; ar: string };
+    /** Where the engineer trained, as supplied by the business. */
+    trainedIn: { en: string; ar: string };
+    /** Portrait in src/assets/team/, e.g. 'muhammad-faisal.jpg'. null shows a name badge instead. */
+    photo: string | null;
+  };
 }
 
 export const business: BusinessConfig = {
@@ -54,6 +62,11 @@ export const business: BusinessConfig = {
   enquiryRetention: null,
   hostingProvider: null,
   equipmentPhotosConfirmed: false,
+  engineer: {
+    name: { en: 'Engineer Muhammad Faisal', ar: 'المهندس محمد فيصل' },
+    trainedIn: { en: 'Pakistan', ar: 'باكستان' },
+    photo: null,
+  },
 };
 
 /* ---------- derived helpers (no business facts below this line) ---------- */

@@ -13,7 +13,7 @@ interface Props {
 const { lang, page } = Astro.props;
 const ui = t(lang);
 const alt = otherLang(lang);
-const navKeys: PageKey[] = ['home', 'detection', 'repair', 'areas', 'about', 'contact'];
+const navKeys: PageKey[] = ['home', 'detection', 'repair', 'howItWorks', 'areas', 'about', 'contact'];
 const switchHref = path(page ?? 'home', alt);
 ---
 <div class="topbar">
@@ -94,7 +94,7 @@ const switchHref = path(page ?? 'home', alt);
         toggle.focus();
       }
     });
-    window.matchMedia('(min-width: 64rem)').addEventListener('change', (e) => e.matches && setOpen(false));
+    window.matchMedia('(min-width: 85rem)').addEventListener('change', (e) => e.matches && setOpen(false));
   }
 </script>
 
@@ -194,6 +194,7 @@ const switchHref = path(page ?? 'home', alt);
     height: 1.1rem;
   }
   .header-call {
+    white-space: nowrap;
     min-height: 2.75rem;
     padding-block: 0.5rem;
   }
@@ -287,7 +288,7 @@ const switchHref = path(page ?? 'home', alt);
     }
   }
 
-  @media (min-width: 64rem) {
+  @media (min-width: 85rem) {
     .header-inner {
       flex-wrap: nowrap;
     }

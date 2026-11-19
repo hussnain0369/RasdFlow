@@ -1,0 +1,113 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHero from '../PageHero.astro';
+import Faq from '../Faq.astro';
+import CtaBand from '../CtaBand.astro';
+import repairPhoto from '../../assets/photos/repair-valve.jpg';
+import { extra } from '../../content/extra';
+import type { Lang } from '../../i18n/routes';
+import { t } from '../../i18n/ui';
+import { faqJsonLd } from '../../lib/structured';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const c = extra[lang].howItWorks;
+const ui = t(lang);
+---
+<BaseLayout lang={lang} page="howItWorks" title={c.meta.title} description={c.meta.description} jsonLd={[faqJsonLd(c.faqs, lang)]}>
+  <PageHero lang={lang} page="howItWorks" h1={c.h1} intro={c.intro} image={repairPhoto} imageAlt={c.imageAlt} />
+
+  <section class="section" aria-label={c.h1}>
+    <div class="wrap">
+      <ol class="run">
+        {
+          c.steps.map((s, i) => (
+            <li>
+              <span class="joint" aria-hidden="true">{i + 1}</span>
+              <div>
+                <h2>{s.title}</h2>
+                <p>{s.text}</p>
+                {s.points && (
+                  <ul>
+                    {s.points.map((pt) => <li>{pt}</li>)}
+                  </ul>
+                )}
+              </div>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </section>
+
+  <div class="faq-wrap section--mist">
+    <Faq faqs={c.faqs} title={ui.faqTitle} />
+  </div>
+
+  <CtaBand lang={lang} title={c.cta.title} text={c.cta.text} />
+</BaseLayout>
+
+<style>
+  /* Vertical version of the homepage pipe run */
+  .run {
+    --joint: 3.25rem;
+    --pipe: 6px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 2.75rem;
+    position: relative;
+    max-width: 48rem;
+  }
+  .run::before {
+    content: '';
+    position: absolute;
+    inset-block: calc(var(--joint) / 2);
+    inset-inline-start: calc(var(--joint) / 2 - var(--pipe) / 2);
+    width: var(--pipe);
+    border-radius: var(--pipe);
+    background: var(--blue);
+  }
+  .run > li {
+    position: relative;
+    display: grid;
+    grid-template-columns: var(--joint) 1fr;
+    gap: 1.5rem;
+  }
+  .joint {
+    position: relative;
+    width: var(--joint);
+    height: var(--joint);
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    background: var(--navy);
+    color: var(--white);
+    font-weight: 800;
+    font-size: 1.25rem;
+    font-stretch: 112%;
+    box-shadow: 0 0 0 6px var(--white), 0 0 0 9px var(--blue);
+  }
+  h2 {
+    font-size: var(--step-2);
+    font-stretch: 106%;
+    padding-block-start: 0.55rem;
+    margin-block-end: 0.6rem;
+  }
+  .run ul {
+    margin: 0.75rem 0 0;
+    padding-inline-start: 1.25rem;
+  }
+  .run ul li + li {
+    margin-block-start: 0.35rem;
+  }
+  .run ul li::marker {
+    color: var(--blue);
+  }
+  .faq-wrap {
+    border-block-start: 1px solid var(--line);
+  }
+</style>

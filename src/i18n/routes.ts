@@ -1,12 +1,25 @@
 export type Lang = 'en' | 'ar';
-export type PageKey = 'home' | 'detection' | 'repair' | 'areas' | 'about' | 'contact' | 'privacy';
+export type PageKey =
+  | 'home'
+  | 'detection'
+  | 'repair'
+  | 'howItWorks'
+  | 'guide'
+  | 'areas'
+  | 'about'
+  | 'engineer'
+  | 'contact'
+  | 'privacy';
 
 const slugs: Record<PageKey, string> = {
   home: '',
   detection: 'water-leak-detection/',
   repair: 'water-leak-repair/',
+  howItWorks: 'how-it-works/',
+  guide: 'water-leak-guide/',
   areas: 'areas-we-cover/',
   about: 'about/',
+  engineer: 'our-engineer/',
   contact: 'contact/',
   privacy: 'privacy-policy/',
 };

@@ -1,0 +1,215 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHero from '../PageHero.astro';
+import CtaBand from '../CtaBand.astro';
+import Icon from '../Icon.astro';
+import inspectionPhoto from '../../assets/photos/inspection-under-sink.jpg';
+import { extra } from '../../content/extra';
+import { content } from '../../content/pages';
+import { path, type Lang } from '../../i18n/routes';
+import { t } from '../../i18n/ui';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const c = extra[lang].guide;
+const ui = t(lang);
+const heroAlt = content[lang].detection.imageAlt;
+---
+<BaseLayout lang={lang} page="guide" title={c.meta.title} description={c.meta.description}>
+  <PageHero lang={lang} page="guide" h1={c.h1} intro={c.intro} image={inspectionPhoto} imageAlt={heroAlt} actions={false} />
+
+  <section class="section" aria-labelledby="rooms-title">
+    <div class="wrap">
+      <h2 id="rooms-title" class="head">{c.roomsTitle}</h2>
+      <div class="rooms">
+        {
+          c.rooms.map((r) => (
+            <section class="room" aria-label={r.title}>
+              <Icon name={r.icon} class="room-icon" />
+              <h3>{r.title}</h3>
+              <ul>
+                {r.points.map((pt) => <li>{pt}</li>)}
+              </ul>
+            </section>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--mist" aria-labelledby="meter-title">
+    <div class="wrap meter">
+      <div class="meter-art" aria-hidden="true">
+        <Icon name="usage" />
+      </div>
+      <div>
+        <h2 id="meter-title">{c.meter.title}</h2>
+        <p class="meter-intro">{c.meter.intro}</p>
+        <ol class="meter-steps">
+          {c.meter.steps.map((s) => <li>{s}</li>)}
+        </ol>
+        <p class="note">{c.meter.note}</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="now-title">
+    <div class="wrap two">
+      <div>
+        <h2 id="now-title">{c.now.title}</h2>
+        <ul class="ticks">
+          {c.now.list?.map((s) => <li>{s}</li>)}
+        </ul>
+        <p class="safety" role="note">{c.safety}</p>
+      </div>
+      <div>
+        <h2>{c.whenTitle}</h2>
+        <ul class="ticks">
+          {c.when.map((s) => <li>{s}</li>)}
+        </ul>
+        <p class="links">
+          <a class="link-arrow" href={path('detection', lang)}>
+            <span>{ui.nav.detection}</span>
+            <Icon name="arrow" />
+          </a>
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <CtaBand lang={lang} title={c.cta.title} text={c.cta.text} />
+</BaseLayout>
+
+<style>
+  .head {
+    margin-block-end: 2.5rem;
+  }
+  .rooms {
+    display: grid;
+    gap: 2.5rem;
+  }
+  @media (min-width: 48rem) {
+    .rooms {
+      grid-template-columns: 1fr 1fr;
+      gap: 3rem 4rem;
+    }
+  }
+  .room {
+    padding-block-start: 1.5rem;
+    border-block-start: 4px solid var(--navy);
+  }
+  .room :global(.room-icon) {
+    width: 2.25rem;
+    height: 2.25rem;
+    color: var(--blue);
+    margin-block-end: 0.75rem;
+  }
+  .room h3 {
+    font-size: var(--step-2);
+    margin-block-end: 0.75rem;
+  }
+  .room ul,
+  .ticks {
+    margin: 0;
+    padding-inline-start: 1.25rem;
+  }
+  .room li + li,
+  .ticks li + li {
+    margin-block-start: 0.45rem;
+  }
+  .room li::marker,
+  .ticks li::marker {
+    color: var(--blue);
+  }
+  .meter {
+    display: grid;
+    gap: 2.5rem;
+    align-items: center;
+  }
+  @media (min-width: 56rem) {
+    .meter {
+      grid-template-columns: auto 1fr;
+      gap: 4.5rem;
+    }
+  }
+  .meter-art {
+    display: grid;
+    place-items: center;
+    width: 12rem;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    background: var(--white);
+    color: var(--navy);
+    box-shadow: 0 0 0 10px var(--blue-tint), 0 0 0 13px var(--blue);
+    margin-inline: auto;
+  }
+  .meter-art :global(svg) {
+    width: 6.5rem;
+    height: 6.5rem;
+    stroke-width: 1.2;
+  }
+  .meter-intro {
+    margin-block: 1rem 1.5rem;
+    max-width: 40rem;
+  }
+  .meter-steps {
+    counter-reset: step;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 0.9rem;
+    max-width: 40rem;
+  }
+  .meter-steps li {
+    counter-increment: step;
+    display: grid;
+    grid-template-columns: 2.25rem 1fr;
+    gap: 0.9rem;
+    align-items: start;
+  }
+  .meter-steps li::before {
+    content: counter(step);
+    display: grid;
+    place-items: center;
+    width: 2.25rem;
+    height: 2.25rem;
+    border-radius: 50%;
+    background: var(--navy);
+    color: var(--white);
+    font-weight: 750;
+  }
+  .note {
+    margin-block-start: 1.5rem;
+    padding: 1rem 1.25rem;
+    border-inline-start: 4px solid var(--blue);
+    background: var(--white);
+    max-width: 40rem;
+  }
+  .two {
+    display: grid;
+    gap: 3rem;
+  }
+  @media (min-width: 56rem) {
+    .two {
+      grid-template-columns: 1fr 1fr;
+      gap: 5rem;
+    }
+  }
+  .two h2 {
+    font-size: var(--step-2);
+    margin-block-end: 1.25rem;
+  }
+  .safety {
+    margin-block-start: 1.75rem;
+    padding: 1rem 1.25rem;
+    border-inline-start: 4px solid var(--error);
+    background: #fdf0ef;
+    color: #7a1a12;
+  }
+  .links {
+    margin-block-start: 1.75rem;
+  }
+</style>
