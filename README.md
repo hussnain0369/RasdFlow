@@ -51,7 +51,7 @@ Arabic pages use the same paths under `/ar/`. Each page links to its equivalent 
 - **Contact methods** in `business.ts` that are `null` are never shown. The Call and WhatsApp buttons, the mobile contact bar, footer details and contact page entries appear only once a valid international number or email is set. `tel:` and `https://wa.me/` links are generated from those values.
 - **The enquiry form** only appears when `RESEND_API_KEY`, `ENQUIRY_TO_EMAIL` and `ENQUIRY_FROM_EMAIL` are set at build time. The server route also checks them at request time and returns an error when they are missing. A success message is shown only after the delivery service accepts the email.
 - **Search indexing**: pages get `noindex` and `robots.txt` blocks all crawlers unless `SITE_URL` is set and `DEPLOY_ENV=production`. Canonical URLs, `hreflang`, the sitemap and Open Graph URLs need `SITE_URL`.
-- **Equipment photos**: two of the supplied photos show a thermal camera and an acoustic listening device. They are hidden until `equipmentPhotosConfirmed` is set to `true`, because showing them implies LeakFix uses that equipment.
+- **Equipment photos**: the homepage shows the acoustic listening photo and the Leak Detection page the thermal camera photo, as the business asked. The page text does not name or promise specific equipment.
 - **Privacy policy**: the wording follows the configuration. It mentions the form provider only when the form is on, and states clearly where the hosting provider, retention period and privacy contact are still being confirmed.
 
 ## Enquiry form security
@@ -83,7 +83,7 @@ The business needs to supply or confirm:
 3. Production domain (`SITE_URL`) and the hosting provider's name.
 4. Form delivery: a Resend account with a verified sending domain, the API key, and the address that receives enquiries. Or confirm the form should stay off.
 5. Working hours, if they should be shown.
-6. Confirmed service scope: which detection methods and equipment are used (this unlocks the equipment photos), and whether any specialist repairs should be listed.
+6. Confirmed service scope: which detection methods and equipment are used (the homepage and Leak Detection photos show acoustic and thermal equipment), and whether any specialist repairs should be listed.
 7. Registered business name and any registration details for the privacy policy.
 8. How long enquiry data is kept, and who handles it.
 9. A review of the privacy policy draft by the business, with legal advice where needed.

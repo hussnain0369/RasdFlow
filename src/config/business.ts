@@ -31,12 +31,6 @@ export interface BusinessConfig {
   enquiryRetention: { en: string; ar: string } | null;
   /** Name of the website hosting provider, for the privacy policy. */
   hostingProvider: string | null;
-  /**
-   * The supplied photos showing a thermal imaging camera and an acoustic listening
-   * device imply the business uses that equipment. Keep false until the business
-   * confirms it does; the photos are then shown on the leak detection page.
-   */
-  equipmentPhotosConfirmed: boolean;
   /** Team member shown on the Our Engineer page. Only facts the business has supplied. */
   engineer: {
     name: { en: string; ar: string };
@@ -61,7 +55,6 @@ export const business: BusinessConfig = {
   hours: null,
   enquiryRetention: null,
   hostingProvider: null,
-  equipmentPhotosConfirmed: false,
   engineer: {
     name: { en: 'Engineer Muhammad Faisal', ar: 'المهندس محمد فيصل' },
     trainedIn: { en: 'Pakistan', ar: 'باكستان' },

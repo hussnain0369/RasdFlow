@@ -30,7 +30,7 @@ const homeEn = {
     'An unexplained rise in your water bill, recurring damp patches or a leaking pipe can point to a problem that needs attention. LeakFix helps property owners and tenants in Riyadh investigate suspected water leaks and arrange suitable repairs.',
   ctaPrimary: 'Discuss a Water Leak',
   ctaWhatsapp: 'WhatsApp LeakFix',
-  heroAlt: 'A LeakFix technician uses a torch to inspect pipework and a damp patch inside a bathroom vanity unit',
+  heroAlt: 'A LeakFix technician wearing headphones listens through a ground sensor placed on the paving outside a villa',
   signs: {
     title: 'Signs You May Have a Water Leak',
     intro:
@@ -126,7 +126,7 @@ const homeAr: Home = {
     'ارتفاع فاتورة المياه دون سبب واضح، أو بقع رطوبة تتكرر، أو ماسورة تسرّب؛ كلها علامات قد تدل على مشكلة تحتاج إلى متابعة. تساعد LeakFix ملّاك العقارات والمستأجرين في الرياض على فحص التسربات المشتبه بها وترتيب الإصلاح المناسب.',
   ctaPrimary: 'حدّثنا عن مشكلة التسرب',
   ctaWhatsapp: 'راسل LeakFix عبر واتساب',
-  heroAlt: 'فنّي من LeakFix يستخدم كشافًا لفحص التمديدات وبقعة رطوبة داخل خزانة مغسلة',
+  heroAlt: 'فنّي من LeakFix يرتدي سماعات ويستمع عبر حسّاس موضوع على أرضية خارج فيلا',
   signs: {
     title: 'علامات قد تدل على وجود تسرب',
     intro:
@@ -226,7 +226,7 @@ const detectionEn: ServicePage = {
   h1: 'Water Leak Detection in Riyadh',
   intro:
     'A leak is not always visible at the point where water appears. Moisture can travel through surrounding materials, making the source difficult to identify. LeakFix helps investigate suspected water leaks so the next step can be based on the findings.',
-  imageAlt: 'A technician shines a torch onto a damp, stained wall beneath a vanity unit',
+  imageAlt: 'A technician points a handheld thermal camera at a bathroom wall with a damp stain near the floor',
   sections: [
     {
       title: 'When an Inspection May Help',
@@ -299,7 +299,7 @@ const detectionAr: ServicePage = {
   h1: 'كشف تسربات المياه في الرياض',
   intro:
     'لا يكون مصدر التسرب دائمًا في المكان الذي تظهر فيه المياه؛ فالرطوبة قد تنتقل عبر المواد المحيطة، فيصعب تحديد مصدرها. تساعدك LeakFix في فحص التسربات المشتبه بها حتى تُبنى الخطوة التالية على نتائج واضحة.',
-  imageAlt: 'فنّي يوجّه كشافًا نحو جدار عليه آثار رطوبة أسفل خزانة مغسلة',
+  imageAlt: 'فنّي يوجّه كاميرا حرارية محمولة نحو جدار حمّام عليه أثر رطوبة قرب الأرضية',
   sections: [
     {
       title: 'متى يفيد الفحص؟',

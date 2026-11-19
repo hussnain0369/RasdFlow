@@ -5,7 +5,6 @@ import CtaBand from '../CtaBand.astro';
 import Icon from '../Icon.astro';
 import inspectionPhoto from '../../assets/photos/inspection-under-sink.jpg';
 import { extra } from '../../content/extra';
-import { content } from '../../content/pages';
 import { path, type Lang } from '../../i18n/routes';
 import { t } from '../../i18n/ui';
 
@@ -15,7 +14,10 @@ interface Props {
 const { lang } = Astro.props;
 const c = extra[lang].guide;
 const ui = t(lang);
-const heroAlt = content[lang].detection.imageAlt;
+const heroAlt =
+  lang === 'ar'
+    ? 'فنّي يستخدم كشافًا لفحص التمديدات وبقعة رطوبة داخل خزانة مغسلة'
+    : 'A technician uses a torch to inspect pipework and a damp patch inside a vanity unit';
 ---
 <BaseLayout lang={lang} page="guide" title={c.meta.title} description={c.meta.description}>
   <PageHero lang={lang} page="guide" h1={c.h1} intro={c.intro} image={inspectionPhoto} imageAlt={heroAlt} actions={false} />
