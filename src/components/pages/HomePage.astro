@@ -1,5 +1,6 @@
 ---
 import { Picture } from 'astro:assets';
+import '@fontsource/instrument-serif/latin-400-italic.css';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Icon from '../Icon.astro';
 import Faq from '../Faq.astro';
@@ -9,7 +10,7 @@ import repairPhoto from '../../assets/photos/repair-valve.jpg';
 import { content } from '../../content/pages';
 import { path, type Lang } from '../../i18n/routes';
 import { t } from '../../i18n/ui';
-import { whatsappHref } from '../../config/business';
+import { contact, whatsappHref } from '../../config/business';
 import { faqJsonLd } from '../../lib/structured';
 
 interface Props {
@@ -24,19 +25,38 @@ const wa = whatsappHref(lang);
   <section class="hero" aria-labelledby="hero-title">
     <div class="wrap hero-grid">
       <div class="hero-copy">
-        <p class="eyebrow">{c.eyebrow}</p>
-        <h1 id="hero-title">{c.h1}</h1>
+        <p class="pill">
+          <Icon name="pin" class="pill-icon" />
+          <span>{c.eyebrow}</span>
+        </p>
+        <h1 id="hero-title">
+          <span>{c.h1Lead}</span>
+          {' '}
+          <span class="accent">{c.h1Accent}</span>
+        </h1>
         <p class="lede">{c.intro}</p>
-        <div class="btn-row hero-ctas">
-          <a class="btn" href={path('contact', lang)}>{c.ctaPrimary}</a>
+        <div class="hero-ctas" data-hides-fab>
+          {
+            contact.phone && (
+              <a class="hero-btn hero-btn--call" href={contact.phone.href}>
+                <span class="call-badge"><Icon name="phone" /></span>
+                <span class="visually-hidden">{ui.call}: </span>
+                <span class="ltr">{contact.phone.display}</span>
+              </a>
+            )
+          }
           {
             wa && (
-              <a class="btn btn--ghost" href={wa} rel="noopener" target="_blank">
+              <a class="hero-btn hero-btn--outline" href={wa} rel="noopener" target="_blank">
                 <Icon name="chat" />
                 <span>{c.ctaWhatsapp}</span>
               </a>
             )
           }
+          <a class:list={['hero-btn', contact.phone ? 'hero-btn--outline' : 'hero-btn--call']} href={path('contact', lang)}>
+            <span>{c.ctaPrimary}</span>
+            <Icon name="arrow" class="arrow" />
+          </a>
         </div>
       </div>
       <div class="hero-media">
@@ -44,7 +64,7 @@ const wa = whatsappHref(lang);
           src={heroPhoto}
           alt={c.heroAlt}
           widths={[480, 760, 1100, 1448]}
-          sizes="(min-width: 64rem) 50vw, 100vw"
+          sizes="(min-width: 64rem) 45vw, 100vw"
           formats={['avif', 'webp']}
           loading="eager"
           fetchpriority="high"
@@ -147,48 +167,124 @@ const wa = whatsappHref(lang);
 </BaseLayout>
 
 <style>
-  /* ---------- Hero ---------- */
+  /* ---------- Hero: dark navy, large stacked call buttons ---------- */
   .hero {
+    background:
+      radial-gradient(60rem 40rem at 85% 10%, rgba(8, 135, 218, 0.28), transparent 60%),
+      linear-gradient(180deg, #072641 0%, #0a3052 100%);
+    color: #c9dbea;
     padding-block: clamp(2.5rem, 1.5rem + 4vw, 5rem) clamp(3rem, 2rem + 4vw, 6rem);
-    border-block-end: 1px solid var(--line);
   }
   .hero-grid {
     display: grid;
-    gap: 2.5rem;
+    gap: 2.75rem;
     align-items: center;
   }
-  .eyebrow {
-    color: var(--blue-text);
-    font-weight: 700;
+  .pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.55rem 1.1rem;
+    border: 1px solid rgba(255, 255, 255, 0.22);
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.06);
+    color: var(--white);
+    font-weight: 650;
     font-size: var(--step--1);
-    margin-block-end: 1.25rem;
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
+    margin-block-end: 1.75rem;
   }
-  .eyebrow:lang(en) {
+  .pill:lang(en) {
     text-transform: uppercase;
-    letter-spacing: 0.08em;
+    letter-spacing: 0.07em;
   }
-  /* short pipe stub leading into the eyebrow */
-  .eyebrow::before {
-    content: '';
-    width: 2.25rem;
-    height: 4px;
-    border-radius: 2px;
-    background: var(--blue);
+  .pill :global(.pill-icon) {
+    width: 1.15rem;
+    height: 1.15rem;
+    color: #5cb8f0;
   }
   .hero h1 {
-    max-width: 14ch;
+    color: var(--white);
+    font-size: clamp(2.5rem, 1.6rem + 3.6vw, 4.4rem);
+    line-height: 1.02;
+    max-width: 15ch;
   }
   .hero h1:lang(ar) {
+    line-height: 1.3;
     max-width: 16ch;
   }
+  .accent {
+    color: #5cb8f0;
+  }
+  .accent:lang(en) {
+    font-family: 'Instrument Serif', Georgia, serif;
+    font-style: italic;
+    font-weight: 400;
+    font-stretch: 100%;
+    letter-spacing: 0;
+    font-size: 1.08em;
+  }
   .hero .lede {
-    margin-block-start: 1.5rem;
+    margin-block-start: 1.75rem;
+    color: #c9dbea;
+    max-width: 36rem;
   }
   .hero-ctas {
-    margin-block-start: 2rem;
+    display: grid;
+    gap: 0.9rem;
+    margin-block-start: 2.25rem;
+    max-width: 30rem;
+  }
+  .hero-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.85rem;
+    min-height: 4.25rem;
+    padding: 0.75rem 1.5rem;
+    border-radius: 999px;
+    font-size: 1.25rem;
+    font-weight: 750;
+    text-decoration: none;
+    transition: background-color 0.15s ease, border-color 0.15s ease;
+  }
+  .hero-btn :global(svg) {
+    width: 1.35rem;
+    height: 1.35rem;
+    flex: none;
+  }
+  .hero-btn--call {
+    background: var(--blue);
+    color: var(--white);
+    box-shadow: 0 10px 28px rgba(8, 135, 218, 0.35);
+  }
+  .hero-btn--call:hover {
+    background: #0a79c2;
+    color: var(--white);
+  }
+  .call-badge {
+    display: grid;
+    place-items: center;
+    width: 2.6rem;
+    height: 2.6rem;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.22);
+  }
+  .hero-btn--outline {
+    border: 2px solid rgba(255, 255, 255, 0.35);
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--white);
+  }
+  .hero-btn--outline:hover {
+    border-color: var(--white);
+    color: var(--white);
+  }
+  [dir='rtl'] .hero-btn :global(.arrow) {
+    transform: scaleX(-1);
+  }
+  .hero-btn:focus-visible {
+    outline: 3px solid var(--white);
+    outline-offset: 3px;
+    border-radius: 999px;
   }
   .hero-media :global(.hero-img) {
     width: 100%;
@@ -199,8 +295,8 @@ const wa = whatsappHref(lang);
   }
   @media (min-width: 64rem) {
     .hero-grid {
-      grid-template-columns: 1.05fr 1fr;
-      gap: 4rem;
+      grid-template-columns: 1.1fr 1fr;
+      gap: 4.5rem;
     }
     .hero-media :global(.hero-img) {
       aspect-ratio: 5 / 6;

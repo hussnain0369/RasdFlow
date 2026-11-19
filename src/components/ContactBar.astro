@@ -38,8 +38,29 @@ const wa = whatsappHref(lang);
   )
 }
 
+<script>
+  // Hide the floating buttons while a page's own large contact buttons
+  // (marked data-hides-fab) are on screen, so the two never overlap.
+  const stack = document.querySelector<HTMLElement>('.fab-stack');
+  const targets = document.querySelectorAll('[data-hides-fab]');
+  if (stack && targets.length && 'IntersectionObserver' in window) {
+    const visible = new Set<Element>();
+    const observer = new IntersectionObserver((entries) => {
+      for (const e of entries) e.isIntersecting ? visible.add(e.target) : visible.delete(e.target);
+      stack.classList.toggle('is-hidden', visible.size > 0);
+    });
+    targets.forEach((t) => observer.observe(t));
+  }
+</script>
+
 <style>
+  .fab-stack.is-hidden {
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(0.75rem);
+  }
   .fab-stack {
+    transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s;
     --fab: 3.5rem;
     position: fixed;
     inset-inline-end: max(1rem, env(safe-area-inset-right, 0px));

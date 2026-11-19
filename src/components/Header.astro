@@ -16,6 +16,24 @@ const alt = otherLang(lang);
 const navKeys: PageKey[] = ['home', 'detection', 'repair', 'areas', 'about', 'contact'];
 const switchHref = path(page ?? 'home', alt);
 ---
+<div class="topbar">
+  <div class="wrap topbar-inner">
+    <Icon name="pin" class="topbar-icon" />
+    <p>
+      <span>{ui.topbar}</span>
+      {
+        contact.phone && (
+          <>
+            {' '}
+            <a href={contact.phone.href}>
+              {ui.topbarCall} <span class="ltr">{contact.phone.display}</span>
+            </a>
+          </>
+        )
+      }
+    </p>
+  </div>
+</div>
 <header class="site-header">
   <div class="wrap header-inner">
     <a class="brand" href={path('home', lang)}>
@@ -81,6 +99,36 @@ const switchHref = path(page ?? 'home', alt);
 </script>
 
 <style>
+  .topbar {
+    background: #041a2e;
+    color: #c9dbea;
+    font-size: var(--step--1);
+  }
+  .topbar-inner {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    min-height: 2.6rem;
+    padding-block: 0.45rem;
+  }
+  .topbar p {
+    line-height: 1.4;
+  }
+  .topbar :global(.topbar-icon) {
+    width: 1rem;
+    height: 1rem;
+    flex: none;
+    color: #5cb8f0;
+  }
+  .topbar a {
+    color: var(--white);
+    font-weight: 650;
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
+  }
+  .topbar a:hover {
+    color: #5cb8f0;
+  }
   .site-header {
     position: sticky;
     inset-block-start: 0;

@@ -24,6 +24,8 @@ const homeEn = {
   },
   eyebrow: 'Water leak services in Riyadh',
   h1: 'Water Leak Detection & Repair in Riyadh',
+  h1Lead: 'Water Leak Detection & Repair',
+  h1Accent: 'in Riyadh',
   intro:
     'An unexplained rise in your water bill, recurring damp patches or a leaking pipe can point to a problem that needs attention. LeakFix helps property owners and tenants in Riyadh investigate suspected water leaks and arrange suitable repairs.',
   ctaPrimary: 'Discuss a Water Leak',
@@ -118,6 +120,8 @@ const homeAr: Home = {
   },
   eyebrow: 'خدمات تسربات المياه في الرياض',
   h1: 'كشف تسربات المياه وإصلاحها في الرياض',
+  h1Lead: 'كشف تسربات المياه وإصلاحها',
+  h1Accent: 'في الرياض',
   intro:
     'ارتفاع فاتورة المياه دون سبب واضح، أو بقع رطوبة تتكرر، أو ماسورة تسرّب؛ كلها علامات قد تدل على مشكلة تحتاج إلى متابعة. تساعد LeakFix ملّاك العقارات والمستأجرين في الرياض على فحص التسربات المشتبه بها وترتيب الإصلاح المناسب.',
   ctaPrimary: 'حدّثنا عن مشكلة التسرب',
