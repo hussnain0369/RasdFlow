@@ -27,7 +27,7 @@ const homeEn = {
   h1Lead: 'Water Leak Detection & Repair',
   h1Accent: 'in Riyadh',
   intro:
-    'An unexplained rise in your water bill, recurring damp patches or a leaking pipe can point to a problem that needs attention. LeakFix helps property owners and tenants in Riyadh investigate suspected water leaks and arrange suitable repairs.',
+    'A rising water bill, damp patches or a leaking pipe? LeakFix helps property owners and tenants in Riyadh investigate leaks and arrange repairs.',
   ctaPrimary: 'Discuss a Water Leak',
   ctaWhatsapp: 'WhatsApp LeakFix',
   heroAlt: 'A LeakFix technician wearing headphones listens through a ground sensor placed on the paving outside a villa',
@@ -123,7 +123,7 @@ const homeAr: Home = {
   h1Lead: 'كشف تسربات المياه وإصلاحها',
   h1Accent: 'في الرياض',
   intro:
-    'ارتفاع فاتورة المياه دون سبب واضح، أو بقع رطوبة تتكرر، أو ماسورة تسرّب؛ كلها علامات قد تدل على مشكلة تحتاج إلى متابعة. تساعد LeakFix ملّاك العقارات والمستأجرين في الرياض على فحص التسربات المشتبه بها وترتيب الإصلاح المناسب.',
+    'فاتورة مياه مرتفعة، أو بقع رطوبة، أو ماسورة تسرّب؟ تساعد LeakFix ملّاك العقارات والمستأجرين في الرياض على فحص التسربات وترتيب إصلاحها.',
   ctaPrimary: 'حدّثنا عن مشكلة التسرب',
   ctaWhatsapp: 'راسل LeakFix عبر واتساب',
   heroAlt: 'فنّي من LeakFix يرتدي سماعات ويستمع عبر حسّاس موضوع على أرضية خارج فيلا',
