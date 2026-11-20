@@ -20,17 +20,17 @@ const wa = whatsappHref(lang);
   (contact.phone || wa || contact.email) && (
     <nav class="fab-stack" aria-label={ui.contactBarLabel}>
       {contact.email && (
-        <a href={contact.email.href} class="fab fab--email" aria-label={ui.email} title={ui.email}>
+        <a href={contact.email.href} data-contact="email" class="fab fab--email" aria-label={ui.email} title={ui.email}>
           <Icon name="mail" />
         </a>
       )}
       {contact.phone && (
-        <a href={contact.phone.href} class="fab fab--call" aria-label={ui.call} title={ui.call}>
+        <a href={contact.phone.href} data-contact="call" class="fab fab--call" aria-label={ui.call} title={ui.call}>
           <Icon name="phone" />
         </a>
       )}
       {wa && (
-        <a href={wa} class="fab fab--wa" rel="noopener" target="_blank" aria-label={ui.whatsapp} title={ui.whatsapp}>
+        <a href={wa} data-contact="whatsapp" class="fab fab--wa" rel="noopener" target="_blank" aria-label={ui.whatsapp} title={ui.whatsapp}>
           <Icon name="chat" />
         </a>
       )}
@@ -41,13 +41,13 @@ const wa = whatsappHref(lang);
   (contact.phone || wa) && (
     <nav class="bottom-bar" aria-label={ui.contactBarLabel}>
       {contact.phone && (
-        <a href={contact.phone.href} class="bar-call">
+        <a href={contact.phone.href} data-contact="call" class="bar-call">
           <Icon name="phone" />
           <span>{ui.call}</span>
         </a>
       )}
       {wa && (
-        <a href={wa} class="bar-wa" rel="noopener" target="_blank">
+        <a href={wa} data-contact="whatsapp" class="bar-wa" rel="noopener" target="_blank">
           <Icon name="chat" />
           <span>{ui.whatsappShort}</span>
         </a>

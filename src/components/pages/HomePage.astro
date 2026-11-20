@@ -47,13 +47,13 @@ const ms = methodsSection[lang];
             (contact.phone || wa) ? (
               <div class="hero-ctas">
                 {contact.phone && (
-                  <a class="hero-btn hero-btn--call" href={contact.phone.href} title={contact.phone.display}>
+                  <a class="hero-btn hero-btn--call" href={contact.phone.href} data-contact="call" title={contact.phone.display}>
                     <Icon name="phone" />
                     <span>{c.ctaCall}</span>
                   </a>
                 )}
                 {wa && (
-                  <a class="hero-btn hero-btn--wa" href={wa} rel="noopener" target="_blank">
+                  <a class="hero-btn hero-btn--wa" href={wa} data-contact="whatsapp" rel="noopener" target="_blank">
                     <Icon name="chat" />
                     <span>{c.ctaWa}</span>
                   </a>
@@ -294,6 +294,9 @@ const ms = methodsSection[lang];
     gap: 0.75rem;
     grid-template-columns: repeat(auto-fit, minmax(9.5rem, 1fr));
   }
+  :global([dir='rtl']) .hero-ctas {
+    grid-template-columns: repeat(auto-fit, minmax(11.5rem, 1fr));
+  }
   .hero-btn {
     display: flex;
     align-items: center;
@@ -358,7 +361,7 @@ const ms = methodsSection[lang];
     vertical-align: -0.2em;
     margin-inline-start: 0.4rem;
   }
-  [dir='rtl'] .hero-link :global(.arrow) {
+  :global([dir='rtl']) .hero-link :global(.arrow) {
     transform: scaleX(-1);
   }
   @media (min-width: 48rem) {

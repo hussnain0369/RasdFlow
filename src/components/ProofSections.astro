@@ -8,20 +8,26 @@ import type { ImageMetadata } from 'astro';
 import Icon from './Icon.astro';
 import { business } from '../config/business';
 import { methodsFor } from '../content/services';
-import type { Lang } from '../i18n/routes';
+import { path, type Lang } from '../i18n/routes';
+import { t } from '../i18n/ui';
 
 interface Props {
   lang: Lang;
+  /** Only examples for these service pages; omit for all (homepage). */
+  services?: string[];
+  /** Reviews are shown on the homepage only. */
+  reviews?: boolean;
 }
-const { lang } = Astro.props;
+const { lang, services, reviews: showReviews = !services } = Astro.props;
 const ar = lang === 'ar';
 const photos = import.meta.glob<{ default: ImageMetadata }>('../assets/projects/*.{jpg,jpeg,png,webp}', { eager: true });
 const methodName = (k: string) => methodsFor(lang).find((m) => m.key === k)?.title ?? '';
-const projects = business.projects;
-const reviews = business.reviews.filter((r) => r.text[lang]);
+// At most three examples, each linked to its service page.
+const projects = business.projects.filter((p) => !services || services.includes(p.service)).slice(0, 3);
+const reviews = showReviews ? business.reviews.filter((r) => r.text[lang]) : [];
 const L = ar
-  ? { work: 'أعمال منجزة', problem: 'المشكلة المبلّغ عنها', method: 'طريقة الكشف', findings: 'النتائج', repair: 'الإصلاح', outcome: 'النتيجة', reviews: 'آراء العملاء', profile: 'اقرأ التقييمات على الملف الموثّق', source: 'المصدر' }
-  : { work: 'Completed Work', problem: 'Reported problem', method: 'Detection method', findings: 'Findings', repair: 'Repair', outcome: 'Outcome', reviews: 'What Customers Say', profile: 'Read reviews on our verified profile', source: 'Source' };
+  ? { work: 'أعمال منجزة', problem: 'المشكلة المبلّغ عنها', method: 'طريقة الكشف', findings: 'النتائج', repair: 'الإصلاح', outcome: 'النتيجة', checked: 'كيف تم التأكد', reviews: 'آراء العملاء', profile: 'اقرأ التقييمات على الملف الموثّق', source: 'المصدر' }
+  : { work: 'Completed Work', problem: 'Reported problem', method: 'Detection method', findings: 'Findings', repair: 'Repair', outcome: 'Outcome', checked: 'How it was checked', reviews: 'What Customers Say', profile: 'Read reviews on our verified profile', source: 'Source' };
 ---
 {
   projects.length > 0 && (
@@ -41,7 +47,14 @@ const L = ar
                   <dt>{L.findings}</dt><dd>{p.findings[lang]}</dd>
                   <dt>{L.repair}</dt><dd>{p.repair[lang]}</dd>
                   <dt>{L.outcome}</dt><dd>{p.outcome[lang]}</dd>
+                  <dt>{L.checked}</dt><dd>{p.checked[lang]}</dd>
                 </dl>
+                {!services && (
+                  <a class="link-arrow" href={path(p.service, lang)}>
+                    <span>{t(lang).nav[p.service]}</span>
+                    <Icon name="arrow" />
+                  </a>
+                )}
               </article>
             );
           })}
@@ -51,7 +64,7 @@ const L = ar
   )
 }
 {
-  (reviews.length > 0 || business.reviewProfileUrl) && (
+  (reviews.length > 0 || (showReviews && business.reviewProfileUrl)) && (
     <section class="section section--mist" aria-labelledby="reviews-title">
       <div class="wrap">
         <h2 id="reviews-title">{L.reviews}</h2>

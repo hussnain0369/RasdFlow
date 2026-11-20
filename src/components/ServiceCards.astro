@@ -99,7 +99,7 @@ const items = data.items.filter((i) => !keys || keys.includes(i.key as PageKey))
     height: 1.2rem;
     color: var(--blue-text);
   }
-  [dir='rtl'] a :global(.svc-arrow) {
+  :global([dir='rtl']) a :global(.svc-arrow) {
     transform: scaleX(-1);
   }
 </style>

@@ -18,9 +18,9 @@ export type SignIcon = 'usage' | 'damp' | 'fixture' | 'paint' | 'pressure' | 'so
 
 const homeEn = {
   meta: {
-    title: 'Water Leak Detection & Repair in Riyadh | LeakFix',
+    title: 'LeakFix | Water Leak Detection and Repair Services in Riyadh',
     description:
-      'LeakFix provides water leak detection and repair in Riyadh. Enquire about hidden leaks, leaking pipes and water-related property damage.',
+      'LeakFix finds and repairs water leaks in Riyadh homes and businesses: hidden and underground leaks, leaking pipes and connections. Call or WhatsApp to arrange a visit.',
   },
   eyebrow: 'Water leak services in Riyadh',
   h1: 'Water Leak Detection & Repair in Riyadh',
@@ -117,9 +117,9 @@ type Home = typeof homeEn;
 
 const homeAr: Home = {
   meta: {
-    title: 'كشف تسربات المياه وإصلاحها في الرياض | LeakFix',
+    title: 'LeakFix | خدمات كشف وإصلاح تسربات المياه في الرياض',
     description:
-      'تقدّم LeakFix خدمة كشف تسربات المياه وإصلاحها في الرياض. استفسر عن التسربات المخفية وتسرب المواسير والأضرار التي تسببها المياه في عقارك.',
+      'LeakFix تكشف تسربات المياه وتصلحها في منازل ومنشآت الرياض: التسربات المخفية وتحت الأرض وتسرب المواسير والوصلات. اتصل أو راسلنا عبر واتساب لترتيب زيارة.',
   },
   eyebrow: 'خدمات تسربات المياه في الرياض',
   h1: 'كشف تسربات المياه وإصلاحها في الرياض',
@@ -130,8 +130,8 @@ const homeAr: Home = {
   ctaPrimary: 'حدّثنا عن مشكلة التسرب',
   ctaWhatsapp: 'راسل LeakFix عبر واتساب',
   heroAlt: 'صورة توضيحية للكشف الصوتي: فنّي يرتدي سماعات ويستمع عبر حسّاس موضوع على أرضية خارج فيلا',
-  ctaCall: 'اتصل بنا',
-  ctaWa: 'واتساب',
+  ctaCall: 'اتصل الآن',
+  ctaWa: 'تواصل عبر واتساب',
   ctaContactLink: 'اكتب تفاصيل التسرب في صفحة التواصل',
   signs: {
     title: 'علامات قد تدل على وجود تسرب',
@@ -227,7 +227,7 @@ const detectionEn: ServicePage = {
   meta: {
     title: 'Water Leak Detection in Riyadh | LeakFix',
     description:
-      'Suspect a hidden water leak in Riyadh? Contact LeakFix to discuss damp patches, unusual water usage and a suitable inspection.',
+      'Water leak detection in Riyadh: signs of a hidden leak, what the inspection covers, how the fee is agreed and the checks done before any tiles or walls are opened.',
   },
   h1: 'Water Leak Detection in Riyadh',
   intro:
@@ -298,11 +298,11 @@ const detectionEn: ServicePage = {
 
 const detectionAr: ServicePage = {
   meta: {
-    title: 'كشف تسربات المياه في الرياض | LeakFix',
+    title: 'كشف تسربات المياه بالرياض | LeakFix',
     description:
-      'تشك في وجود تسرب مياه مخفي في الرياض؟ تواصل مع LeakFix لمناقشة بقع الرطوبة والاستهلاك غير المعتاد والفحص المناسب لعقارك.',
+      'كشف تسربات المياه بالرياض: علامات التسرب المخفي، وما يشمله الفحص، وكيف تُحدَّد رسومه، والفحوصات الممكنة قبل أي تكسير. تواصل مع LeakFix لترتيب زيارة.',
   },
-  h1: 'كشف تسربات المياه في الرياض',
+  h1: 'كشف تسربات المياه بالرياض',
   intro:
     'لا يكون مصدر التسرب دائمًا في المكان الذي تظهر فيه المياه؛ فالرطوبة قد تنتقل عبر المواد المحيطة، فيصعب تحديد مصدرها. تساعدك LeakFix في فحص التسربات المشتبه بها حتى تُبنى الخطوة التالية على نتائج واضحة.',
   imageAlt: 'صورة توضيحية للتصوير الحراري: فنّي يوجّه كاميرا حرارية محمولة نحو جدار حمّام عليه أثر رطوبة قرب الأرضية',
@@ -373,7 +373,7 @@ const repairEn: ServicePage = {
   meta: {
     title: 'Water Leak Repair in Riyadh | LeakFix',
     description:
-      'Arrange water leak repair in Riyadh with LeakFix. Discuss leaking pipes, damaged connections and repair requirements for your property.',
+      'Water leak repair in Riyadh: the pipework we repair, how the quote is prepared and approved, how the repair is checked afterwards, and whether finishing is included.',
   },
   h1: 'Water Leak Repair in Riyadh',
   intro:
@@ -446,11 +446,11 @@ const repairEn: ServicePage = {
 
 const repairAr: ServicePage = {
   meta: {
-    title: 'إصلاح تسربات المياه في الرياض | LeakFix',
+    title: 'إصلاح تسربات المياه بالرياض | LeakFix',
     description:
-      'رتّب إصلاح تسرب المياه في الرياض مع LeakFix. ناقش تسرب المواسير والوصلات المتضررة ومتطلبات الإصلاح في عقارك.',
+      'إصلاح تسربات المياه بالرياض: أنواع التمديدات التي نصلحها، وكيف يُعدّ عرض السعر وتتم الموافقة عليه، والفحص بعد الإصلاح، وما إذا كان التشطيب مشمولًا.',
   },
-  h1: 'إصلاح تسربات المياه في الرياض',
+  h1: 'إصلاح تسربات المياه بالرياض',
   intro:
     'بعد تحديد موقع التسرب، يجب أن يعالج الإصلاح الماسورة أو الوصلة المتضررة. تناقش LeakFix معك الأعمال المقترحة ومتطلبات الدخول والسعر قبل أن توافق على الإصلاح.',
   imageAlt: 'فنّي يشدّ وصلة محبس نحاسية أسفل مغسلة باستخدام مفتاحين',

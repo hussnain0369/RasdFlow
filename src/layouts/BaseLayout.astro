@@ -48,6 +48,7 @@ const organization = siteUrl
       areaServed: { '@type': 'City', name: 'Riyadh' },
       ...(realContact.phone ? { telephone: realContact.phone.display } : {}),
       ...(realContact.email ? { email: realContact.email.display } : {}),
+      ...(business.googleBusinessProfileUrl ? { sameAs: [business.googleBusinessProfileUrl] } : {}),
     }
   : null;
 const structured = [...(page === 'home' && organization ? [organization] : []), ...jsonLd];

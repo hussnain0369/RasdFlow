@@ -63,10 +63,18 @@ export interface BusinessConfig {
   reviews: Review[];
   /** Link to a verified public review profile (e.g. Google Business Profile). null = not shown. */
   reviewProfileUrl: string | null;
+  /** Verified inspection fee wording in Saudi riyals, e.g. { en: 'SAR 250 for a standard villa visit', ar: '...' }. null = not shown. */
+  inspectionFee: Bi | null;
+  /** Riyadh districts the business confirms it serves. Empty = coverage described as Riyadh with availability checked per enquiry. */
+  serviceDistricts: Bi[];
+  /** A redacted sample inspection report in /public, e.g. '/sample-inspection-report.pdf'. null = not linked. */
+  sampleReport: string | null;
+  /** Public Google Business Profile URL, used for structured data sameAs once verified. */
+  googleBusinessProfileUrl: string | null;
 }
 
 export type MethodKey = 'acoustic' | 'thermal' | 'pressure' | 'underground';
-type Bi = { en: string; ar: string };
+export type Bi = { en: string; ar: string };
 
 export interface ProjectExample {
   /** Only with the customer's permission. */
@@ -76,6 +84,10 @@ export interface ProjectExample {
   findings: Bi;
   repair: Bi;
   outcome: Bi;
+  /** How the result was checked, e.g. a pressure test after the repair. */
+  checked: Bi;
+  /** Service page this example belongs to. */
+  service: 'detection' | 'hidden' | 'underground' | 'repair' | 'pipeRepair';
   /** Approved job photo in src/assets/projects/. */
   photo: string | null;
   photoAlt: Bi | null;
@@ -119,6 +131,10 @@ export const business: BusinessConfig = {
   projects: [],
   reviews: [],
   reviewProfileUrl: null,
+  inspectionFee: null,
+  serviceDistricts: [],
+  sampleReport: null,
+  googleBusinessProfileUrl: null,
 };
 
 /* ---------- derived helpers (no business facts below this line) ---------- */

@@ -6,12 +6,30 @@ import Icon from '../Icon.astro';
 import RelatedLinks from '../RelatedLinks.astro';
 import { content } from '../../content/pages';
 import { path, type Lang } from '../../i18n/routes';
+import { bookingQuestions } from '../../content/services';
+import { business } from '../../config/business';
 
 interface Props {
   lang: Lang;
 }
 const { lang } = Astro.props;
 const c = content[lang].areas;
+const q = bookingQuestions[lang];
+const districts = business.serviceDistricts.map((d) => d[lang]);
+const ar = lang === 'ar';
+const coverage = ar
+  ? {
+      title: districts.length ? 'الأحياء التي نخدمها في الرياض' : 'التغطية في الرياض',
+      text: districts.length
+        ? 'نخدم حاليًا الأحياء التالية. وإذا لم يكن حيّك في القائمة، تواصل معنا للتأكد من إمكانية الزيارة.'
+        : 'نستقبل الاستفسارات من مختلف أحياء الرياض، ونؤكد إمكانية الزيارة لكل طلب حسب الحي والموعد. أرسل اسم الحي وسنرد عليك بالمواعيد المتاحة.',
+    }
+  : {
+      title: districts.length ? 'Riyadh Districts We Serve' : 'Coverage in Riyadh',
+      text: districts.length
+        ? 'We currently serve the districts below. If yours is not listed, contact us to check whether a visit can be arranged.'
+        : 'We take enquiries from across Riyadh and confirm visit availability for each request by district and timing. Send your district and we will reply with availability.',
+    };
 ---
 <BaseLayout lang={lang} page="areas" title={c.meta.title} description={c.meta.description}>
   <PageHero lang={lang} page="areas" h1={c.h1} intro={c.intro} actions={false} />
@@ -20,11 +38,18 @@ const c = content[lang].areas;
     <div class="wrap areas-grid">
       <div class="prose">
         <p class="body">{c.body}</p>
+        <h2 class="cov-title">{coverage.title}</h2>
+        <p>{coverage.text}</p>
+        {districts.length > 0 && (
+          <ul class="districts">
+            {districts.map((d) => <li>{d}</li>)}
+          </ul>
+        )}
       </div>
       <div>
-        <h2 id="include-title">{c.checklistTitle}</h2>
+        <h2 id="include-title">{q.title}</h2>
         <ul class="checklist">
-          {c.checklist.map((item) => <li><Icon name="pin" /><span>{item}</span></li>)}
+          {q.items.map((item) => <li><Icon name="pin" /><span>{item}</span></li>)}
         </ul>
       </div>
     </div>
@@ -61,6 +86,14 @@ const c = content[lang].areas;
       grid-template-columns: 1fr 1fr;
       gap: 5rem;
     }
+  }
+  .cov-title {
+    font-size: var(--step-2);
+    margin-block-start: 2rem;
+  }
+  .districts {
+    columns: 2;
+    column-gap: 2rem;
   }
   .body {
     font-size: var(--step-1);

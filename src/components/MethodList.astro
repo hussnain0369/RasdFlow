@@ -5,7 +5,7 @@ import Icon from './Icon.astro';
 import Illustration from './Illustration.astro';
 import thermalPhoto from '../assets/photos/equipment-thermal.jpg';
 import acousticPhoto from '../assets/photos/equipment-acoustic.jpg';
-import { methodsFor } from '../content/services';
+import { methodsFor, methodsSection } from '../content/services';
 import type { MethodKey } from '../config/business';
 import type { Lang } from '../i18n/routes';
 
@@ -44,6 +44,7 @@ const pics = {
   },
 } as Partial<Record<MethodKey, { src: ImageMetadata; focus: string; alt: { en: string; ar: string } }>>;
 const H = level;
+const labels = methodsSection[lang];
 ---
 {
   list.length > 0 &&
@@ -68,7 +69,15 @@ const H = level;
                   <Icon name={icons[m.key]} class="inline-icon" />
                   <span>{m.title}</span>
                 </H>
-                {m.detail.map((d) => <p>{d}</p>)}
+                <p class="m-short">{m.short}</p>
+                <dl class="m-facts">
+                  <dt>{labels.when}</dt>
+                  <dd>{m.when}</dd>
+                  <dt>{labels.tells}</dt>
+                  <dd>{m.tells}</dd>
+                  <dt>{labels.limits}</dt>
+                  <dd>{m.limits}</dd>
+                </dl>
               </div>
               {pic && (
                 <Illustration
@@ -145,6 +154,21 @@ const H = level;
   .method-text p + p,
   .method-text .m-title + p {
     margin-block-start: 0.6rem;
+  }
+  .m-short {
+    margin-block-start: 0.4rem;
+  }
+  .m-facts {
+    margin: 0.9rem 0 0;
+  }
+  .m-facts dt {
+    margin-block-start: 0.75rem;
+    font-weight: 700;
+    color: var(--navy);
+    font-size: var(--step--1);
+  }
+  .m-facts dd {
+    margin: 0.2rem 0 0;
   }
   .method .m-title {
     display: flex;

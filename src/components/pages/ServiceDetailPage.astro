@@ -6,6 +6,7 @@ import MethodList from '../MethodList.astro';
 import RelatedLinks from '../RelatedLinks.astro';
 import Faq from '../Faq.astro';
 import CtaBand from '../CtaBand.astro';
+import ProofSections from '../ProofSections.astro';
 import thermalPhoto from '../../assets/photos/equipment-thermal.jpg';
 import acousticPhoto from '../../assets/photos/equipment-acoustic.jpg';
 import repairPhoto from '../../assets/photos/repair-valve.jpg';
@@ -69,6 +70,8 @@ const service = serviceJsonLd({
       <RelatedLinks lang={lang} pages={related[kind]} />
     </div>
   </div>
+
+  <ProofSections lang={lang} services={[kind]} />
 
   <div class="faq-wrap">
     <Faq faqs={c.faqs} title={ui.faqTitle} />

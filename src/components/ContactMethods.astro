@@ -25,7 +25,7 @@ const any = contact.phone || wa || contact.email;
             <Icon name="phone" />
             <div>
               <span class="label">{ui.phoneLabel}</span>
-              <a href={contact.phone.href}><span class="ltr">{contact.phone.display}</span></a>
+              <a href={contact.phone.href} data-contact="call"><span class="ltr">{contact.phone.display}</span></a>
             </div>
           </li>
         )}
@@ -34,7 +34,7 @@ const any = contact.phone || wa || contact.email;
             <Icon name="chat" />
             <div>
               <span class="label">{ui.whatsappLabel}</span>
-              <a href={wa} rel="noopener" target="_blank"><span class="ltr">{contact.whatsapp.display}</span></a>
+              <a href={wa} data-contact="whatsapp" rel="noopener" target="_blank"><span class="ltr">{contact.whatsapp.display}</span></a>
             </div>
           </li>
         )}
@@ -43,7 +43,7 @@ const any = contact.phone || wa || contact.email;
             <Icon name="mail" />
             <div>
               <span class="label">{ui.emailLabel}</span>
-              <a href={contact.email.href}><span class="ltr">{contact.email.display}</span></a>
+              <a href={contact.email.href} data-contact="email"><span class="ltr">{contact.email.display}</span></a>
             </div>
           </li>
         )}

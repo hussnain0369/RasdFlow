@@ -27,13 +27,13 @@ const fallbackLabel = fallback === undefined ? ui.nav.contact : fallback;
   (contact.phone || wa) ? (
     <div class="btn-row">
       {contact.phone && (
-        <a class={primary} href={contact.phone.href}>
+        <a class={primary} href={contact.phone.href} data-contact="call">
           <Icon name="phone" />
           <span>{callLabel ?? ui.call}</span>
         </a>
       )}
       {wa && (
-        <a class={contact.phone ? secondary : primary} href={wa} rel="noopener" target="_blank">
+        <a class={contact.phone ? secondary : primary} href={wa} data-contact="whatsapp" rel="noopener" target="_blank">
           <Icon name="chat" />
           <span>{whatsappLabel ?? ui.whatsapp}</span>
         </a>

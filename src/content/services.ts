@@ -12,7 +12,12 @@ export interface Method {
   key: MethodKey;
   title: string;
   short: string;
-  detail: string[];
+  /** When the method is used. */
+  when: string;
+  /** What the result can tell the technician. */
+  tells: string;
+  /** What can limit it. */
+  limits: string;
 }
 
 const methodsEn: Method[] = [
@@ -20,37 +25,33 @@ const methodsEn: Method[] = [
     key: 'acoustic',
     title: 'Acoustic leak detection',
     short: 'Listening equipment picks up the sound of water escaping from pressurised pipes.',
-    detail: [
-      'Sensitive listening equipment helps identify the sound of water escaping from a pressurised pipe. The technician listens at points along the suspected pipe route and compares how the sound changes.',
-      'Pipe material, depth and background noise, such as traffic, pumps or air conditioning, can affect how clearly a leak can be heard. Results are checked against other evidence.',
-    ],
+    when: 'Used on pressurised supply pipes when the likely route of the pipe is known or can be traced, indoors or under paving.',
+    tells: 'A stronger, clearer leak sound at one point along the route suggests the leak is close to that point, which helps decide where to look more closely.',
+    limits: 'Pipe material, depth, soft ground and background noise such as traffic, pumps or air conditioning can make the sound faint or misleading. Results are checked against other tests.',
   },
   {
     key: 'thermal',
     title: 'Thermal imaging',
     short: 'An infrared camera shows surface temperature differences that can guide the inspection.',
-    detail: [
-      'An infrared camera shows temperature differences across walls, floors and ceilings. Water escaping from a pipe can change the surface temperature around it.',
-      'A temperature pattern is not proof of a leak on its own. The technician checks what the camera shows against damp signs, the likely pipe routes and other tests before identifying a likely source.',
-    ],
+    when: 'Used on walls, floors and ceilings where damp or a stain has appeared, or where hot or cold water pipes are thought to run behind the surface.',
+    tells: 'Temperature differences on the surface can show the likely path of a pipe or where moisture is spreading, which guides where to test next.',
+    limits: 'The camera only sees surface temperature. Sunlight, air conditioning, wall thickness and finishes such as marble can affect the image, and a pattern alone does not prove a leak.',
   },
   {
     key: 'pressure',
     title: 'Pressure testing',
     short: 'Monitoring an isolated pipe section shows whether that section is losing pressure.',
-    detail: [
-      'The technician isolates a suitable section of pipework and monitors its pressure under controlled conditions.',
-      'A pressure drop indicates a loss of pressure in that section, which points to a leak somewhere along it. Further checks may be needed to locate the exact point.',
-    ],
+    when: 'Used to confirm whether a section of pipework is losing water, and to check a pipe after it has been repaired.',
+    tells: 'If the pressure in an isolated section drops, that section is losing pressure, which points to a leak somewhere along it. Testing sections one by one narrows the search.',
+    limits: 'The test shows that a section is leaking, not exactly where. Valves that do not seal fully can affect the reading, so the result is confirmed before conclusions are drawn.',
   },
   {
     key: 'underground',
     title: 'Underground pipe investigation',
     short: 'Buried pipework is assessed and the search area narrowed before any digging is discussed.',
-    detail: [
-      'For buried supply pipes, the technician assesses the accessible pipework, the water meter and the suspected route of the pipe across the courtyard, garden or driveway.',
-      'Suitable tests, such as pressure testing sections and listening along the route, narrow down the search area. Only then is it discussed whether excavation or targeted access is needed, and where.',
-    ],
+    when: 'Used when the meter shows water being lost and the property has buried supply pipes under a courtyard, garden or driveway.',
+    tells: 'Combining the likely pipe route, section testing and listening narrows the search to a smaller area before any digging is discussed.',
+    limits: 'Deep pipes, unknown routes from earlier building work and hard surfaces such as concrete can make the search slower and may still require targeted access to confirm the leak.',
   },
 ];
 
@@ -59,37 +60,33 @@ const methodsAr: Method[] = [
     key: 'acoustic',
     title: 'الكشف الصوتي عن التسربات',
     short: 'أجهزة استماع تلتقط صوت تسرب المياه من المواسير المضغوطة.',
-    detail: [
-      'تساعد أجهزة الاستماع الحساسة على تمييز صوت المياه المتسربة من ماسورة تحت الضغط. يستمع الفنّي عند نقاط على امتداد المسار المتوقع للماسورة ويقارن تغيّر الصوت بينها.',
-      'تؤثر مادة الماسورة وعمقها والضوضاء المحيطة، مثل حركة السيارات أو المضخات أو المكيفات، في وضوح صوت التسرب، لذلك تُقارَن النتائج بأدلة أخرى.',
-    ],
+    when: 'يُستخدم على مواسير التغذية المضغوطة عندما يكون مسار الماسورة معروفًا أو يمكن تتبعه، داخل المبنى أو تحت البلاط.',
+    tells: 'إذا كان صوت التسرب أقوى وأوضح عند نقطة معيّنة على المسار، فهذا يشير إلى أن التسرب قريب منها، فيساعد على تحديد مكان الفحص الأدق.',
+    limits: 'تؤثر مادة الماسورة وعمقها والتربة الرخوة والضوضاء المحيطة، مثل السيارات والمضخات والمكيفات، في وضوح الصوت أو دقته، لذلك تُقارَن النتائج باختبارات أخرى.',
   },
   {
     key: 'thermal',
     title: 'التصوير الحراري',
     short: 'كاميرا تعمل بالأشعة تحت الحمراء تُظهر فروق حرارة الأسطح التي قد توجّه الفحص.',
-    detail: [
-      'تُظهر الكاميرا الحرارية فروق درجات الحرارة على الجدران والأرضيات والأسقف، فالمياه المتسربة من ماسورة قد تغيّر حرارة السطح المحيط بها.',
-      'النمط الحراري وحده لا يثبت وجود تسرب. يقارن الفنّي ما تُظهره الكاميرا بعلامات الرطوبة والمسارات المتوقعة للمواسير والاختبارات الأخرى قبل تحديد المصدر المحتمل.',
-    ],
+    when: 'يُستخدم على الجدران والأرضيات والأسقف التي ظهرت فيها رطوبة أو بقعة، أو حيث يُعتقد مرور مواسير مياه حارة أو باردة خلف السطح.',
+    tells: 'تُظهر فروق الحرارة على السطح المسار المحتمل للماسورة أو مكان انتشار الرطوبة، فتوجّه الفحص إلى المكان التالي.',
+    limits: 'الكاميرا ترى حرارة السطح فقط، وقد تتأثر الصورة بأشعة الشمس والتكييف وسماكة الجدار والتشطيبات مثل الرخام. والنمط الحراري وحده لا يثبت وجود تسرب.',
   },
   {
     key: 'pressure',
     title: 'اختبار الضغط',
     short: 'مراقبة ضغط جزء معزول من التمديدات توضّح ما إذا كان يفقد الضغط.',
-    detail: [
-      'يعزل الفنّي جزءًا مناسبًا من التمديدات ويراقب ضغطه في ظروف مضبوطة.',
-      'انخفاض الضغط يدل على فقدانه في ذلك الجزء، وهذا يشير إلى تسرب في مكان ما على امتداده. وقد تلزم فحوصات إضافية لتحديد النقطة بدقة.',
-    ],
+    when: 'يُستخدم للتأكد مما إذا كان جزء من التمديدات يفقد المياه، ولفحص الماسورة بعد إصلاحها.',
+    tells: 'إذا انخفض الضغط في جزء معزول، فهذا الجزء يفقد الضغط، مما يشير إلى تسرب في مكان ما على امتداده. واختبار الأجزاء واحدًا تلو الآخر يضيّق نطاق البحث.',
+    limits: 'يوضّح الاختبار أن الجزء يسرّب، لا موقع التسرب بالضبط. وقد تؤثر المحابس التي لا تُغلق بإحكام في القراءة، لذلك تُؤكَّد النتيجة قبل الحكم.',
   },
   {
     key: 'underground',
     title: 'فحص المواسير تحت الأرض',
     short: 'تقييم التمديدات المدفونة وتضييق نطاق البحث قبل مناقشة أي حفر.',
-    detail: [
-      'في مواسير التغذية المدفونة، يقيّم الفنّي التمديدات التي يمكن الوصول إليها وعداد المياه والمسار المتوقع للماسورة عبر الحوش أو الحديقة أو المدخل.',
-      'تُستخدم اختبارات مناسبة، مثل اختبار ضغط أجزاء من الخط والاستماع على امتداد المسار، لتضييق نطاق البحث. وبعدها فقط يُناقَش ما إذا كان الحفر أو فتح موضع محدد ضروريًا، وأين.',
-    ],
+    when: 'يُستخدم عندما يُظهر العداد فقدانًا للمياه وفي العقار مواسير تغذية مدفونة تحت الحوش أو الحديقة أو المدخل.',
+    tells: 'الجمع بين المسار المحتمل للماسورة واختبار الأجزاء والاستماع يضيّق البحث إلى مساحة أصغر قبل مناقشة أي حفر.',
+    limits: 'المواسير العميقة والمسارات غير المعروفة من أعمال بناء سابقة والأسطح الصلبة مثل الخرسانة قد تُبطئ البحث، وقد يلزم فتح موضع محدد لتأكيد التسرب.',
   },
 ];
 
@@ -104,12 +101,18 @@ export const methodsSection = {
     intro: 'The methods used depend on the property, the symptoms and the pipework. Findings from one method are checked against others before a likely source is identified.',
     link: 'More about leak detection',
     illustration: 'Illustration',
+    when: 'When it is used',
+    tells: 'What the result can tell us',
+    limits: 'What can limit it',
   },
   ar: {
     title: 'كيف نحدد تسربات المياه',
     intro: 'تعتمد الطريقة المستخدمة على العقار والأعراض والتمديدات، وتُقارَن نتائج كل طريقة بغيرها قبل تحديد المصدر المحتمل.',
     link: 'المزيد عن كشف التسربات',
     illustration: 'صورة توضيحية',
+    when: 'متى تُستخدم',
+    tells: 'ما الذي توضّحه النتيجة',
+    limits: 'ما الذي قد يحدّ منها',
   },
 } satisfies Record<Lang, unknown>;
 
@@ -202,11 +205,11 @@ export interface ServiceDetail {
 const en: Record<ServiceKey, ServiceDetail> = {
   hidden: {
     meta: {
-      title: 'Hidden Water Leak Detection in Riyadh | LeakFix',
+      title: 'Leak Detection in Walls, Floors and Ceilings, Riyadh | LeakFix',
       description:
         'Damp walls, stained ceilings or a rising water bill with no visible leak? LeakFix investigates hidden leaks inside walls, floors and ceilings in Riyadh.',
     },
-    h1: 'Hidden Water Leak Detection in Riyadh',
+    h1: 'Leak Detection in Walls, Floors and Ceilings in Riyadh',
     intro:
       'When water escapes inside a wall, under a floor or above a ceiling, the first sign is often a damp patch, a stain or a higher bill rather than the leak itself. LeakFix investigates hidden leaks so any opening can be planned around the findings.',
     image: 'thermal',
@@ -342,11 +345,11 @@ const en: Record<ServiceKey, ServiceDetail> = {
   },
   pipeRepair: {
     meta: {
-      title: 'Pipe Leak Repair in Riyadh | LeakFix',
+      title: 'Pipe and Connection Leak Repair in Riyadh | LeakFix',
       description:
         'Repair of leaking pipes, joints and connections in Riyadh. LeakFix explains the repair, access and price before work starts.',
     },
-    h1: 'Pipe Leak Repair in Riyadh',
+    h1: 'Pipe and Connection Leak Repair in Riyadh',
     intro:
       'Once a leaking pipe or connection has been found, LeakFix explains how it can be repaired, what access is needed and the price, so you can decide before any work begins.',
     image: 'repair',
@@ -412,11 +415,11 @@ const en: Record<ServiceKey, ServiceDetail> = {
 const ar: Record<ServiceKey, ServiceDetail> = {
   hidden: {
     meta: {
-      title: 'كشف التسربات المخفية بالرياض | LeakFix',
+      title: 'كشف التسربات داخل الجدران والأرضيات والأسقف بالرياض | LeakFix',
       description:
         'رطوبة في الجدران أو بقع في الأسقف أو ارتفاع في فاتورة المياه دون تسرب ظاهر؟ تفحص LeakFix التسربات المخفية داخل الجدران والأرضيات والأسقف في الرياض.',
     },
-    h1: 'كشف التسربات المخفية بالرياض',
+    h1: 'كشف التسربات داخل الجدران والأرضيات والأسقف بالرياض',
     intro:
       'عندما تتسرب المياه داخل جدار أو تحت أرضية أو فوق سقف، تكون أول علامة غالبًا بقعة رطوبة أو أثرًا أو ارتفاعًا في الفاتورة، لا التسرب نفسه. تفحص LeakFix التسربات المخفية حتى يُخطَّط لأي فتح بناءً على النتائج.',
     image: 'thermal',
@@ -552,11 +555,11 @@ const ar: Record<ServiceKey, ServiceDetail> = {
   },
   pipeRepair: {
     meta: {
-      title: 'إصلاح تسرب المواسير بالرياض | LeakFix',
+      title: 'إصلاح تسرب المواسير والوصلات بالرياض | LeakFix',
       description:
         'إصلاح تسرب المواسير والوصلات والتوصيلات في الرياض. توضّح LeakFix الإصلاح والدخول المطلوب والسعر قبل بدء العمل.',
     },
-    h1: 'إصلاح تسرب المواسير بالرياض',
+    h1: 'إصلاح تسرب المواسير والوصلات بالرياض',
     intro:
       'بعد تحديد الماسورة أو الوصلة المسرّبة، توضّح لك LeakFix طريقة إصلاحها والدخول المطلوب والسعر، لتقرر قبل بدء أي عمل.',
     image: 'repair',
@@ -642,3 +645,154 @@ export const serviceCards = {
     ],
   },
 } as const;
+
+/* ------------------------------------------------------------------
+ * Detection without breaking surfaces (main detection page, both languages).
+ * ------------------------------------------------------------------ */
+
+export function noBreakingSection(lang: Lang): Section {
+  const ar = lang === 'ar';
+  const m = business.methods;
+  const items = ar
+    ? [
+        'قراءة عداد المياه مع إغلاق جميع المخارج للتأكد من فقدان المياه.',
+        'فحص التمديدات والأدوات الصحية والتوصيلات التي يمكن الوصول إليها.',
+        ...(m.pressure ? ['اختبار ضغط أجزاء معزولة من التمديدات لمعرفة أيّها يفقد الضغط.'] : []),
+        ...(m.acoustic ? ['الاستماع على امتداد مسار الماسورة بأجهزة الكشف الصوتي.'] : []),
+        ...(m.thermal ? ['التصوير الحراري للجدران والأرضيات والأسقف.'] : []),
+      ]
+    : [
+        'Reading the water meter with every outlet closed to confirm water is being lost.',
+        'Checking accessible pipework, fixtures and connections.',
+        ...(m.pressure ? ['Pressure testing isolated sections of pipework to see which one is losing pressure.'] : []),
+        ...(m.acoustic ? ['Listening along the pipe route with acoustic equipment.'] : []),
+        ...(m.thermal ? ['Thermal imaging of walls, floors and ceilings.'] : []),
+      ];
+  const reinstate = openingSection(lang).body?.[2];
+  return ar
+    ? {
+        title: 'كشف تسربات المياه بدون تكسير',
+        body: ['يمكن إجراء كثير من الفحوصات قبل فتح أي شيء:'],
+        list: items,
+        after: [
+          'غالبًا ما تضيّق هذه الفحوصات البحث إلى مساحة صغيرة. لكن قد يلزم فتح موضع محدد عندما لا يمكن تأكيد النقطة الدقيقة من السطح، أو عندما يجب الوصول إلى الماسورة لإصلاحها، أو عندما تتعارض القراءات.',
+          'نشرح لك أي فتح ونتفق عليه معك قبل البدء، ويُحصر في المكان الذي تشير إليه النتائج.',
+          ...(reinstate ? [reinstate] : []),
+        ],
+      }
+    : {
+        title: 'Leak Detection Without Breaking Tiles or Walls',
+        body: ['Many checks can be done before anything is opened:'],
+        list: items,
+        after: [
+          'These checks often narrow the search to a small area. Targeted access may still be needed when the exact point cannot be confirmed from the surface, when the pipe has to be reached to repair it, or when the readings conflict.',
+          'Any opening is explained and agreed with you first, and kept to the area the findings point to.',
+          ...(reinstate ? [reinstate] : []),
+        ],
+      };
+}
+
+/* ------------------------------------------------------------------
+ * Charges: inspection fee (detection) and repair quote (repair).
+ * ------------------------------------------------------------------ */
+
+export function chargesSection(lang: Lang, kind: 'detection' | 'repair'): Section {
+  const ar = lang === 'ar';
+  const fee = business.inspectionFee?.[lang];
+  if (kind === 'detection') {
+    return ar
+      ? {
+          title: 'كيف تُحدَّد رسوم الفحص',
+          body: [
+            'تُؤكَّد رسوم الفحص عند الحجز وقبل الزيارة، وتعتمد على العقار والمشكلة التي وصفتها والفحوصات المتوقعة.',
+            ...(fee ? [`رسوم الفحص: ${fee}.`] : []),
+            'إذا أظهر الفحص الحاجة إلى فحص إضافي أو فتح موضع، فيُسعَّر ذلك ويُتفق عليه قبل تنفيذه. ويُقدَّم عرض سعر الإصلاح بشكل منفصل بعد ظهور النتائج.',
+          ],
+        }
+      : {
+          title: 'How the Inspection Fee Is Agreed',
+          body: [
+            'The inspection fee is confirmed when you book, before anyone visits. It depends on the property, the problem you describe and the checks likely to be needed.',
+            ...(fee ? [`Inspection fee: ${fee}.`] : []),
+            'If the inspection shows that more investigation or opening is needed, that is priced and agreed before it is done. A repair is quoted separately once the findings are known.',
+          ],
+        };
+  }
+  return ar
+    ? {
+        title: 'ما الذي يشمله عرض سعر الإصلاح',
+        list: [
+          'إصلاح الماسورة أو الوصلة المسرّبة.',
+          'القطع وأجزاء المواسير التي ستُستبدل.',
+          'أي دخول لازم للوصول إلى الماسورة.',
+          'طريقة فحص الإصلاح بعد الانتهاء.',
+        ],
+        after: [
+          'قد تكون هناك تكلفة إضافية لأعمال خارج النطاق المتفق عليه، مثل تسرب آخر يظهر أثناء الإصلاح، أو استبدال مواسير أكثر مما في العرض، أو أعمال تشطيب غير مذكورة فيه. ونوضّح لك أي إضافة ونتفق عليها قبل تنفيذها.',
+        ],
+      }
+    : {
+        title: 'What the Repair Quote Includes',
+        list: [
+          'The repair to the leaking pipe or connection.',
+          'Parts and pipe sections to be replaced.',
+          'Any access needed to reach the pipe.',
+          'How the repair will be checked afterwards.',
+        ],
+        after: [
+          'Extra cost can arise from work outside the agreed scope, such as another leak found during the repair, replacing more pipe than quoted, or finishing work not listed in the quote. Any extra is explained and agreed before it is done.',
+        ],
+      };
+}
+
+export function pipeworkSection(lang: Lang): Section {
+  return lang === 'ar'
+    ? {
+        title: 'التمديدات التي نصلحها',
+        list: [
+          'مواسير التغذية ووصلاتها داخل الجدران وتحت الأرضيات.',
+          'التوصيلات أسفل المغاسل وخلف المراحيض.',
+          'المحابس التي تسرّب.',
+          'مواسير التغذية المدفونة بعد تحديد موقع التسرب.',
+        ],
+        after: ['بعد الإصلاح يُفحص الجزء للتأكد من عدم استمرار التسرب، وقد يشمل ذلك اختبار ضغط الماسورة التي أُصلحت.'],
+      }
+    : {
+        title: 'Pipework We Repair',
+        list: [
+          'Supply pipes and fittings inside walls and under floors.',
+          'Connections under sinks and basins and behind toilets.',
+          'Leaking isolation valves.',
+          'Buried supply pipes, once the leak has been located.',
+        ],
+        after: ['After the repair, the section is checked for continuing leakage, which can include pressure testing the repaired pipe.'],
+      };
+}
+
+/** Questions LeakFix asks when an enquiry comes in (coverage and contact pages). */
+export const bookingQuestions = {
+  en: {
+    title: 'What We Ask When You Book',
+    items: [
+      'Your district in Riyadh and the property location.',
+      'Property type: villa, apartment, building or commercial premises, and which floor.',
+      'Whether the property has a ground tank, roof tank or both.',
+      'Where you see water, damp or stains, and when it started.',
+      'Whether the problem is constant or comes and goes.',
+      'Who will provide access, such as the owner, a tenant or a building manager.',
+      'Photos or a short video, if you have them.',
+    ],
+  },
+  ar: {
+    title: 'ما نسألك عنه عند الحجز',
+    items: [
+      'اسم الحي في الرياض وموقع العقار.',
+      'نوع العقار: فيلا أو شقة أو عمارة أو محل تجاري، وفي أي دور.',
+      'هل في العقار خزان أرضي أو علوي أو كلاهما.',
+      'أين تظهر المياه أو الرطوبة أو البقع، ومتى بدأت.',
+      'هل المشكلة مستمرة أم تظهر وتختفي.',
+      'من سيتيح الدخول، مثل المالك أو المستأجر أو إدارة المبنى.',
+      'صور أو مقطع فيديو قصير إن توفر.',
+    ],
+  },
+} satisfies Record<Lang, unknown>;
