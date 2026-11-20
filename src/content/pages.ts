@@ -291,7 +291,7 @@ const detectionEn: ServicePage = {
     },
   ],
   cta: {
-    title: 'Discuss a Suspected Leak',
+    title: 'Request a Leak Inspection',
     text: 'Tell us where you have noticed the problem and where the property is in Riyadh. We will talk through the next step with you.',
   },
 };
@@ -364,7 +364,7 @@ const detectionAr: ServicePage = {
     },
   ],
   cta: {
-    title: 'ناقش معنا التسرب المشتبه به',
+    title: 'اطلب فحص التسرب',
     text: 'أخبرنا أين لاحظت المشكلة وأين يقع العقار في الرياض، وسنتحدث معك عن الخطوة التالية.',
   },
 };
@@ -567,25 +567,29 @@ const aboutEn = {
   meta: {
     title: 'About LeakFix | Water Leak Services in Riyadh',
     description:
-      'LeakFix provides water leak detection and repair in Riyadh. Learn how we explain the next step and agree the work and price before proceeding.',
+      'About LeakFix: water leak detection and repair for homes and commercial properties in Riyadh, the methods we use and the team behind the work.',
   },
   h1: 'About LeakFix',
   intro:
     'LeakFix provides water leak detection and repair services in Riyadh. Our focus is straightforward: understand the reported problem, explain the proposed next step and agree the work before proceeding.',
   sections: [
     {
-      title: 'Clear Information Before a Visit',
+      title: 'What LeakFix Does',
       body: [
-        'Tell us what you have noticed and where the property is located. We will discuss visit availability and what information is needed.',
+        'LeakFix investigates and repairs water leaks in homes and commercial properties across Riyadh: leaks hidden inside walls, floors and ceilings, leaks in buried supply pipes, and leaking pipes, joints and connections.',
       ],
     },
     {
-      title: 'A Defined Scope of Work',
+      title: 'How Leaks Are Investigated',
       body: [
-        'Inspection findings and access requirements help determine the next step. Confirm the proposed work and price before authorising a repair.',
+        'LeakFix uses pressure testing, acoustic listening, thermal imaging and underground pipe investigation, choosing the checks that suit each property. The aim is to narrow down the leak before anything is opened, and to be clear about whether a finding points to a likely area or confirms the exact source.',
       ],
     },
   ] as Section[],
+  teamTitle: 'Our Team',
+  teamText:
+    'Engineer Muhammad Faisal is part of the LeakFix team and works on leak investigations and repairs. Engineer Faisal received training in Pakistan.',
+  teamLink: 'Read Engineer Muhammad Faisal\'s profile',
   contactTitle: 'Contact LeakFix',
   contactText: 'Use the contact page to enquire about a suspected or identified water leak.',
   contactLink: 'Contact LeakFix about a leak',
@@ -595,21 +599,28 @@ const aboutAr: typeof aboutEn = {
   meta: {
     title: 'من نحن | LeakFix لخدمات تسربات المياه في الرياض',
     description:
-      'تقدّم LeakFix خدمة كشف تسربات المياه وإصلاحها في الرياض. تعرّف على طريقتنا في توضيح الخطوة التالية والاتفاق على العمل والسعر قبل البدء.',
+      'تعرّف على LeakFix: كشف تسربات المياه وإصلاحها للمنازل والعقارات التجارية في الرياض، والطرق التي نستخدمها، والفريق الذي ينفّذ العمل.',
   },
   h1: 'من نحن',
   intro:
     'تقدّم LeakFix خدمات كشف تسربات المياه وإصلاحها في الرياض. وطريقتنا واضحة: نفهم المشكلة التي تصفها، ونوضّح الخطوة التالية المقترحة، ونتفق معك على العمل قبل البدء.',
   sections: [
     {
-      title: 'معلومات واضحة قبل الزيارة',
-      body: ['أخبرنا بما لاحظته وأين يقع العقار، وسنناقش معك المواعيد المتاحة والمعلومات التي نحتاجها.'],
+      title: 'ما الذي تقدّمه LeakFix',
+      body: [
+        'تفحص LeakFix تسربات المياه وتصلحها في المنازل والعقارات التجارية في أنحاء الرياض: التسربات المخفية داخل الجدران والأرضيات والأسقف، وتسربات مواسير التغذية المدفونة، وتسرب المواسير والوصلات والتوصيلات.',
+      ],
     },
     {
-      title: 'نطاق عمل محدد',
-      body: ['نتائج الفحص ومتطلبات الدخول تساعد على تحديد الخطوة التالية. تأكّد من الأعمال المقترحة والسعر قبل الموافقة على الإصلاح.'],
+      title: 'كيف نفحص التسربات',
+      body: [
+        'تستخدم LeakFix اختبار الضغط والكشف الصوتي والتصوير الحراري وفحص المواسير تحت الأرض، وتختار الفحوصات المناسبة لكل عقار. والهدف تضييق مكان التسرب قبل فتح أي شيء، وتوضيح ما إذا كانت النتيجة تشير إلى منطقة محتملة أم تؤكد المصدر بدقة.',
+      ],
     },
   ],
+  teamTitle: 'فريقنا',
+  teamText: 'المهندس محمد فيصل من فريق LeakFix، ويعمل في فحص التسربات وإصلاحها، وقد تلقّى تدريبه في باكستان.',
+  teamLink: 'اطّلع على ملف المهندس محمد فيصل',
   contactTitle: 'تواصل مع LeakFix',
   contactText: 'استخدم صفحة التواصل للاستفسار عن تسرب مياه مشتبه به أو تم تحديده.',
   contactLink: 'تواصل مع LeakFix بخصوص تسرب',

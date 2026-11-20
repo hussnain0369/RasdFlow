@@ -14,7 +14,7 @@ import { services, findingsSection, openingSection, methodsFor, type ServiceKey 
 import { path, type Lang, type PageKey } from '../../i18n/routes';
 import { t } from '../../i18n/ui';
 import { absoluteUrl, siteUrl } from '../../config/site';
-import { faqJsonLd, serviceJsonLd } from '../../lib/structured';
+import { serviceJsonLd } from '../../lib/structured';
 
 interface Props {
   lang: Lang;
@@ -44,7 +44,7 @@ const service = serviceJsonLd({
   lang,
 });
 ---
-<BaseLayout lang={lang} page={kind} title={c.meta.title} description={c.meta.description} jsonLd={[service, faqJsonLd(c.faqs, lang)]}>
+<BaseLayout lang={lang} page={kind} title={c.meta.title} description={c.meta.description} jsonLd={[service]}>
   <PageHero lang={lang} page={kind} h1={c.h1} intro={c.intro} image={img.src} imageAlt={c.imageAlt} imageFocus={img.focus} />
 
   <div class="section">

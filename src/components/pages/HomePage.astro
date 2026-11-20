@@ -17,7 +17,6 @@ import { content } from '../../content/pages';
 import { path, type Lang } from '../../i18n/routes';
 import { t } from '../../i18n/ui';
 import { contact, whatsappHref } from '../../config/business';
-import { faqJsonLd } from '../../lib/structured';
 
 interface Props {
   lang: Lang;
@@ -28,7 +27,7 @@ const ui = t(lang);
 const wa = whatsappHref(lang);
 const ms = methodsSection[lang];
 ---
-<BaseLayout lang={lang} page="home" title={c.meta.title} description={c.meta.description} jsonLd={[faqJsonLd(c.faqs, lang)]}>
+<BaseLayout lang={lang} page="home" title={c.meta.title} description={c.meta.description}>
   <section class="hero" aria-labelledby="hero-title">
     <div class="wrap hero-grid">
       <div class="hero-copy">
@@ -189,6 +188,12 @@ const ms = methodsSection[lang];
           ))
         }
       </ol>
+      <p class="steps-link">
+        <a class="link-arrow" href={path('howItWorks', lang)}>
+          <span>{ui.nav.howItWorks}</span>
+          <Icon name="arrow" />
+        </a>
+      </p>
     </div>
   </section>
 
@@ -440,6 +445,9 @@ const ms = methodsSection[lang];
     .signs {
       grid-template-columns: repeat(3, 1fr);
     }
+  }
+  .steps-link {
+    margin-block-start: 2.5rem;
   }
   .methods-link {
     margin-block-start: 2rem;

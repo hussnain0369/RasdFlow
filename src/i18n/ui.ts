@@ -25,7 +25,7 @@ export const ui = {
       privacy: 'Privacy Policy',
     } satisfies Record<PageKey, string>,
     call: 'Call LeakFix',
-    whatsapp: 'WhatsApp Us',
+    whatsapp: 'WhatsApp LeakFix',
     whatsappShort: 'WhatsApp',
     email: 'Email LeakFix',
     contactBarLabel: 'Quick contact',

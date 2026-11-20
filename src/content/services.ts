@@ -372,15 +372,6 @@ const en: Record<ServiceKey, ServiceDetail> = {
         ],
       },
       {
-        title: 'What Is Agreed Before Work Starts',
-        list: [
-          'The leak being repaired and the proposed repair.',
-          'Any opening of walls, floors or ground needed for access.',
-          'Parts or pipe sections to be replaced.',
-          'The scope and the price.',
-        ],
-      },
-      {
         title: 'Checking the Repair',
         body: [
           'After the repair, the section is checked for continuing leakage in a way that suits the work, which can include pressure testing the repaired pipe. Anything still unresolved is explained.',
@@ -582,15 +573,6 @@ const ar: Record<ServiceKey, ServiceDetail> = {
         ],
       },
       {
-        title: 'ما يُتفق عليه قبل بدء العمل',
-        list: [
-          'التسرب المراد إصلاحه والإصلاح المقترح.',
-          'أي فتح للجدران أو الأرضيات أو الأرض لازم للوصول.',
-          'القطع أو أجزاء المواسير التي ستُستبدل.',
-          'نطاق العمل والسعر.',
-        ],
-      },
-      {
         title: 'التأكد من الإصلاح',
         body: [
           'بعد الإصلاح، يُفحص الجزء للتأكد من عدم استمرار التسرب بالطريقة المناسبة للعمل، وقد يشمل ذلك اختبار ضغط الماسورة التي أُصلحت. وأي أمر لم يُحَل نوضّحه لك.',
@@ -726,6 +708,7 @@ export function chargesSection(lang: Lang, kind: 'detection' | 'repair'): Sectio
           'القطع وأجزاء المواسير التي ستُستبدل.',
           'أي دخول لازم للوصول إلى الماسورة.',
           'طريقة فحص الإصلاح بعد الانتهاء.',
+          'هل يشمل العمل تشطيب الأسطح التي فُتحت.',
         ],
         after: [
           'قد تكون هناك تكلفة إضافية لأعمال خارج النطاق المتفق عليه، مثل تسرب آخر يظهر أثناء الإصلاح، أو استبدال مواسير أكثر مما في العرض، أو أعمال تشطيب غير مذكورة فيه. ونوضّح لك أي إضافة ونتفق عليها قبل تنفيذها.',
@@ -738,6 +721,7 @@ export function chargesSection(lang: Lang, kind: 'detection' | 'repair'): Sectio
           'Parts and pipe sections to be replaced.',
           'Any access needed to reach the pipe.',
           'How the repair will be checked afterwards.',
+          'Whether finishing of any opened surfaces is included.',
         ],
         after: [
           'Extra cost can arise from work outside the agreed scope, such as another leak found during the repair, replacing more pipe than quoted, or finishing work not listed in the quote. Any extra is explained and agreed before it is done.',
@@ -755,7 +739,6 @@ export function pipeworkSection(lang: Lang): Section {
           'المحابس التي تسرّب.',
           'مواسير التغذية المدفونة بعد تحديد موقع التسرب.',
         ],
-        after: ['بعد الإصلاح يُفحص الجزء للتأكد من عدم استمرار التسرب، وقد يشمل ذلك اختبار ضغط الماسورة التي أُصلحت.'],
       }
     : {
         title: 'Pipework We Repair',
@@ -765,7 +748,6 @@ export function pipeworkSection(lang: Lang): Section {
           'Leaking isolation valves.',
           'Buried supply pipes, once the leak has been located.',
         ],
-        after: ['After the repair, the section is checked for continuing leakage, which can include pressure testing the repaired pipe.'],
       };
 }
 

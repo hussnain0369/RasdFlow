@@ -131,6 +131,19 @@ for (const [url, html] of pages) {
   }
 }
 
+if (indexable) {
+  for (const [url, html] of pages) {
+    for (const marker of ['5X XXX XXXX', 'info@leakfix.example', 'trial-contact', 'Trial preview', 'نسخة تجريبية']) {
+      if (html.includes(marker)) fail(url, `production build contains placeholder "${marker}"`);
+    }
+  }
+  // Launch gate: an indexable build must offer at least one real way to call or message LeakFix.
+  const home = pages.get(`${base}/`) ?? '';
+  if (!/href="(tel:|https:\/\/wa\.me\/)/.test(home)) {
+    problems.push('Production build has no telephone or WhatsApp link: set phone/whatsapp in src/config/business.ts before launch.');
+  }
+}
+
 console.log(`Checked ${pages.size} pages in ${root}. Indexable build: ${indexable ? 'yes' : 'no'}.`);
 if (problems.length) {
   console.error(problems.map((p) => ` - ${p}`).join('\n'));

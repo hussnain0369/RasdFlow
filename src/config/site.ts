@@ -16,7 +16,8 @@ export const siteUrl = rawSiteUrl ? rawSiteUrl.replace(/\/+$/, '') : undefined;
  * Every other build (local, preview, staging) is served with noindex and a
  * robots.txt that disallows crawling.
  */
-export const indexable = Boolean(siteUrl) && env('DEPLOY_ENV') === 'production';
+export const isProduction = env('DEPLOY_ENV') === 'production';
+export const indexable = Boolean(siteUrl) && isProduction;
 
 /** The enquiry form is shown only when a delivery service is fully configured. */
 export const enquiryDelivery = {

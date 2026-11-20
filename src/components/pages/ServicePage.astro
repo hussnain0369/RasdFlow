@@ -16,7 +16,7 @@ import { business } from '../../config/business';
 import { path, type Lang } from '../../i18n/routes';
 import { t } from '../../i18n/ui';
 import { absoluteUrl, siteUrl } from '../../config/site';
-import { faqJsonLd, serviceJsonLd } from '../../lib/structured';
+import { serviceJsonLd } from '../../lib/structured';
 
 interface Props {
   lang: Lang;
@@ -28,12 +28,15 @@ const ui = t(lang);
 const detection = kind === 'detection';
 const image = detection ? thermalPhoto : repairPhoto;
 const m = methodsSection[lang];
+// The detailed customer process lives on How It Works; hub pages keep only what is specific to them.
 const before = detection
-  ? [...c.sections.slice(0, 3), chargesSection(lang, 'detection')]
-  : [pipeworkSection(lang), ...c.sections, chargesSection(lang, 'repair')];
+  ? [c.sections[0], c.sections[2], chargesSection(lang, 'detection')]
+  : [pipeworkSection(lang), c.sections[0], c.sections[1], chargesSection(lang, 'repair')];
 const after = detection
-  ? [noBreakingSection(lang), ...c.sections.slice(3), findingsSection(lang)]
-  : [openingSection(lang)];
+  ? [noBreakingSection(lang), findingsSection(lang)]
+  : [c.sections[3], openingSection(lang)];
+// Repair has no methods block between the two groups, so it renders as one run.
+const first = detection ? before : [...before, ...after];
 const report = detection && business.sampleReport;
 const reportLabel = lang === 'ar' ? 'اطّلع على نموذج تقرير فحص (بعد حذف بيانات العميل)' : 'See a sample inspection report (customer details removed)';
 const service = serviceJsonLd({ name: c.h1, description: c.meta.description, url: absoluteUrl(path(kind, lang)), siteUrl, lang });
@@ -41,12 +44,12 @@ const specificTitle = detection
   ? lang === 'ar' ? 'خدمات كشف متخصصة' : 'Specific Detection Services'
   : lang === 'ar' ? 'خدمة إصلاح متخصصة' : 'Specific Repair Service';
 ---
-<BaseLayout lang={lang} page={kind} title={c.meta.title} description={c.meta.description} jsonLd={[service, faqJsonLd(c.faqs, lang)]}>
+<BaseLayout lang={lang} page={kind} title={c.meta.title} description={c.meta.description} jsonLd={[service]}>
   <PageHero lang={lang} page={kind} h1={c.h1} intro={c.intro} image={image} imageAlt={c.imageAlt} imageFocus={detection ? '62% 45%' : '45% 50%'} />
 
-  <div class="section">
+  <div class:list={['section', { 'section--joined': !detection }]}>
     <div class="wrap">
-      <Sections sections={before} idPrefix="a" />
+      <Sections sections={first} idPrefix="a" />
     </div>
   </div>
 
@@ -66,7 +69,7 @@ const specificTitle = detection
 
   <div class="section">
     <div class="wrap">
-      <Sections sections={after} idPrefix="b" />
+      {detection && <Sections sections={after} idPrefix="b" />}
       {report && (
         <p class="report">
           <a class="link-arrow" href={report}>
@@ -93,6 +96,9 @@ const specificTitle = detection
 <style>
   .section {
     padding-block-end: var(--space-section);
+  }
+  .section--joined {
+    padding-block-end: 0;
   }
   .report {
     padding-block: 0 2rem;

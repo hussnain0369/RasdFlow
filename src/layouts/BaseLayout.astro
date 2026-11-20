@@ -10,6 +10,7 @@ import { t } from '../i18n/ui';
 import { absoluteUrl, indexable, siteUrl } from '../config/site';
 import { business, contact, realContact, isDemoContact } from '../config/business';
 import TrialNotice from '../components/TrialNotice.astro';
+import { breadcrumbJsonLd } from '../lib/structured';
 
 interface Props {
   lang: Lang;
@@ -51,7 +52,19 @@ const organization = siteUrl
       ...(business.googleBusinessProfileUrl ? { sameAs: [business.googleBusinessProfileUrl] } : {}),
     }
   : null;
-const structured = [...(page === 'home' && organization ? [organization] : []), ...jsonLd];
+// Breadcrumbs mirror the visible trail: Home > (About >) page.
+const trail = page && page !== 'home' && siteUrl
+  ? [
+      { name: ui.breadcrumbHome, url: absoluteUrl(path('home', lang))! },
+      ...(page === 'engineer' ? [{ name: ui.nav.about, url: absoluteUrl(path('about', lang))! }] : []),
+      { name: ui.nav[page], url: absoluteUrl(path(page, lang))! },
+    ]
+  : null;
+const structured = [
+  ...(page === 'home' && organization ? [organization] : []),
+  ...jsonLd,
+  ...(trail ? [breadcrumbJsonLd(trail)] : []),
+];
 const fabCount = [contact.phone, contact.whatsapp, contact.email].filter(Boolean).length;
 const fabCountMobile = [contact.phone, contact.whatsapp].filter(Boolean).length;
 ---

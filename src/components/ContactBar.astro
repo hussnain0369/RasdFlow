@@ -130,7 +130,8 @@ const wa = whatsappHref(lang);
   .bottom-bar {
     display: none;
   }
-  @media (max-width: 47.99rem) {
+  /* Bottom bar up to 1360px (where the full menu also appears); floating buttons only where the margins are wide */
+  @media (max-width: 84.99rem) {
     .fab-stack {
       display: none;
     }
@@ -174,9 +175,17 @@ const wa = whatsappHref(lang);
       background: #138b4f;
     }
   }
-  @media (min-width: 64rem) {
+  @media (min-width: 48rem) and (max-width: 84.99rem) {
+    .bottom-bar {
+      justify-content: center;
+    }
+    .bottom-bar a {
+      flex: 0 1 15rem;
+    }
+  }
+  @media (min-width: 85rem) {
     .fab-stack {
-      inset-inline-end: 1.5rem;
+      inset-inline-end: 1rem;
       inset-block-end: 1.5rem;
     }
   }

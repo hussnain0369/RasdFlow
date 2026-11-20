@@ -92,3 +92,19 @@ The website has no analytics or trackers installed. Every Call, WhatsApp and ema
 - A redacted sample inspection report, if LeakFix issues reports.
 - Engineer's photo, qualification, experience and training provider.
 - Customer reviews with permission, or the verified review profile URL.
+
+---
+
+## 6. Photos to replace the illustrations
+
+All current photos are generated illustrations and are labelled "Illustration" on the site. Genuine photos, approved by the people shown, would add the most credibility here:
+
+| Where | Current image | Genuine photo to supply |
+| --- | --- | --- |
+| Homepage hero, Underground page | Acoustic listening (illustration) | A LeakFix technician listening along a buried pipe route in a Riyadh courtyard |
+| Leak Detection hero, Walls & Floors page | Thermal camera (illustration) | The thermal camera LeakFix uses, pointed at a damp wall, ideally with the screen visible |
+| Leak Repair and Pipe Repair pages, coverage section | Valve repair (illustration) | A real repair in progress: the opened area, the replaced fitting or pipe section |
+| Water Leak Guide | Torch inspection (illustration) | A technician checking a water meter or under-sink connections |
+| Our Engineer page | No photo (text-only profile) | A professional portrait of Engineer Muhammad Faisal, approved by him |
+| Pressure testing (no image yet) | — | The pressure gauge connected to an isolated pipe section |
+| Completed work section (hidden) | — | Before/after photos for up to three jobs, with the customer's permission and no identifying property details |

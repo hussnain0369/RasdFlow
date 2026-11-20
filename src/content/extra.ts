@@ -24,19 +24,27 @@ const engineerEn: EngineerPage = {
   },
   h1: 'Engineer Muhammad Faisal',
   intro:
-    'Engineer Muhammad Faisal is part of the LeakFix team, working on water leak detection and repair for properties in Riyadh. Engineer Faisal received training in Pakistan.',
+    "Engineer Muhammad Faisal works on LeakFix's water leak investigations and repairs in Riyadh, and received training in Pakistan.",
   role: 'Engineer, LeakFix',
   facts: [],
   sections: [
     {
-      title: 'On a LeakFix Inspection',
+      title: 'Role in Leak Investigations',
       body: [
-        'Engineer Faisal starts from what the property owner or tenant has noticed, then checks the water meter and the pipework that can be reached. The detection methods are chosen to suit the property and the symptoms, and the findings are explained in plain language before any further work is agreed.',
+        'On an inspection, Engineer Faisal reviews what the owner or tenant has reported, checks the water meter and the pipework that can be reached, and decides which tests suit the property. Results from different tests are compared before reaching a conclusion.',
       ],
     },
     {
-      title: 'Training',
-      body: ['Engineer Faisal received training in Pakistan.'],
+      title: 'Explaining the Findings',
+      body: [
+        'Customers are told whether the findings point to a likely leak area or confirm the exact source, what remains uncertain, and what the next step would involve, such as targeted access or a repair.',
+      ],
+    },
+    {
+      title: 'Repairs',
+      body: [
+        'Engineer Faisal also works on the repairs that follow an inspection, including checking the repaired section afterwards for continuing leakage.',
+      ],
     },
   ],
   cta: {
@@ -54,19 +62,27 @@ const engineerAr: EngineerPage = {
   },
   h1: 'المهندس محمد فيصل',
   intro:
-    'المهندس محمد فيصل من فريق LeakFix، ويعمل في كشف تسربات المياه وإصلاحها للعقارات في الرياض. وقد تلقّى المهندس فيصل تدريبه في باكستان.',
+    'يعمل المهندس محمد فيصل في فحص تسربات المياه وإصلاحها لدى LeakFix في الرياض، وقد تلقّى تدريبه في باكستان.',
   role: 'مهندس، LeakFix',
   facts: [],
   sections: [
     {
-      title: 'خلال فحص LeakFix',
+      title: 'دوره في فحص التسربات',
       body: [
-        'يبدأ المهندس فيصل مما لاحظه مالك العقار أو المستأجر، ثم يفحص عداد المياه والتمديدات التي يمكن الوصول إليها. وتُختار طرق الكشف بما يناسب العقار والأعراض، وتُشرح النتائج بلغة واضحة قبل الاتفاق على أي عمل إضافي.',
+        'خلال الفحص، يراجع المهندس فيصل ما أبلغ عنه المالك أو المستأجر، ويفحص عداد المياه والتمديدات التي يمكن الوصول إليها، ويحدد الاختبارات المناسبة للعقار. وتُقارَن نتائج الاختبارات المختلفة قبل الوصول إلى استنتاج.',
       ],
     },
     {
-      title: 'التدريب',
-      body: ['تلقّى المهندس فيصل تدريبه في باكستان.'],
+      title: 'شرح النتائج',
+      body: [
+        'يوضّح للعميل ما إذا كانت النتائج تشير إلى منطقة تسرب محتملة أم تؤكد المصدر بدقة، وما الذي ما يزال غير مؤكد، وما الخطوة التالية، مثل فتح موضع محدد أو الإصلاح.',
+      ],
+    },
+    {
+      title: 'الإصلاح',
+      body: [
+        'ويعمل المهندس فيصل أيضًا في الإصلاحات التي تلي الفحص، ومنها فحص الجزء الذي أُصلح بعد ذلك للتأكد من عدم استمرار التسرب.',
+      ],
     },
   ],
   cta: {

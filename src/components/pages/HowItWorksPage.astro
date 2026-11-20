@@ -7,7 +7,6 @@ import repairPhoto from '../../assets/photos/repair-valve.jpg';
 import { extra } from '../../content/extra';
 import type { Lang } from '../../i18n/routes';
 import { t } from '../../i18n/ui';
-import { faqJsonLd } from '../../lib/structured';
 
 interface Props {
   lang: Lang;
@@ -16,7 +15,7 @@ const { lang } = Astro.props;
 const c = extra[lang].howItWorks;
 const ui = t(lang);
 ---
-<BaseLayout lang={lang} page="howItWorks" title={c.meta.title} description={c.meta.description} jsonLd={[faqJsonLd(c.faqs, lang)]}>
+<BaseLayout lang={lang} page="howItWorks" title={c.meta.title} description={c.meta.description}>
   <PageHero lang={lang} page="howItWorks" h1={c.h1} intro={c.intro} image={repairPhoto} imageAlt={c.imageAlt} />
 
   <section class="section" aria-label={c.h1}>

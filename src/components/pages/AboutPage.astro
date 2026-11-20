@@ -3,7 +3,6 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import PageHero from '../PageHero.astro';
 import Sections from '../Sections.astro';
 import Icon from '../Icon.astro';
-import EngineerTeaser from '../EngineerTeaser.astro';
 import { content } from '../../content/pages';
 import { path, type Lang } from '../../i18n/routes';
 
@@ -21,9 +20,16 @@ const sections = [
   <div class="section">
     <div class="wrap">
       <Sections sections={sections} />
-      <div class="team">
-        <EngineerTeaser lang={lang} />
-      </div>
+      <section class="row-contact" aria-labelledby="about-team">
+        <h2 id="about-team">{c.teamTitle}</h2>
+        <div>
+          <p>{c.teamText}</p>
+          <a class="link-arrow" href={path('engineer', lang)}>
+            <span>{c.teamLink}</span>
+            <Icon name="arrow" />
+          </a>
+        </div>
+      </section>
       <section class="row-contact" aria-labelledby="about-contact">
         <h2 id="about-contact">{c.contactTitle}</h2>
         <div>
@@ -39,9 +45,6 @@ const sections = [
 </BaseLayout>
 
 <style>
-  .team {
-    padding-block: 1rem 2.75rem;
-  }
   .row-contact {
     display: grid;
     gap: 1.25rem;

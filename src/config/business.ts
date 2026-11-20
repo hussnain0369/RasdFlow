@@ -1,3 +1,5 @@
+import { isProduction } from './site';
+
 /**
  * LeakFix business configuration — the single source of truth for business facts.
  *
@@ -154,8 +156,9 @@ export interface ContactMethod {
 
 /** Link target for trial placeholders; a script opens the trial notice instead. */
 export const DEMO_HREF = '#trial-contact';
+/** Placeholders never reach a production build, whatever demoContact says. */
 const demo = (display: string): ContactMethod | null =>
-  business.demoContact ? { href: DEMO_HREF, display, demo: true } : null;
+  business.demoContact && !isProduction ? { href: DEMO_HREF, display, demo: true } : null;
 
 export const contact: Record<'phone' | 'whatsapp' | 'email', ContactMethod | null> = {
   phone: isInternational(business.phone)
