@@ -92,6 +92,12 @@ const ms = methodsSection[lang];
     </div>
   </section>
 
+  <section class="engineer-band">
+    <div class="wrap">
+      <EngineerTeaser lang={lang} />
+    </div>
+  </section>
+
   <section class="section section--mist" aria-labelledby="signs-title">
     <div class="wrap">
       <div class="section-head">
@@ -210,12 +216,6 @@ const ms = methodsSection[lang];
   </section>
 
   <ProofSections lang={lang} />
-
-  <section class="section section--mist engineer-band">
-    <div class="wrap">
-      <EngineerTeaser lang={lang} />
-    </div>
-  </section>
 
   <Faq faqs={c.faqs} title={ui.faqTitle} />
 
@@ -384,6 +384,12 @@ const ms = methodsSection[lang];
       aspect-ratio: 5 / 6;
       object-position: 48% 50%;
     }
+  }
+
+  /* ---------- Engineer, directly under the hero ---------- */
+  .engineer-band {
+    padding-block: clamp(1.75rem, 1.25rem + 2vw, 3rem);
+    background: var(--white);
   }
 
   /* ---------- Signs ---------- */
