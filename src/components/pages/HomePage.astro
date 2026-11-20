@@ -307,6 +307,18 @@ const wa = whatsappHref(lang);
     object-position: 50% 50%;
     border-radius: var(--radius-m);
   }
+  /* Phones and tablets: blue panel for the text, then the photo edge to edge at its foot */
+  @media (max-width: 63.99rem) {
+    .hero {
+      padding-block-end: 0;
+    }
+    .hero-media {
+      margin-inline: calc(-1 * var(--gutter));
+    }
+    .hero-media :global(.hero-img) {
+      border-radius: 0;
+    }
+  }
   @media (min-width: 64rem) {
     .hero-grid {
       grid-template-columns: 1.1fr 1fr;
