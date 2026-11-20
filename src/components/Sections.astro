@@ -4,14 +4,16 @@ interface Props {
   sections: Section[];
   /** Index of the section after whose text the default slot is rendered. */
   slotAfter?: number;
+  /** Unique per page when Sections is used more than once. */
+  idPrefix?: string;
 }
-const { sections, slotAfter = -1 } = Astro.props;
+const { sections, slotAfter = -1, idPrefix = 's' } = Astro.props;
 ---
 <div class="sections">
   {
     sections.map((s, i) => (
-      <section class="row" aria-labelledby={`s-${i}`}>
-        <h2 id={`s-${i}`}>{s.title}</h2>
+      <section class="row" aria-labelledby={`${idPrefix}-${i}`}>
+        <h2 id={`${idPrefix}-${i}`}>{s.title}</h2>
         <div class="prose">
           {s.body?.map((p) => <p>{p}</p>)}
           {s.list && (

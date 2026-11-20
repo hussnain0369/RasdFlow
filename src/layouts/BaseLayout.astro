@@ -52,9 +52,10 @@ const organization = siteUrl
   : null;
 const structured = [...(page === 'home' && organization ? [organization] : []), ...jsonLd];
 const fabCount = [contact.phone, contact.whatsapp, contact.email].filter(Boolean).length;
+const fabCountMobile = [contact.phone, contact.whatsapp].filter(Boolean).length;
 ---
 <!doctype html>
-<html lang={lang} dir={dir} class:list={['no-js', { 'has-contact-bar': fabCount > 0 }]} style={fabCount ? `--fab-count: ${fabCount}` : undefined}>
+<html lang={lang} dir={dir} class:list={['no-js', { 'has-contact-bar': fabCount > 0 }]} style={fabCount ? `--fab-count: ${fabCount}; --fab-count-m: ${fabCountMobile}` : undefined}>
   <head>
     <meta charset="utf-8" />
     <script is:inline>document.documentElement.classList.replace('no-js', 'js');</script>

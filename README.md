@@ -43,8 +43,16 @@ SITE_URL=https://www.example.com DEPLOY_ENV=production npm run build && npm run 
 | URL map | `src/i18n/routes.ts` |
 | Photos and logo | `src/assets/` |
 
-English pages (10): `/`, `/water-leak-detection/`, `/water-leak-repair/`, `/how-it-works/`, `/water-leak-guide/`, `/areas-we-cover/`, `/about/`, `/our-engineer/`, `/contact/`, `/privacy-policy/`.
+English pages (13): `/`, `/water-leak-detection/`, `/hidden-water-leak-detection/`, `/underground-water-leak-detection/`, `/water-leak-repair/`, `/pipe-leak-repair/`, `/how-it-works/`, `/water-leak-guide/`, `/areas-we-cover/`, `/about/`, `/our-engineer/`, `/contact/`, `/privacy-policy/`.
 Arabic pages use the same paths under `/ar/`. Each page links to its equivalent through the language switcher and reciprocal `hreflang` tags.
+
+## Confirmed content switches (`src/config/business.ts`)
+
+- `methods`: detection methods the owner has confirmed (acoustic, thermal, pressure testing, underground investigation). A method set to `false` disappears from every page.
+- `reinstatement`: `null` until confirmed; the copy then says reinstatement is set out in each job's agreed scope. Set `'included'` or `'separate'` once decided.
+- `projects` and `reviews`: completed-work examples and customer reviews, published only with permission. Both sections stay hidden while empty. `reviewProfileUrl` links a verified review profile.
+- `engineer`: verified details only. Add `photo` (in `src/assets/team/`), `qualification`, `experience` and `trainingProvider` when confirmed; until then the profile is text only.
+- All supplied photos are generated images and are labelled "Illustration" on the page. Replace them with genuine job photos when available.
 
 ## How missing information is handled
 

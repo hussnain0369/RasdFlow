@@ -32,7 +32,9 @@
 
   --radius-s: 4px;
   --radius-m: 8px;
-  --space-section: clamp(4rem, 3rem + 4vw, 7rem);
+  --space-section: clamp(3rem, 2rem + 4vw, 7rem);
+  /* Lead paragraphs: 17px on phones, 20px on desktop */
+  --step-lede: clamp(1.0625rem, 0.95rem + 0.55vw, 1.25rem);
   --gutter: clamp(1rem, 0.5rem + 2.5vw, 2.5rem);
   --max: 76rem;
   /* Height taken by the floating contact buttons; the footer reserves it. */
@@ -40,6 +42,12 @@
   --contact-bar-h: calc(var(--fab-count) * 4.25rem + 1rem);
 
   color-scheme: light;
+}
+@media (max-width: 47.99rem) {
+  :root {
+    /* Bottom contact bar on phones: 3rem buttons + 1rem padding + safe area */
+    --contact-bar-h: calc(min(var(--fab-count-m, 0), 1) * (4.25rem + env(safe-area-inset-bottom, 0px)));
+  }
 }
 
 *,
@@ -78,7 +86,7 @@ body {
 :lang(ar) body,
 body:lang(ar) {
   font-family: var(--font-ar);
-  line-height: 1.85;
+  line-height: 1.8;
 }
 
 h1,
@@ -193,7 +201,7 @@ img {
 }
 
 .lede {
-  font-size: var(--step-1);
+  font-size: var(--step-lede);
   line-height: 1.55;
   color: var(--ink);
   max-width: 38rem;
@@ -319,11 +327,11 @@ img {
 }
 .section-head {
   max-width: 42rem;
-  margin-block-end: clamp(2rem, 1.5rem + 2vw, 3.5rem);
+  margin-block-end: clamp(1.75rem, 1.25rem + 2vw, 3.5rem);
 }
 .section-head p {
-  margin-block-start: 1rem;
-  font-size: var(--step-1);
+  margin-block-start: 0.85rem;
+  font-size: var(--step-lede);
   line-height: 1.55;
 }
 
@@ -341,11 +349,11 @@ img {
   align-items: flex-start;
   justify-content: space-between;
   gap: 1.5rem;
-  padding-block: 1.25rem;
+  padding-block: 1.1rem;
   cursor: pointer;
   list-style: none;
   font-weight: 650;
-  font-size: var(--step-1);
+  font-size: clamp(1.0625rem, 1rem + 0.3vw, 1.25rem);
   color: var(--navy);
   line-height: 1.35;
 }

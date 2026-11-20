@@ -1,5 +1,4 @@
 ---
-import EngineerBadge from './EngineerBadge.astro';
 import Icon from './Icon.astro';
 import { engineerTeaser } from '../content/extra';
 import { path, type Lang } from '../i18n/routes';
@@ -11,7 +10,6 @@ const { lang } = Astro.props;
 const c = engineerTeaser[lang];
 ---
 <section class="teaser" aria-labelledby="engineer-teaser">
-  <EngineerBadge lang={lang} size="s" />
   <div>
     <h2 id="engineer-teaser">{c.title}</h2>
     <p>{c.text}</p>
@@ -25,9 +23,6 @@ const c = engineerTeaser[lang];
 <style>
   .teaser {
     display: grid;
-    grid-template-columns: auto 1fr;
-    gap: 1.75rem;
-    align-items: center;
     padding: clamp(1.5rem, 1rem + 2vw, 2.5rem);
     border: 1px solid var(--line);
     border-inline-start: 6px solid var(--blue);
@@ -41,10 +36,5 @@ const c = engineerTeaser[lang];
   p {
     margin-block: 0.6rem 1rem;
     max-width: 40rem;
-  }
-  @media (max-width: 30rem) {
-    .teaser {
-      grid-template-columns: 1fr;
-    }
   }
 </style>

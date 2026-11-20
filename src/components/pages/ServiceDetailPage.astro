@@ -1,0 +1,90 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHero from '../PageHero.astro';
+import Sections from '../Sections.astro';
+import MethodList from '../MethodList.astro';
+import RelatedLinks from '../RelatedLinks.astro';
+import Faq from '../Faq.astro';
+import CtaBand from '../CtaBand.astro';
+import thermalPhoto from '../../assets/photos/equipment-thermal.jpg';
+import acousticPhoto from '../../assets/photos/equipment-acoustic.jpg';
+import repairPhoto from '../../assets/photos/repair-valve.jpg';
+import { services, findingsSection, openingSection, methodsFor, type ServiceKey } from '../../content/services';
+import { path, type Lang, type PageKey } from '../../i18n/routes';
+import { t } from '../../i18n/ui';
+import { absoluteUrl, siteUrl } from '../../config/site';
+import { faqJsonLd, serviceJsonLd } from '../../lib/structured';
+
+interface Props {
+  lang: Lang;
+  kind: ServiceKey;
+}
+const { lang, kind } = Astro.props;
+const c = services[lang][kind];
+const ui = t(lang);
+const images = {
+  thermal: { src: thermalPhoto, focus: '62% 45%' },
+  acoustic: { src: acousticPhoto, focus: '40% 60%' },
+  repair: { src: repairPhoto, focus: '45% 50%' },
+};
+const img = images[c.image];
+const tail = [...c.tail, ...(c.detection ? [findingsSection(lang)] : []), openingSection(lang)];
+const hasMethods = methodsFor(lang, c.methods).length > 0;
+const related: Record<ServiceKey, PageKey[]> = {
+  hidden: ['detection', 'underground', 'pipeRepair', 'areas', 'contact'],
+  underground: ['detection', 'hidden', 'pipeRepair', 'areas', 'contact'],
+  pipeRepair: ['repair', 'hidden', 'underground', 'areas', 'contact'],
+};
+const service = serviceJsonLd({
+  name: c.h1,
+  description: c.meta.description,
+  url: absoluteUrl(path(kind, lang)),
+  siteUrl,
+  lang,
+});
+---
+<BaseLayout lang={lang} page={kind} title={c.meta.title} description={c.meta.description} jsonLd={[service, faqJsonLd(c.faqs, lang)]}>
+  <PageHero lang={lang} page={kind} h1={c.h1} intro={c.intro} image={img.src} imageAlt={c.imageAlt} imageFocus={img.focus} />
+
+  <div class="section">
+    <div class="wrap">
+      <Sections sections={c.lead} idPrefix="lead" />
+    </div>
+  </div>
+
+  {
+    hasMethods && (
+      <section class="section section--mist" aria-labelledby="methods-title">
+        <div class="wrap">
+          <h2 id="methods-title" class="methods-title">{c.methodsTitle}</h2>
+          <MethodList lang={lang} keys={c.methods} variant="full" />
+        </div>
+      </section>
+    )
+  }
+
+  <div class="section">
+    <div class="wrap">
+      <Sections sections={tail} idPrefix="tail" />
+      <RelatedLinks lang={lang} pages={related[kind]} />
+    </div>
+  </div>
+
+  <div class="faq-wrap">
+    <Faq faqs={c.faqs} title={ui.faqTitle} />
+  </div>
+
+  <CtaBand lang={lang} title={c.cta.title} text={c.cta.text} />
+</BaseLayout>
+
+<style>
+  .section {
+    padding-block-end: var(--space-section);
+  }
+  .methods-title {
+    margin-block-end: 2rem;
+  }
+  .faq-wrap {
+    border-block-start: 1px solid var(--line);
+  }
+</style>

@@ -1,0 +1,105 @@
+---
+import Icon from './Icon.astro';
+import { serviceCards } from '../content/services';
+import { path, type Lang, type PageKey } from '../i18n/routes';
+import { t } from '../i18n/ui';
+
+interface Props {
+  lang: Lang;
+  keys?: PageKey[];
+  title?: string;
+  headingId?: string;
+}
+const { lang, keys, title, headingId = 'svc-title' } = Astro.props;
+const ui = t(lang);
+const data = serviceCards[lang];
+const items = data.items.filter((i) => !keys || keys.includes(i.key as PageKey));
+---
+<section class="svc" aria-labelledby={headingId}>
+  <h2 id={headingId}>{title ?? data.title}</h2>
+  <ul>
+    {
+      items.map((i) => (
+        <li>
+          <a href={path(i.key as PageKey, lang)}>
+            <span class="svc-icon"><Icon name={i.icon} /></span>
+            <span class="svc-text">
+              <strong>{ui.nav[i.key as PageKey]}</strong>
+              <span>{i.text}</span>
+            </span>
+            <Icon name="arrow" class="svc-arrow" />
+          </a>
+        </li>
+      ))
+    }
+  </ul>
+</section>
+
+<style>
+  h2 {
+    margin-block-end: 1.5rem;
+  }
+  ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 0.75rem;
+    grid-template-columns: repeat(auto-fit, minmax(min(19rem, 100%), 1fr));
+  }
+  a {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    gap: 1rem;
+    align-items: center;
+    height: 100%;
+    padding: 1.1rem 1.25rem;
+    border: 1px solid var(--line);
+    border-inline-start: 4px solid var(--blue);
+    border-radius: var(--radius-s);
+    background: var(--white);
+    color: var(--ink);
+    text-decoration: none;
+  }
+  a:hover {
+    border-color: var(--navy);
+    color: var(--ink);
+  }
+  a:hover strong {
+    color: var(--blue-text);
+  }
+  .svc-icon {
+    display: grid;
+    place-items: center;
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 50%;
+    background: var(--blue-tint);
+    color: var(--blue-text);
+  }
+  .svc-icon :global(svg) {
+    width: 1.35rem;
+    height: 1.35rem;
+  }
+  .svc-text {
+    display: grid;
+    gap: 0.15rem;
+    line-height: 1.45;
+  }
+  strong {
+    color: var(--navy);
+    font-size: 1.0625rem;
+  }
+  .svc-text span {
+    font-size: var(--step--1);
+    color: var(--ink-soft);
+  }
+  a :global(.svc-arrow) {
+    width: 1.2rem;
+    height: 1.2rem;
+    color: var(--blue-text);
+  }
+  [dir='rtl'] a :global(.svc-arrow) {
+    transform: scaleX(-1);
+  }
+</style>

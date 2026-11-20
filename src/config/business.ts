@@ -42,9 +42,51 @@ export interface BusinessConfig {
     name: { en: string; ar: string };
     /** Where the engineer trained, as supplied by the business. */
     trainedIn: { en: string; ar: string };
-    /** Portrait in src/assets/team/, e.g. 'muhammad-faisal.jpg'. null shows a name badge instead. */
+    /** Professional title confirmed by the business (verified). */
+    title: { en: string; ar: string };
+    /** Portrait supplied or approved by the engineer, in src/assets/team/. null = text-only profile. */
     photo: string | null;
+    /** Verified qualification, e.g. degree and awarding body. null = not shown. */
+    qualification: { en: string; ar: string } | null;
+    /** Verified technical experience. null = not shown. */
+    experience: { en: string; ar: string } | null;
+    /** Verified training provider for the Pakistan training. null = provider not named. */
+    trainingProvider: { en: string; ar: string } | null;
   };
+  /** Detection methods the business has confirmed it offers. Unconfirmed methods are never published. */
+  methods: Record<MethodKey, boolean>;
+  /** Whether reinstatement of opened surfaces is included. null = not confirmed; copy says it is agreed per job. */
+  reinstatement: 'included' | 'separate' | null;
+  /** Completed jobs approved for publication. Empty = section hidden. */
+  projects: ProjectExample[];
+  /** Customer reviews published with permission. Empty = section hidden. */
+  reviews: Review[];
+  /** Link to a verified public review profile (e.g. Google Business Profile). null = not shown. */
+  reviewProfileUrl: string | null;
+}
+
+export type MethodKey = 'acoustic' | 'thermal' | 'pressure' | 'underground';
+type Bi = { en: string; ar: string };
+
+export interface ProjectExample {
+  /** Only with the customer's permission. */
+  district: Bi | null;
+  problem: Bi;
+  method: MethodKey[];
+  findings: Bi;
+  repair: Bi;
+  outcome: Bi;
+  /** Approved job photo in src/assets/projects/. */
+  photo: string | null;
+  photoAlt: Bi | null;
+}
+
+export interface Review {
+  /** First name or initials, as the customer agreed. */
+  author: string;
+  text: Bi | { en: string; ar?: undefined } | { ar: string; en?: undefined };
+  /** Where the review was originally published, if public. */
+  sourceUrl: string | null;
 }
 
 export const business: BusinessConfig = {
@@ -65,8 +107,18 @@ export const business: BusinessConfig = {
   engineer: {
     name: { en: 'Engineer Muhammad Faisal', ar: 'المهندس محمد فيصل' },
     trainedIn: { en: 'Pakistan', ar: 'باكستان' },
+    title: { en: 'Engineer', ar: 'مهندس' },
     photo: null,
+    qualification: null,
+    experience: null,
+    trainingProvider: null,
   },
+  // Confirmed by the business owner.
+  methods: { acoustic: true, thermal: true, pressure: true, underground: true },
+  reinstatement: null,
+  projects: [],
+  reviews: [],
+  reviewProfileUrl: null,
 };
 
 /* ---------- derived helpers (no business facts below this line) ---------- */

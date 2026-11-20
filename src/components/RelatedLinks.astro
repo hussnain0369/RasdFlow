@@ -1,0 +1,48 @@
+---
+import Icon from './Icon.astro';
+import { path, type Lang, type PageKey } from '../i18n/routes';
+import { t } from '../i18n/ui';
+
+interface Props {
+  lang: Lang;
+  pages: PageKey[];
+  title?: string;
+}
+const { lang, pages, title } = Astro.props;
+const ui = t(lang);
+const heading = title ?? (lang === 'ar' ? 'صفحات ذات صلة' : 'Related pages');
+---
+<nav class="related" aria-label={heading}>
+  <h2>{heading}</h2>
+  <ul>
+    {
+      pages.map((key) => (
+        <li>
+          <a class="link-arrow" href={path(key, lang)}>
+            <span>{ui.nav[key]}</span>
+            <Icon name="arrow" />
+          </a>
+        </li>
+      ))
+    }
+  </ul>
+</nav>
+
+<style>
+  .related {
+    padding-block: 2.5rem;
+    border-block-start: 1px solid var(--line);
+  }
+  h2 {
+    font-size: var(--step-1);
+    margin-block-end: 1rem;
+  }
+  ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem 2rem;
+  }
+</style>

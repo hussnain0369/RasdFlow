@@ -4,7 +4,7 @@ interface Props {
   name:
     | 'phone' | 'chat' | 'mail' | 'arrow' | 'menu' | 'close' | 'globe'
     | 'usage' | 'damp' | 'fixture' | 'paint' | 'pressure' | 'sound'
-    | 'detect' | 'repair' | 'pin' | 'clock';
+    | 'detect' | 'repair' | 'pin' | 'clock' | 'thermal';
   label?: string;
   class?: string;
 }
@@ -36,6 +36,8 @@ const paths: Record<Props['name'], string> = {
   detect: '<circle cx="10.5" cy="10.5" r="6.5"/><path d="m15.5 15.5 5 5"/><path d="M10.5 7c-1.5 2-2.2 3.2-2.2 4.2a2.2 2.2 0 0 0 4.4 0c0-1-.7-2.2-2.2-4.2Z"/>',
   // Open-ended spanner
   repair: '<path d="M14.5 4.2a4.5 4.5 0 0 0-5 6.2L3.6 16.3a1.8 1.8 0 0 0 2.5 2.5L12 12.9a4.5 4.5 0 0 0 6.2-5l-2.6 2.6-2.3-.6-.6-2.3Z"/>',
+  // Handheld thermal camera
+  thermal: '<rect x="3" y="4" width="14" height="10" rx="2"/><rect x="6" y="7" width="8" height="4" rx="1"/><path d="M17 7.5h2.5a1.5 1.5 0 0 1 1.5 1.5v1a1.5 1.5 0 0 1-1.5 1.5H17"/><path d="M8 14l-1 7h4l1-7"/>',
   pin: '<path d="M12 21s-6.5-6.2-6.5-11a6.5 6.5 0 0 1 13 0c0 4.8-6.5 11-6.5 11Z"/><circle cx="12" cy="10" r="2.3"/>',
   clock: '<circle cx="12" cy="12" r="8.5"/><path d="M12 7v5l3 2"/>',
 };

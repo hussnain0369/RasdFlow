@@ -30,6 +30,8 @@ const pages = new Map(htmlFiles.map((f) => [toUrlPath(f), readFileSync(f, 'utf8'
 const titles = new Map();
 const descriptions = new Map();
 const hreflangs = new Map();
+const entityIds = new Set();
+const typeCount = new Map();
 
 const resolves = (href) => {
   let clean = decodeURI(href.split('#')[0].split('?')[0]);
@@ -73,6 +75,20 @@ for (const [url, html] of pages) {
   const alts = [...html.matchAll(/<link rel="alternate" hreflang="([^"]+)" href="([^"]+)"/g)].map((m) => [m[1], m[2]]);
   if (alts.length) hreflangs.set(url, Object.fromEntries(alts));
 
+  for (const m of html.matchAll(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/g)) {
+    let data;
+    try {
+      data = JSON.parse(m[1]);
+    } catch {
+      fail(file, 'invalid JSON-LD');
+      continue;
+    }
+    const text = JSON.stringify(data);
+    if (/aggregateRating|"review"|"address"|"openingHours/.test(text)) fail(file, 'JSON-LD contains unsupported business claims');
+    for (const id of text.matchAll(/"@id":"([^"]+)"/g)) entityIds.add(id[1]);
+    if (data['@type']) typeCount.set(`${file}|${data['@type']}`, (typeCount.get(`${file}|${data['@type']}`) ?? 0) + 1);
+  }
+
   for (const m of html.matchAll(/<img\b[^>]*>/g)) {
     if (!/\balt="/.test(m[0])) fail(file, `img without alt: ${m[0].slice(0, 80)}`);
   }
@@ -88,6 +104,10 @@ for (const [url, html] of pages) {
   }
   if (/href="(?:#|javascript:)"/.test(html)) fail(file, 'placeholder link');
 }
+
+for (const [key, n] of typeCount) if (n > 1) fail(key.split('|')[0], `duplicate ${key.split('|')[1]} JSON-LD blocks`);
+const orgIds = [...entityIds].filter((id) => id.endsWith('#organization'));
+if (orgIds.length > 1) problems.push(`More than one Organization @id in use: ${orgIds.join(', ')}`);
 
 // Reciprocal hreflang: every alternate must list this page back.
 for (const [url, alts] of hreflangs) {

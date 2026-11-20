@@ -3,6 +3,9 @@ export type PageKey =
   | 'home'
   | 'detection'
   | 'repair'
+  | 'hidden'
+  | 'underground'
+  | 'pipeRepair'
   | 'howItWorks'
   | 'guide'
   | 'areas'
@@ -15,6 +18,9 @@ const slugs: Record<PageKey, string> = {
   home: '',
   detection: 'water-leak-detection/',
   repair: 'water-leak-repair/',
+  hidden: 'hidden-water-leak-detection/',
+  underground: 'underground-water-leak-detection/',
+  pipeRepair: 'pipe-leak-repair/',
   howItWorks: 'how-it-works/',
   guide: 'water-leak-guide/',
   areas: 'areas-we-cover/',

@@ -2,14 +2,19 @@
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import PageHero from '../PageHero.astro';
 import Sections from '../Sections.astro';
+import MethodList from '../MethodList.astro';
+import ServiceCards from '../ServiceCards.astro';
+import RelatedLinks from '../RelatedLinks.astro';
 import Faq from '../Faq.astro';
 import CtaBand from '../CtaBand.astro';
 import repairPhoto from '../../assets/photos/repair-valve.jpg';
 import thermalPhoto from '../../assets/photos/equipment-thermal.jpg';
 import { content } from '../../content/pages';
-import type { Lang } from '../../i18n/routes';
+import { findingsSection, openingSection, methodsFor, methodsSection } from '../../content/services';
+import { path, type Lang } from '../../i18n/routes';
 import { t } from '../../i18n/ui';
-import { faqJsonLd } from '../../lib/structured';
+import { absoluteUrl, siteUrl } from '../../config/site';
+import { faqJsonLd, serviceJsonLd } from '../../lib/structured';
 
 interface Props {
   lang: Lang;
@@ -18,14 +23,46 @@ interface Props {
 const { lang, kind } = Astro.props;
 const c = content[lang][kind];
 const ui = t(lang);
-const image = kind === 'detection' ? thermalPhoto : repairPhoto;
+const detection = kind === 'detection';
+const image = detection ? thermalPhoto : repairPhoto;
+const m = methodsSection[lang];
+const before = detection ? c.sections.slice(0, 3) : c.sections;
+const after = detection ? [...c.sections.slice(3), findingsSection(lang), openingSection(lang)] : [openingSection(lang)];
+const service = serviceJsonLd({ name: c.h1, description: c.meta.description, url: absoluteUrl(path(kind, lang)), siteUrl, lang });
+const specificTitle = detection
+  ? lang === 'ar' ? 'خدمات كشف متخصصة' : 'Specific Detection Services'
+  : lang === 'ar' ? 'خدمة إصلاح متخصصة' : 'Specific Repair Service';
 ---
-<BaseLayout lang={lang} page={kind} title={c.meta.title} description={c.meta.description} jsonLd={[faqJsonLd(c.faqs, lang)]}>
-  <PageHero lang={lang} page={kind} h1={c.h1} intro={c.intro} image={image} imageAlt={c.imageAlt} />
+<BaseLayout lang={lang} page={kind} title={c.meta.title} description={c.meta.description} jsonLd={[service, faqJsonLd(c.faqs, lang)]}>
+  <PageHero lang={lang} page={kind} h1={c.h1} intro={c.intro} image={image} imageAlt={c.imageAlt} imageFocus={detection ? '62% 45%' : '45% 50%'} />
 
   <div class="section">
     <div class="wrap">
-      <Sections sections={c.sections} />
+      <Sections sections={before} idPrefix="a" />
+    </div>
+  </div>
+
+  {
+    detection && methodsFor(lang).length > 0 && (
+      <section class="section section--mist" aria-labelledby="methods-title">
+        <div class="wrap">
+          <div class="section-head">
+            <h2 id="methods-title">{m.title}</h2>
+            <p>{m.intro}</p>
+          </div>
+          <MethodList lang={lang} variant="full" />
+        </div>
+      </section>
+    )
+  }
+
+  <div class="section">
+    <div class="wrap">
+      <Sections sections={after} idPrefix="b" />
+      <div class="specific">
+        <ServiceCards lang={lang} keys={detection ? ['hidden', 'underground'] : ['pipeRepair']} title={specificTitle} />
+      </div>
+      <RelatedLinks lang={lang} pages={detection ? ['repair', 'howItWorks', 'guide', 'areas', 'contact'] : ['detection', 'howItWorks', 'areas', 'contact']} />
     </div>
   </div>
 
@@ -38,9 +75,16 @@ const image = kind === 'detection' ? thermalPhoto : repairPhoto;
 
 <style>
   .section {
-    padding-block-end: 0;
+    padding-block-end: var(--space-section);
   }
-  .faq-wrap :global(.section) {
-    padding-block-start: 3rem;
+  .specific {
+    padding-block: 2.5rem;
+    border-block-start: 1px solid var(--line);
+  }
+  .specific :global(h2) {
+    font-size: var(--step-2);
+  }
+  .faq-wrap {
+    border-block-start: 1px solid var(--line);
   }
 </style>

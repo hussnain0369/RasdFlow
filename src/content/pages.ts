@@ -30,7 +30,10 @@ const homeEn = {
     'A rising water bill, damp patches or a leaking pipe? LeakFix helps property owners and tenants in Riyadh investigate leaks and arrange repairs.',
   ctaPrimary: 'Discuss a Water Leak',
   ctaWhatsapp: 'WhatsApp LeakFix',
-  heroAlt: 'A LeakFix technician wearing headphones listens through a ground sensor placed on the paving outside a villa',
+  heroAlt: 'Illustration of acoustic leak detection: a technician wearing headphones listens through a ground sensor placed on paving outside a villa',
+  ctaCall: 'Call LeakFix',
+  ctaWa: 'WhatsApp Us',
+  ctaContactLink: 'Describe your leak on the contact page',
   signs: {
     title: 'Signs You May Have a Water Leak',
     intro:
@@ -126,7 +129,10 @@ const homeAr: Home = {
     'فاتورة مياه مرتفعة، أو بقع رطوبة، أو ماسورة تسرّب؟ تساعد LeakFix ملّاك العقارات والمستأجرين في الرياض على فحص التسربات وترتيب إصلاحها.',
   ctaPrimary: 'حدّثنا عن مشكلة التسرب',
   ctaWhatsapp: 'راسل LeakFix عبر واتساب',
-  heroAlt: 'فنّي من LeakFix يرتدي سماعات ويستمع عبر حسّاس موضوع على أرضية خارج فيلا',
+  heroAlt: 'صورة توضيحية للكشف الصوتي: فنّي يرتدي سماعات ويستمع عبر حسّاس موضوع على أرضية خارج فيلا',
+  ctaCall: 'اتصل بنا',
+  ctaWa: 'واتساب',
+  ctaContactLink: 'اكتب تفاصيل التسرب في صفحة التواصل',
   signs: {
     title: 'علامات قد تدل على وجود تسرب',
     intro:
@@ -226,7 +232,7 @@ const detectionEn: ServicePage = {
   h1: 'Water Leak Detection in Riyadh',
   intro:
     'A leak is not always visible at the point where water appears. Moisture can travel through surrounding materials, making the source difficult to identify. LeakFix helps investigate suspected water leaks so the next step can be based on the findings.',
-  imageAlt: 'A technician points a handheld thermal camera at a bathroom wall with a damp stain near the floor',
+  imageAlt: 'Illustration of thermal imaging: a technician points a handheld infrared camera at a bathroom wall with a damp stain near the floor',
   sections: [
     {
       title: 'When an Inspection May Help',
@@ -255,7 +261,7 @@ const detectionEn: ServicePage = {
       title: 'What the Inspection Involves',
       body: [
         'There is no single approach that suits every property. How the inspection is carried out depends on the symptoms you describe, which pipework can be reached and the condition of the building.',
-        'Before the visit, we discuss what the inspection is expected to look at. If the inspection cannot confirm the source without further work, we explain why and what the options are.',
+        'Before the visit, we discuss what the inspection is expected to look at and which of the methods below suit the property. If the source cannot be confirmed without further work, we explain why and what the options are.',
       ],
     },
     {
@@ -299,7 +305,7 @@ const detectionAr: ServicePage = {
   h1: 'كشف تسربات المياه في الرياض',
   intro:
     'لا يكون مصدر التسرب دائمًا في المكان الذي تظهر فيه المياه؛ فالرطوبة قد تنتقل عبر المواد المحيطة، فيصعب تحديد مصدرها. تساعدك LeakFix في فحص التسربات المشتبه بها حتى تُبنى الخطوة التالية على نتائج واضحة.',
-  imageAlt: 'فنّي يوجّه كاميرا حرارية محمولة نحو جدار حمّام عليه أثر رطوبة قرب الأرضية',
+  imageAlt: 'صورة توضيحية للتصوير الحراري: فنّي يوجّه كاميرا حرارية محمولة نحو جدار حمّام عليه أثر رطوبة قرب الأرضية',
   sections: [
     {
       title: 'متى يفيد الفحص؟',
@@ -328,7 +334,7 @@ const detectionAr: ServicePage = {
       title: 'ماذا يشمل الفحص؟',
       body: [
         'لا توجد طريقة واحدة تناسب كل العقارات. يعتمد أسلوب الفحص على الأعراض التي تصفها، والتمديدات التي يمكن الوصول إليها، وحالة المبنى.',
-        'قبل الزيارة نناقش معك ما سيركّز عليه الفحص. وإذا لم يتمكن الفحص من تأكيد المصدر دون أعمال إضافية، نوضّح لك السبب والخيارات المتاحة.',
+        'قبل الزيارة نناقش معك ما سيركّز عليه الفحص وأيّ الطرق الموضّحة أدناه تناسب العقار. وإذا لم يمكن تأكيد المصدر دون أعمال إضافية، نوضّح لك السبب والخيارات المتاحة.',
       ],
     },
     {

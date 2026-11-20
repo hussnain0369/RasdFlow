@@ -1,10 +1,17 @@
 ---
+/**
+ * Text-only profile built from verified details in src/config/business.ts.
+ * A portrait appears only when the engineer supplies or approves one.
+ */
+import { Picture } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Sections from '../Sections.astro';
-import EngineerBadge from '../EngineerBadge.astro';
 import CtaBand from '../CtaBand.astro';
-import Icon from '../Icon.astro';
+import RelatedLinks from '../RelatedLinks.astro';
 import { extra } from '../../content/extra';
+import { methodsFor } from '../../content/services';
+import { business } from '../../config/business';
 import { path, type Lang } from '../../i18n/routes';
 import { t } from '../../i18n/ui';
 
@@ -14,15 +21,26 @@ interface Props {
 const { lang } = Astro.props;
 const c = extra[lang].engineer;
 const ui = t(lang);
+const e = business.engineer;
+const ar = lang === 'ar';
+const photos = import.meta.glob<{ default: ImageMetadata }>('../../assets/team/*.{jpg,jpeg,png,webp}', { eager: true });
+const photo = e.photo ? photos[`../../assets/team/${e.photo}`]?.default : undefined;
+const methods = methodsFor(lang).map((m) => m.title);
+const facts = [
+  { label: ar ? 'المسمّى الوظيفي' : 'Job title', value: `${e.title[lang]}${ar ? '، ' : ', '}LeakFix` },
+  { label: ar ? 'مقر العمل' : 'Based in', value: ar ? 'الرياض، المملكة العربية السعودية' : 'Riyadh, Saudi Arabia' },
+  { label: ar ? 'التدريب' : 'Training', value: e.trainingProvider ? `${e.trainingProvider[lang]} (${e.trainedIn[lang]})` : e.trainedIn[lang] },
+  ...(e.qualification ? [{ label: ar ? 'المؤهل' : 'Qualification', value: e.qualification[lang] }] : []),
+  ...(e.experience ? [{ label: ar ? 'الخبرة' : 'Experience', value: e.experience[lang] }] : []),
+];
+const methodsTitle = ar ? 'طرق الكشف المستخدمة' : 'Detection methods used';
 ---
 <BaseLayout lang={lang} page="engineer" title={c.meta.title} description={c.meta.description}>
   <section class="profile" aria-labelledby="page-title">
-    <div class="wrap profile-grid">
-      <div class="profile-media">
-        <EngineerBadge lang={lang} />
-      </div>
+    <div class:list={['wrap', 'profile-grid', { 'with-photo': photo }]}>
+      {photo && <Picture src={photo} alt={e.name[lang]} widths={[320, 640]} sizes="16rem" formats={['avif', 'webp']} class="portrait" />}
       <div>
-        <nav class="crumbs" aria-label={lang === 'ar' ? 'مسار التنقل' : 'Breadcrumb'}>
+        <nav class="crumbs" aria-label={ar ? 'مسار التنقل' : 'Breadcrumb'}>
           <a href={path('home', lang)}>{ui.breadcrumbHome}</a>
           <span aria-hidden="true">/</span>
           <a href={path('about', lang)}>{ui.nav.about}</a>
@@ -33,7 +51,7 @@ const ui = t(lang);
         <p class="role">{c.role}</p>
         <p class="lede">{c.intro}</p>
         <dl class="facts">
-          {c.facts.map((f) => (
+          {facts.map((f) => (
             <div>
               <dt>{f.label}</dt>
               <dd>{f.value}</dd>
@@ -47,12 +65,17 @@ const ui = t(lang);
   <div class="section">
     <div class="wrap">
       <Sections sections={c.sections} />
-      <p class="more">
-        <a class="link-arrow" href={path('howItWorks', lang)}>
-          <span>{ui.nav.howItWorks}</span>
-          <Icon name="arrow" />
-        </a>
-      </p>
+      {
+        methods.length > 0 && (
+          <section class="row-methods" aria-labelledby="eng-methods">
+            <h2 id="eng-methods">{methodsTitle}</h2>
+            <ul>
+              {methods.map((m) => <li>{m}</li>)}
+            </ul>
+          </section>
+        )
+      }
+      <RelatedLinks lang={lang} pages={['detection', 'howItWorks', 'about', 'contact']} />
     </div>
   </div>
 
@@ -63,24 +86,26 @@ const ui = t(lang);
   .profile {
     background: var(--mist);
     border-block-end: 1px solid var(--line);
-    padding-block: clamp(2.5rem, 1.5rem + 4vw, 5rem);
+    padding-block: clamp(2rem, 1.25rem + 3vw, 4.5rem);
   }
   .profile-grid {
     display: grid;
     grid-template-columns: minmax(0, 1fr);
-    gap: 2.5rem;
-    align-items: center;
+    gap: 2rem;
   }
   @media (min-width: 56rem) {
-    .profile-grid {
-      grid-template-columns: auto 1fr;
-      gap: 4.5rem;
+    .profile-grid.with-photo {
+      grid-template-columns: 16rem 1fr;
+      gap: 4rem;
+      align-items: center;
     }
   }
-  .profile-media {
-    display: flex;
-    justify-content: center;
-    padding: 0.75rem;
+  .profile-grid :global(.portrait) {
+    width: 16rem;
+    max-width: 100%;
+    aspect-ratio: 1;
+    object-fit: cover;
+    border-radius: var(--radius-m);
   }
   .crumbs {
     display: flex;
@@ -94,21 +119,21 @@ const ui = t(lang);
     color: var(--ink-soft);
   }
   .role {
-    margin-block-start: 0.75rem;
+    margin-block-start: 0.6rem;
     color: var(--blue-text);
     font-weight: 650;
   }
   .lede {
-    margin-block-start: 1.25rem;
+    margin-block-start: 1rem;
   }
   .facts {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(min(10rem, 100%), 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(min(11rem, 100%), 1fr));
     gap: 1rem 2rem;
-    margin: 2rem 0 0;
-    padding-block-start: 1.5rem;
+    margin: 1.75rem 0 0;
+    padding-block-start: 1.25rem;
     border-block-start: 2px solid var(--navy);
-    max-width: 40rem;
+    max-width: 44rem;
   }
   dt {
     font-size: var(--step--1);
@@ -122,7 +147,29 @@ const ui = t(lang);
   .section {
     padding-block-end: var(--space-section);
   }
-  .more {
-    margin-block-start: 2.5rem;
+  .row-methods {
+    display: grid;
+    gap: 1.25rem;
+    padding-block: 2.75rem;
+    border-block-start: 1px solid var(--line);
+  }
+  .row-methods h2 {
+    font-size: var(--step-2);
+  }
+  .row-methods ul {
+    margin: 0;
+    padding-inline-start: 1.25rem;
+  }
+  .row-methods li + li {
+    margin-block-start: 0.4rem;
+  }
+  .row-methods li::marker {
+    color: var(--blue);
+  }
+  @media (min-width: 64rem) {
+    .row-methods {
+      grid-template-columns: 1fr 2fr;
+      gap: 4rem;
+    }
   }
 </style>
