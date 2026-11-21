@@ -151,6 +151,15 @@ const ms = methodsSection[lang];
       <h2 id="services-title" class="services-title">{c.services.title}</h2>
       <div class="services">
         <article class="service">
+          <Icon name="fixture" class="service-icon" />
+          <h3>{c.services.plumbing.title}</h3>
+          <p>{c.services.plumbing.text}</p>
+          <a class="link-arrow" href={path('plumbing', lang)}>
+            <span>{c.services.plumbing.link}</span>
+            <Icon name="arrow" />
+          </a>
+        </article>
+        <article class="service">
           <Icon name="detect" class="service-icon" />
           <h3>{c.services.detection.title}</h3>
           <p>{c.services.detection.text}</p>
@@ -172,23 +181,6 @@ const ms = methodsSection[lang];
       <div class="specific">
         <ServiceCards lang={lang} keys={['hidden', 'underground', 'pipeRepair']} headingId="specific-title" />
       </div>
-    </div>
-  </section>
-
-  <section class="section" aria-labelledby="steps-title">
-    <div class="wrap">
-      <h2 id="steps-title" class="steps-title">{c.steps.title}</h2>
-      <ol class="pipe-steps">
-        {
-          c.steps.items.map((step, i) => (
-            <li>
-              <span class="joint" aria-hidden="true">{i + 1}</span>
-              <h3>{step.title}</h3>
-              <p>{step.text}</p>
-            </li>
-          ))
-        }
-      </ol>
       <p class="steps-link">
         <a class="link-arrow" href={path('howItWorks', lang)}>
           <span>{ui.nav.howItWorks}</span>
@@ -473,18 +465,18 @@ const ms = methodsSection[lang];
   /* ---------- Services ---------- */
   .services-title {
     max-width: 18ch;
-    margin-block-end: 3rem;
+    margin-block-end: clamp(1.5rem, 1rem + 2vw, 3rem);
   }
   .services {
     display: grid;
-    gap: 3rem;
+    gap: clamp(1.75rem, 1.25rem + 2vw, 3rem);
   }
   .service {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    gap: 1rem;
-    padding-block-start: 1.75rem;
+    gap: 0.75rem;
+    padding-block-start: 1.25rem;
     border-block-start: 4px solid var(--navy);
   }
   .service h3 {
@@ -505,8 +497,8 @@ const ms = methodsSection[lang];
   }
   @media (min-width: 52rem) {
     .services {
-      grid-template-columns: 1fr 1fr;
-      gap: 4rem;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2.5rem;
     }
   }
 

@@ -90,6 +90,18 @@ One-time setup: in the repository, open **Settings → Pages** and set **Source*
 
 For the real launch on a custom domain, set `BASE_PATH` to `/` (or remove it), `SITE_URL` to the domain and `DEPLOY_ENV=production`.
 
+## Moving to a custom domain
+
+Every URL on the site is built from two settings, so no page needs editing at cutover:
+
+| Setting | GitHub Pages today | Custom domain |
+| --- | --- | --- |
+| `SITE_URL` (origin only) | `https://hussnain0369.github.io` | `https://www.<your-domain>` |
+| `BASE_PATH` | `/RasdFlow/` | `/` (or leave empty) |
+| `DEPLOY_ENV` | `preview` (noindex) | `production` (indexable) |
+
+They drive the canonical URLs, hreflang pairs, `sitemap.xml`, `robots.txt`, Open Graph image and URL, the structured-data `url`, `logo` and `@id`, asset paths and every internal link. In `.github/workflows/deploy-pages.yml` change the three `env` values; if the domain is served by GitHub Pages, also add it under **Settings → Pages → Custom domain** (DNS changes are separate). The business email, phone, WhatsApp number and Google review link live in `src/config/business.ts`.
+
 ## Before launch
 
 **Trial contacts are on.** `demoContact: true` in `src/config/business.ts` shows placeholder contact buttons (+966 5X XXX XXXX, info@leakfix.example) that open a "trial preview" message. Set it to `false` once real details are entered. Real numbers always take over automatically.

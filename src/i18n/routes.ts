@@ -1,6 +1,7 @@
 export type Lang = 'en' | 'ar';
 export type PageKey =
   | 'home'
+  | 'plumbing'
   | 'detection'
   | 'repair'
   | 'hidden'
@@ -17,6 +18,7 @@ export type PageKey =
 
 const slugs: Record<PageKey, string> = {
   home: '',
+  plumbing: 'plumbing-services/',
   detection: 'water-leak-detection/',
   repair: 'water-leak-repair/',
   hidden: 'hidden-water-leak-detection/',

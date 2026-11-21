@@ -21,7 +21,7 @@ LeakFix visits customers' properties, so set the profile up as a **service-area 
 | Hours | **[needed]** Real working hours. Do not mark 24 hours unless that is true. |
 | Address | Enter the business address for verification, then **hide it** ("I deliver goods and services to my customers"). |
 | Service area | Riyadh. Add individual districts only if LeakFix confirms it serves them. |
-| Services | Water leak detection (كشف تسربات المياه); Leak detection inside walls, floors and ceilings; Underground water leak detection (كشف تسربات المياه تحت الأرض); Water leak repair (إصلاح تسربات المياه); Pipe and connection repair. |
+| Services | Plumbing (السباكة): kitchen and bathroom plumbing, taps and fixtures, pipe and fitting replacement, blocked sinks and toilets; Water leak detection (كشف تسربات المياه); Leak detection inside walls, floors and ceilings; Underground water leak detection (كشف تسربات المياه تحت الأرض); Water leak repair (إصلاح تسربات المياه); Pipe and connection repair. |
 | Description (Arabic) | تكشف LeakFix تسربات المياه وتصلحها في منازل ومنشآت الرياض. نستخدم الكشف الصوتي والتصوير الحراري واختبار الضغط لتضييق مكان التسرب قبل أي فتح، ونتفق مع العميل على نطاق العمل والسعر قبل البدء. |
 | Description (English) | LeakFix finds and repairs water leaks in Riyadh homes and businesses. We use acoustic listening, thermal imaging and pressure testing to narrow down the leak before anything is opened, and agree the scope and price with the customer before work starts. |
 | Photos | Only genuine photos of LeakFix staff, vehicles, equipment and completed jobs. **Do not upload the generated illustration images.** |
@@ -81,6 +81,8 @@ The website has no analytics or trackers installed. Every Call, WhatsApp and ema
 ---
 
 ## 5. Still needed from the owner
+
+- Confirmation of water heater and water pump work (heater/pump types; installation, repair or connections only), and whether larger drainage lines are handled. These are not on the site yet.
 
 - Business phone and WhatsApp number, email, working hours.
 - Production domain and Search Console access.

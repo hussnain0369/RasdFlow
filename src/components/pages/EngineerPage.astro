@@ -29,9 +29,10 @@ const methods = methodsFor(lang).map((m) => m.title);
 const facts = [
   { label: ar ? 'المسمّى الوظيفي' : 'Job title', value: `${e.title[lang]}${ar ? '، ' : ', '}LeakFix` },
   { label: ar ? 'مقر العمل' : 'Based in', value: ar ? 'الرياض، المملكة العربية السعودية' : 'Riyadh, Saudi Arabia' },
-  { label: ar ? 'التدريب' : 'Training', value: e.trainingProvider ? `${e.trainingProvider[lang]} (${e.trainedIn[lang]})` : e.trainedIn[lang] },
+  ...(e.experienceShort ? [{ label: ar ? 'الخبرة' : 'Experience', value: e.experienceShort[lang] }] : []),
+  // Training appears only when documented details are supplied.
+  ...(e.trainedIn ? [{ label: ar ? 'التدريب' : 'Training', value: e.trainingProvider ? `${e.trainingProvider[lang]} (${e.trainedIn[lang]})` : e.trainedIn[lang] }] : []),
   ...(e.qualification ? [{ label: ar ? 'المؤهل' : 'Qualification', value: e.qualification[lang] }] : []),
-  ...(e.experience ? [{ label: ar ? 'الخبرة' : 'Experience', value: e.experience[lang] }] : []),
 ];
 const methodsTitle = ar ? 'طرق الكشف المستخدمة' : 'Detection methods used';
 ---

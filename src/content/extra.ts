@@ -3,7 +3,7 @@ import type { Faq, Meta, Section } from './pages';
 
 /* ------------------------------------------------------------------
  * Our Engineer — only facts supplied by the business:
- * name, the title "Engineer", and training received in Pakistan.
+ * name, the title "Engineer", and 25 years of personal experience.
  * ------------------------------------------------------------------ */
 
 export interface EngineerPage {
@@ -20,11 +20,11 @@ const engineerEn: EngineerPage = {
   meta: {
     title: 'Engineer Muhammad Faisal | LeakFix Riyadh',
     description:
-      'Meet Engineer Muhammad Faisal of LeakFix, who received training in Pakistan and works on water leak detection and repair in Riyadh.',
+      'Engineer Muhammad Faisal of LeakFix has 25 years of experience in plumbing, water leak detection and repair. See his role on inspections and repairs in Riyadh.',
   },
   h1: 'Engineer Muhammad Faisal',
   intro:
-    "Engineer Muhammad Faisal works on LeakFix's water leak investigations and repairs in Riyadh, and received training in Pakistan.",
+    'Engineer Muhammad Faisal carries out LeakFix\'s plumbing, leak investigation and repair work in Riyadh. He has 25 years of experience in plumbing, water leak detection and repair.',
   role: 'Engineer, LeakFix',
   facts: [],
   sections: [
@@ -58,11 +58,11 @@ const engineerAr: EngineerPage = {
   meta: {
     title: 'المهندس محمد فيصل | LeakFix الرياض',
     description:
-      'تعرّف على المهندس محمد فيصل من فريق LeakFix، الذي تلقّى تدريبه في باكستان ويعمل في كشف تسربات المياه وإصلاحها في الرياض.',
+      'المهندس محمد فيصل من LeakFix لديه 25 عامًا من الخبرة في أعمال السباكة وكشف تسربات المياه وإصلاحها. تعرّف على دوره في الفحص والإصلاح بالرياض.',
   },
   h1: 'المهندس محمد فيصل',
   intro:
-    'يعمل المهندس محمد فيصل في فحص تسربات المياه وإصلاحها لدى LeakFix في الرياض، وقد تلقّى تدريبه في باكستان.',
+    'يتولى المهندس محمد فيصل أعمال السباكة وفحص تسربات المياه وإصلاحها لدى LeakFix في الرياض. لديه 25 عامًا من الخبرة في أعمال السباكة وكشف تسربات المياه وإصلاحها.',
   role: 'مهندس، LeakFix',
   facts: [],
   sections: [
@@ -396,14 +396,14 @@ export const extra = {
 /** Short engineer introduction reused on the homepage and About page. */
 export const engineerTeaser = {
   en: {
-    title: 'Meet our engineer',
-    text: 'Engineer Muhammad Faisal works on LeakFix water leak detection and repair in Riyadh, and received training in Pakistan.',
-    link: 'About Engineer Muhammad Faisal',
+    title: 'Meet Your Engineer',
+    text: 'Engineer Muhammad Faisal, LeakFix. He has 25 years of experience in plumbing, water leak detection and repair.',
+    link: 'Read his full profile',
   },
   ar: {
-    title: 'تعرّف على مهندسنا',
-    text: 'يعمل المهندس محمد فيصل في كشف تسربات المياه وإصلاحها لدى LeakFix في الرياض، وقد تلقّى تدريبه في باكستان.',
-    link: 'تعرّف على المهندس محمد فيصل',
+    title: 'تعرّف على مهندسك',
+    text: 'المهندس محمد فيصل، LeakFix. لديه 25 عامًا من الخبرة في أعمال السباكة وكشف تسربات المياه وإصلاحها.',
+    link: 'اطّلع على ملفه الكامل',
   },
 } satisfies Record<Lang, unknown>;
 

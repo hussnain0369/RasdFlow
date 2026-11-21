@@ -83,7 +83,16 @@ const ui = t(lang);
     margin-block-start: 1.25rem;
   }
   .hero-actions {
-    margin-block-start: 2rem;
+    margin-block-start: 1.5rem;
+  }
+  /* Call and WhatsApp side by side on phones instead of a tall stack */
+  .hero-actions :global(.btn-row) {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(9rem, max-content));
+  }
+  .hero-actions :global(.btn-row .btn) {
+    padding-inline: 0.75rem;
+    white-space: nowrap;
   }
   .page-hero :global(.page-hero-img) {
     width: 100%;

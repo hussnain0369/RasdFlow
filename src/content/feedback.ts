@@ -78,7 +78,7 @@ export const feedbackText = {
   },
   ar: {
     sectionTitle: 'التقييمات والملاحظات',
-    googleReviewBtn: 'اكتب تقييمًا على Google',
+    googleReviewBtn: 'قيّمنا على Google',
     privateBtn: 'أرسل ملاحظاتك',
     quickPrompt: 'كيف كانت تجربتك معنا؟',
     quickComment: 'تعليق',

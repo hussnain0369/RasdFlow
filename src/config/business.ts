@@ -42,17 +42,17 @@ export interface BusinessConfig {
   /** Team member shown on the Our Engineer page. Only facts the business has supplied. */
   engineer: {
     name: { en: string; ar: string };
-    /** Where the engineer trained, as supplied by the business. */
-    trainedIn: { en: string; ar: string };
+    trainedIn: { en: string; ar: string } | null;
     /** Professional title confirmed by the business (verified). */
     title: { en: string; ar: string };
     /** Portrait supplied or approved by the engineer, in src/assets/team/. null = text-only profile. */
     photo: string | null;
     /** Verified qualification, e.g. degree and awarding body. null = not shown. */
     qualification: { en: string; ar: string } | null;
-    /** Verified technical experience. null = not shown. */
+    /** Verified experience: a sentence for prose and a short form for the profile facts. null = not shown. */
     experience: { en: string; ar: string } | null;
-    /** Verified training provider for the Pakistan training. null = provider not named. */
+    experienceShort: { en: string; ar: string } | null;
+    /** Verified training provider, shown with trainedIn. null = not shown. */
     trainingProvider: { en: string; ar: string } | null;
   };
   /** Detection methods the business has confirmed it offers. Unconfirmed methods are never published. */
@@ -100,8 +100,8 @@ export interface ProjectExample {
 
 export const business: BusinessConfig = {
   name: 'LeakFix',
-  taglineEn: 'Water Leak Detection & Repair',
-  taglineAr: 'كشف تسربات المياه وإصلاحها',
+  taglineEn: 'Plumbing, Water Leak Detection & Repair',
+  taglineAr: 'السباكة وكشف تسربات المياه وإصلاحها',
   city: { en: 'Riyadh', ar: 'الرياض' },
   phone: '+966 59 221 7510',
   whatsapp: '+966 59 221 7510',
@@ -115,11 +115,20 @@ export const business: BusinessConfig = {
   demoContact: false,
   engineer: {
     name: { en: 'Engineer Muhammad Faisal', ar: 'المهندس محمد فيصل' },
-    trainedIn: { en: 'Pakistan', ar: 'باكستان' },
+    /** Documented qualification or training details. null = no training line is shown. */
+    trainedIn: null,
     title: { en: 'Engineer', ar: 'مهندس' },
     photo: null,
     qualification: null,
-    experience: null,
+    // Confirmed by the owner: 25 years of personal experience.
+    experience: {
+      en: 'He has 25 years of experience in plumbing, water leak detection and repair.',
+      ar: 'لديه 25 عامًا من الخبرة في أعمال السباكة وكشف تسربات المياه وإصلاحها.',
+    },
+    experienceShort: {
+      en: '25 years in plumbing, water leak detection and repair',
+      ar: '25 عامًا في أعمال السباكة وكشف تسربات المياه وإصلاحها',
+    },
     trainingProvider: null,
   },
   // Confirmed by the business owner.

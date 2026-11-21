@@ -24,7 +24,8 @@
 
   /* Type scale: 1.25 ratio from a 17px base */
   --step--1: 0.875rem;
-  --step-0: 1.0625rem;
+  /* Body text: 16px on small phones, 17px from tablets */
+  --step-0: clamp(1rem, 0.95rem + 0.25vw, 1.0625rem);
   --step-1: 1.25rem;
   --step-2: clamp(1.4rem, 1.2rem + 0.8vw, 1.75rem);
   --step-3: clamp(1.75rem, 1.35rem + 1.6vw, 2.5rem);
@@ -32,9 +33,9 @@
 
   --radius-s: 4px;
   --radius-m: 8px;
-  --space-section: clamp(3rem, 2rem + 4vw, 7rem);
+  --space-section: clamp(2.5rem, 1.75rem + 4vw, 7rem);
   /* Lead paragraphs: 17px on phones, 20px on desktop */
-  --step-lede: clamp(1.0625rem, 0.95rem + 0.55vw, 1.25rem);
+  --step-lede: clamp(1rem, 0.9rem + 0.55vw, 1.25rem);
   --gutter: clamp(1rem, 0.5rem + 2.5vw, 2.5rem);
   --max: 76rem;
   /* Height taken by the floating contact buttons; the footer reserves it. */

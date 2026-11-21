@@ -34,7 +34,7 @@ const methodsEn: Method[] = [
     title: 'Thermal imaging',
     short: 'An infrared camera shows surface temperature differences that can guide the inspection.',
     when: 'Used on walls, floors and ceilings where damp or a stain has appeared, or where hot or cold water pipes are thought to run behind the surface.',
-    tells: 'Temperature differences on the surface can show the likely path of a pipe or where moisture is spreading, which guides where to test next.',
+    tells: 'Temperature differences on the surface can show the likely path of a pipe or where moisture is spreading. The technician then checks that suspected area with other tests, such as a pressure test or acoustic listening, before concluding that it contains a leak.',
     limits: 'The camera only sees surface temperature. Sunlight, air conditioning, wall thickness and finishes such as marble can affect the image, and a pattern alone does not prove a leak.',
   },
   {
@@ -69,7 +69,7 @@ const methodsAr: Method[] = [
     title: 'التصوير الحراري',
     short: 'كاميرا تعمل بالأشعة تحت الحمراء تُظهر فروق حرارة الأسطح التي قد توجّه الفحص.',
     when: 'يُستخدم على الجدران والأرضيات والأسقف التي ظهرت فيها رطوبة أو بقعة، أو حيث يُعتقد مرور مواسير مياه حارة أو باردة خلف السطح.',
-    tells: 'تُظهر فروق الحرارة على السطح المسار المحتمل للماسورة أو مكان انتشار الرطوبة، فتوجّه الفحص إلى المكان التالي.',
+    tells: 'تُظهر فروق الحرارة على السطح المسار المحتمل للماسورة أو مكان انتشار الرطوبة، ثم يفحص الفنّي تلك المنطقة باختبارات أخرى، مثل اختبار الضغط أو الكشف الصوتي، قبل أن يحكم بوجود تسرب فيها.',
     limits: 'الكاميرا ترى حرارة السطح فقط، وقد تتأثر الصورة بأشعة الشمس والتكييف وسماكة الجدار والتشطيبات مثل الرخام. والنمط الحراري وحده لا يثبت وجود تسرب.',
   },
   {
@@ -131,7 +131,10 @@ export function findingsSection(lang: Lang): Section {
           'المصدر المحتمل لبقعة رطوبة أو مياه ظاهرة.',
           'أن السبب ليس في تمديدات المياه، مثل التكثّف أو مياه الأمطار.',
         ],
-        after: ['في بعض الحالات لا يمكن تحديد النقطة الدقيقة دون الوصول إلى الماسورة نفسها، وسنوضّح لك ذلك إن حدث.'],
+        after: [
+          'في بعض الحالات لا يمكن تحديد النقطة الدقيقة دون الوصول إلى الماسورة نفسها، وسنوضّح لك ذلك إن حدث.',
+          'في نهاية الفحص نوضّح لك ما تم فحصه وما تم التوصل إليه والخطوة التالية المقترحة.',
+        ],
       }
     : {
         title: 'What the Findings Can Establish',
@@ -142,7 +145,10 @@ export function findingsSection(lang: Lang): Section {
           'The likely source of a damp patch or visible water.',
           'That the cause is not the water supply, such as condensation or rainwater.',
         ],
-        after: ['Sometimes the exact point cannot be confirmed without reaching the pipe itself. If that happens, we explain it.'],
+        after: [
+          'Sometimes the exact point cannot be confirmed without reaching the pipe itself. If that happens, we explain it.',
+          'At the end of the inspection you are told what was checked, what was found and the proposed next step.',
+        ],
       };
 }
 

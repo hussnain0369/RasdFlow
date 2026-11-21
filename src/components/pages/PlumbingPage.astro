@@ -1,0 +1,131 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHero from '../PageHero.astro';
+import Sections from '../Sections.astro';
+import RelatedLinks from '../RelatedLinks.astro';
+import Faq from '../Faq.astro';
+import CtaBand from '../CtaBand.astro';
+import Icon from '../Icon.astro';
+import repairPhoto from '../../assets/photos/repair-valve.jpg';
+import { plumbing } from '../../content/plumbing';
+import { business } from '../../config/business';
+import { path, type Lang } from '../../i18n/routes';
+import { t } from '../../i18n/ui';
+import { absoluteUrl, siteUrl } from '../../config/site';
+import { serviceJsonLd } from '../../lib/structured';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const c = plumbing[lang];
+const ui = t(lang);
+const fee = business.inspectionFee?.[lang];
+const before = { ...c.beforeWork, after: fee ? [lang === 'ar' ? `رسوم الفحص: ${fee}.` : `Inspection fee: ${fee}.`] : undefined };
+const noticeLabel = lang === 'ar' ? 'ما قد تلاحظه:' : 'What you might notice:';
+const service = serviceJsonLd({ name: c.h1, description: c.meta.description, url: absoluteUrl(path('plumbing', lang)), siteUrl, lang });
+---
+<BaseLayout lang={lang} page="plumbing" title={c.meta.title} description={c.meta.description} jsonLd={[service]}>
+  <PageHero lang={lang} page="plumbing" h1={c.h1} intro={c.intro} image={repairPhoto} imageAlt={c.imageAlt} imageFocus="45% 50%" />
+
+  <section class="section" aria-labelledby="work-title">
+    <div class="wrap">
+      <h2 id="work-title" class="work-title">{c.workTitle}</h2>
+      <ul class="work">
+        {
+          c.work.map((w) => (
+            <li>
+              <span class="w-icon"><Icon name={w.icon} /></span>
+              <div>
+                <h3>{w.title}</h3>
+                <p class="notice"><span>{noticeLabel}</span> {w.notice}</p>
+                <p>{w.text}</p>
+              </div>
+            </li>
+          ))
+        }
+        <li class="hidden-leaks">
+          <span class="w-icon"><Icon name="detect" /></span>
+          <div>
+            <h3>{c.hidden.title}</h3>
+            <p>{c.hidden.text}</p>
+            <p class="links">
+              <a class="link-arrow" href={path('detection', lang)}><span>{c.hidden.detectionLink}</span><Icon name="arrow" /></a>
+              <a class="link-arrow" href={path('repair', lang)}><span>{c.hidden.repairLink}</span><Icon name="arrow" /></a>
+            </p>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <div class="section section--mist">
+    <div class="wrap">
+      <Sections sections={[before]} idPrefix="pb" />
+      <RelatedLinks lang={lang} pages={['howItWorks', 'detection', 'repair', 'areas', 'contact']} />
+    </div>
+  </div>
+
+  <Faq faqs={c.faqs} title={ui.faqTitle} />
+
+  <CtaBand lang={lang} title={c.cta.title} text={c.cta.text} />
+</BaseLayout>
+
+<style>
+  .work-title {
+    margin-block-end: 1.75rem;
+  }
+  .work {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 0;
+    border-block-start: 2px solid var(--navy);
+  }
+  .work > li {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: 1rem;
+    padding-block: 1.5rem;
+    border-block-end: 1px solid var(--line);
+  }
+  @media (min-width: 56rem) {
+    .work {
+      grid-template-columns: 1fr 1fr;
+      column-gap: 3rem;
+    }
+  }
+  .w-icon {
+    display: grid;
+    place-items: center;
+    width: 2.75rem;
+    height: 2.75rem;
+    border-radius: 50%;
+    background: var(--blue-tint);
+    color: var(--blue-text);
+  }
+  .w-icon :global(svg) {
+    width: 1.5rem;
+    height: 1.5rem;
+  }
+  h3 {
+    font-size: var(--step-1);
+    margin-block-end: 0.4rem;
+  }
+  .notice {
+    color: var(--ink-soft);
+    font-size: var(--step--1);
+    margin-block-end: 0.5rem;
+  }
+  .notice span {
+    font-weight: 700;
+    color: var(--navy);
+  }
+  .links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem 1.5rem;
+    margin-block-start: 0.75rem;
+  }
+</style>

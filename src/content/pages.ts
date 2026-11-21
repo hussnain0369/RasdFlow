@@ -18,16 +18,16 @@ export type SignIcon = 'usage' | 'damp' | 'fixture' | 'paint' | 'pressure' | 'so
 
 const homeEn = {
   meta: {
-    title: 'LeakFix | Water Leak Detection and Repair Services in Riyadh',
+    title: 'LeakFix | Plumbing, Water Leak Detection and Repair in Riyadh',
     description:
-      'LeakFix finds and repairs water leaks in Riyadh homes and businesses: hidden and underground leaks, leaking pipes and connections. Call or WhatsApp to arrange a visit.',
+      'LeakFix provides plumbing, water leak detection and leak repair in Riyadh: dripping taps and sink connections, hidden and underground leaks, and leaking pipes. Call or WhatsApp to arrange a visit.',
   },
   eyebrow: 'Water leak services in Riyadh',
   h1: 'Water Leak Detection & Repair in Riyadh',
   h1Lead: 'Water Leak Detection & Repair',
   h1Accent: 'in Riyadh',
   intro:
-    'A rising water bill, damp patches or a leaking pipe? LeakFix helps property owners and tenants in Riyadh investigate leaks and arrange repairs.',
+    'A dripping tap, damp patches or a rising water bill? LeakFix provides plumbing, water leak detection and repair for homes and businesses in Riyadh.',
   ctaPrimary: 'Discuss a Water Leak',
   ctaWhatsapp: 'WhatsApp LeakFix',
   heroAlt: 'Illustration of acoustic leak detection: a technician wearing headphones listens through a ground sensor placed on paving outside a villa',
@@ -50,15 +50,20 @@ const homeEn = {
       'These signs can have several causes. An inspection can help establish whether a water leak is involved.',
   },
   services: {
-    title: 'Find the Leak. Plan the Repair.',
+    title: 'Which Service Do You Need?',
+    plumbing: {
+      title: 'Plumbing',
+      text: 'For a fixture or pipe you can see: a dripping tap, a leaking hose under the sink, a cistern that keeps running or a blocked basin.',
+      link: 'Explore Plumbing Services',
+    },
     detection: {
       title: 'Water Leak Detection',
-      text: 'Investigate suspected leaks affecting your property. Tell us where you have noticed moisture, unusual water usage or other changes so we can discuss the next step.',
+      text: 'When you see damp, hear running water or your water use has gone up, and you do not know where the leak is.',
       link: 'Explore Leak Detection',
     },
     repair: {
       title: 'Water Leak Repair',
-      text: 'Address an identified leak with a repair suited to the affected pipework or connection. The proposed work depends on the leak location, access and condition of the installation.',
+      text: 'When the leak has already been found and the pipe or connection needs repairing.',
       link: 'Explore Leak Repair',
       alt: 'A technician tightens a brass valve connection under a washbasin using two spanners',
     },
@@ -82,7 +87,7 @@ const homeEn = {
   },
   coverage: {
     title: 'Water Leak Services Across Riyadh',
-    text: 'Contact LeakFix with your district and property location to check visit availability. Let us know whether the issue affects a villa, apartment or commercial property, and whether access needs to be arranged with a tenant or building manager.',
+    text: 'LeakFix works in villas, apartments and commercial properties across Riyadh. The coverage page explains how a visit is confirmed for your district.',
     link: 'Check Riyadh Coverage',
   },
   faqs: [
@@ -100,7 +105,7 @@ const homeEn = {
     },
     {
       q: 'Do you serve my area in Riyadh?',
-      a: 'Send your district and location to check current visit availability.',
+      a: 'LeakFix works across Riyadh. Availability is confirmed for each visit; the coverage page explains how.',
     },
     {
       q: 'What information should I send?',
@@ -109,7 +114,7 @@ const homeEn = {
   ] as Faq[],
   finalCta: {
     title: 'Tell Us About Your Water Leak',
-    text: 'Share your location in Riyadh and describe the problem. We will discuss the next step and visit availability.',
+    text: 'Call or WhatsApp LeakFix to talk through the problem and arrange a visit.',
   },
 };
 
@@ -117,16 +122,16 @@ type Home = typeof homeEn;
 
 const homeAr: Home = {
   meta: {
-    title: 'LeakFix | خدمات كشف وإصلاح تسربات المياه في الرياض',
+    title: 'LeakFix | السباكة وكشف تسربات المياه وإصلاحها في الرياض',
     description:
-      'LeakFix تكشف تسربات المياه وتصلحها في منازل ومنشآت الرياض: التسربات المخفية وتحت الأرض وتسرب المواسير والوصلات. اتصل أو راسلنا عبر واتساب لترتيب زيارة.',
+      'تقدّم LeakFix خدمات السباكة وكشف تسربات المياه وإصلاحها في الرياض: الحنفيات وتوصيلات المغاسل، والتسربات المخفية وتحت الأرض، وتسرب المواسير. اتصل أو راسلنا عبر واتساب لترتيب زيارة.',
   },
   eyebrow: 'خدمات تسربات المياه في الرياض',
   h1: 'كشف تسربات المياه وإصلاحها في الرياض',
   h1Lead: 'كشف تسربات المياه وإصلاحها',
   h1Accent: 'في الرياض',
   intro:
-    'فاتورة مياه مرتفعة، أو بقع رطوبة، أو ماسورة تسرّب؟ تساعد LeakFix ملّاك العقارات والمستأجرين في الرياض على فحص التسربات وترتيب إصلاحها.',
+    'حنفية تقطّر، أو بقع رطوبة، أو فاتورة مياه مرتفعة؟ تقدّم LeakFix خدمات السباكة وكشف تسربات المياه وإصلاحها للمنازل والمنشآت في الرياض.',
   ctaPrimary: 'حدّثنا عن مشكلة التسرب',
   ctaWhatsapp: 'راسل LeakFix عبر واتساب',
   heroAlt: 'صورة توضيحية للكشف الصوتي: فنّي يرتدي سماعات ويستمع عبر حسّاس موضوع على أرضية خارج فيلا',
@@ -148,15 +153,20 @@ const homeAr: Home = {
     closing: 'لهذه العلامات أسباب متعددة، والفحص يساعد على معرفة ما إذا كان تسرب المياه هو السبب.',
   },
   services: {
-    title: 'نحدّد التسرب، ثم نخطّط للإصلاح',
+    title: 'أي خدمة تحتاج؟',
+    plumbing: {
+      title: 'السباكة',
+      text: 'لقطعة أو ماسورة تراها: حنفية تقطّر، أو ليّ يسرّب تحت المغسلة، أو سيفون يستمر في الجريان، أو مغسلة مسدودة.',
+      link: 'تعرّف على خدمات السباكة',
+    },
     detection: {
       title: 'كشف تسربات المياه',
-      text: 'فحص التسربات المشتبه بها في عقارك. أخبرنا أين لاحظت الرطوبة أو الاستهلاك غير المعتاد أو أي تغيّر آخر، لنناقش معك الخطوة التالية.',
+      text: 'عندما ترى رطوبة أو تسمع صوت جريان مياه أو يرتفع استهلاكك، ولا تعرف مكان التسرب.',
       link: 'تعرّف على خدمة كشف التسربات',
     },
     repair: {
       title: 'إصلاح تسربات المياه',
-      text: 'معالجة التسرب بعد تحديده بإصلاح يناسب الماسورة أو الوصلة المتضررة. تعتمد الأعمال المقترحة على موقع التسرب وسهولة الوصول إليه وحالة التمديدات.',
+      text: 'عندما يكون مكان التسرب معروفًا وتحتاج الماسورة أو الوصلة إلى إصلاح.',
       link: 'تعرّف على خدمة إصلاح التسربات',
       alt: 'فنّي يشدّ وصلة محبس نحاسية أسفل مغسلة باستخدام مفتاحين',
     },
@@ -180,7 +190,7 @@ const homeAr: Home = {
   },
   coverage: {
     title: 'خدمات تسربات المياه في أنحاء الرياض',
-    text: 'تواصل مع LeakFix وأخبرنا باسم الحي وموقع العقار لمعرفة إمكانية الزيارة. وضّح لنا إن كانت المشكلة في فيلا أو شقة أو عقار تجاري، وإن كان الدخول يحتاج إلى تنسيق مع مستأجر أو إدارة المبنى.',
+    text: 'تعمل LeakFix في الفلل والشقق والعقارات التجارية في أنحاء الرياض، وتوضّح صفحة مناطق الخدمة كيف نؤكد إمكانية الزيارة لحيّك.',
     link: 'تحقّق من التغطية في الرياض',
   },
   faqs: [
@@ -198,7 +208,7 @@ const homeAr: Home = {
     },
     {
       q: 'هل تخدمون الحي الذي أسكن فيه في الرياض؟',
-      a: 'أرسل لنا اسم الحي والموقع لنؤكد لك إمكانية الزيارة حاليًا.',
+      a: 'تعمل LeakFix في أنحاء الرياض، ونؤكد إمكانية الزيارة لكل طلب، وتوضّح صفحة مناطق الخدمة ذلك.',
     },
     {
       q: 'ما المعلومات التي أرسلها لكم؟',
@@ -207,7 +217,7 @@ const homeAr: Home = {
   ],
   finalCta: {
     title: 'أخبرنا عن مشكلة التسرب',
-    text: 'أرسل لنا موقعك في الرياض وصِف المشكلة، وسنناقش معك الخطوة التالية والمواعيد المتاحة.',
+    text: 'اتصل بـ LeakFix أو راسلنا عبر واتساب لنناقش المشكلة ونرتّب زيارة.',
   },
 };
 
@@ -282,8 +292,8 @@ const detectionEn: ServicePage = {
       a: 'Some leaks only show when a particular tap, shower or appliance is in use, or at certain times of day. Tell us when the problem appears and what was running at the time. This helps us plan the inspection.',
     },
     {
-      q: 'Will you need to get behind walls or under floors?',
-      a: 'Not necessarily. It depends on where the pipework runs and what the inspection shows. If opening a surface is needed to confirm or reach a leak, we explain why and agree it with you first.',
+      q: 'Can a leak be found without breaking tiles or walls?',
+      a: 'Often the inspection itself can narrow the leak down without opening anything, using the checks described on this page. Reaching the pipe to repair it is a separate step: if a wall, tiles or ground must be opened, that is explained and agreed with you first.',
     },
     {
       q: 'Can I discuss a repair after the inspection?',
@@ -355,8 +365,8 @@ const detectionAr: ServicePage = {
       a: 'بعض التسربات لا تظهر إلا عند استخدام حنفية أو دُش أو جهاز معيّن، أو في أوقات محددة من اليوم. أخبرنا متى تظهر المشكلة وما الذي كان يعمل وقتها، فهذا يساعدنا على التخطيط للفحص.',
     },
     {
-      q: 'هل ستحتاجون إلى الوصول خلف الجدران أو تحت الأرضيات؟',
-      a: 'ليس بالضرورة. يعتمد ذلك على مسار التمديدات وما يكشفه الفحص. إذا لزم فتح جزء من سطح ما لتأكيد التسرب أو الوصول إليه، نوضّح لك السبب ونتفق معك قبل ذلك.',
+      q: 'هل يمكن كشف التسرب بدون تكسير؟',
+      a: 'كثيرًا ما يضيّق الفحص نفسه مكان التسرب دون فتح أي شيء، باستخدام الفحوصات الموضّحة في هذه الصفحة. أما الوصول إلى الماسورة لإصلاحها فخطوة منفصلة: إذا لزم فتح جدار أو رفع بلاط أو حفر، نوضّح لك ذلك ونتفق عليه معك أولًا.',
     },
     {
       q: 'هل يمكنني مناقشة الإصلاح بعد الفحص؟',
@@ -529,7 +539,7 @@ const areasEn = {
   },
   h1: 'Water Leak Services Across Riyadh',
   intro: 'Contact LeakFix to check water leak detection and repair availability at your property in Riyadh.',
-  body: 'Send your district, property location and a brief description of the problem. Mention any building access requirements so these can be discussed before a visit is arranged.',
+  body: 'LeakFix carries out plumbing, leak detection and repair visits across Riyadh, in villas, apartments and commercial properties.',
   checklistTitle: 'What to include in your message',
   checklist: [
     'Your district and the property location.',
@@ -538,7 +548,7 @@ const areasEn = {
     'Any access arrangements, such as a building manager, security desk or tenant.',
   ],
   enquiryTitle: 'Check availability for your property',
-  enquiryText: 'Get in touch with the details above and we will confirm whether a visit can be arranged.',
+  enquiryText: 'Send your district and a brief description of the problem on WhatsApp so we can confirm availability.',
   enquiryLink: 'Go to the contact page',
 };
 
@@ -550,7 +560,7 @@ const areasAr: typeof areasEn = {
   },
   h1: 'خدمات تسربات المياه في أنحاء الرياض',
   intro: 'تواصل مع LeakFix للتحقق من توفر خدمة كشف تسربات المياه وإصلاحها في عقارك بالرياض.',
-  body: 'أرسل لنا اسم الحي وموقع العقار ووصفًا مختصرًا للمشكلة. واذكر أي متطلبات للدخول إلى المبنى حتى نناقشها قبل ترتيب الزيارة.',
+  body: 'تنفّذ LeakFix زيارات السباكة وكشف التسربات وإصلاحها في أنحاء الرياض، في الفلل والشقق والعقارات التجارية.',
   checklistTitle: 'ما الذي تذكره في رسالتك',
   checklist: [
     'اسم الحي وموقع العقار.',
@@ -559,7 +569,7 @@ const areasAr: typeof areasEn = {
     'أي ترتيبات للدخول، مثل إدارة المبنى أو الحراسة أو المستأجر.',
   ],
   enquiryTitle: 'تحقّق من إمكانية الزيارة لعقارك',
-  enquiryText: 'تواصل معنا بالتفاصيل أعلاه، وسنؤكد لك إن كان بالإمكان ترتيب زيارة.',
+  enquiryText: 'أرسل اسم الحي ووصفًا مختصرًا للمشكلة عبر واتساب لنتأكد من إمكانية ترتيب زيارة.',
   enquiryLink: 'انتقل إلى صفحة التواصل',
 };
 
@@ -588,7 +598,7 @@ const aboutEn = {
   ] as Section[],
   teamTitle: 'Our Team',
   teamText:
-    'Engineer Muhammad Faisal is part of the LeakFix team and works on leak investigations and repairs. Engineer Faisal received training in Pakistan.',
+    'Engineer Muhammad Faisal carries out LeakFix\'s plumbing, leak investigation and repair work. He has 25 years of experience in plumbing, water leak detection and repair.',
   teamLink: 'Read Engineer Muhammad Faisal\'s profile',
   contactTitle: 'Contact LeakFix',
   contactText: 'Use the contact page to enquire about a suspected or identified water leak.',
@@ -619,7 +629,7 @@ const aboutAr: typeof aboutEn = {
     },
   ],
   teamTitle: 'فريقنا',
-  teamText: 'المهندس محمد فيصل من فريق LeakFix، ويعمل في فحص التسربات وإصلاحها، وقد تلقّى تدريبه في باكستان.',
+  teamText: 'المهندس محمد فيصل يتولى أعمال السباكة وفحص التسربات وإصلاحها لدى LeakFix. لديه 25 عامًا من الخبرة في أعمال السباكة وكشف تسربات المياه وإصلاحها.',
   teamLink: 'اطّلع على ملف المهندس محمد فيصل',
   contactTitle: 'تواصل مع LeakFix',
   contactText: 'استخدم صفحة التواصل للاستفسار عن تسرب مياه مشتبه به أو تم تحديده.',
