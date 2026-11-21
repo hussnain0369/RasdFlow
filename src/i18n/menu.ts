@@ -45,8 +45,9 @@ export function buildMenu(lang: Lang): { home: MenuLink; groups: MenuGroup[] } {
       {
         id: 'about',
         label: ui.aboutUs,
-        overview: 'about',
+        overview: null, // the About Us page is the first link in the group
         links: [
+          page('about'),
           page('engineer'),
           page('reviews'),
           page('howItWorks'),
