@@ -43,6 +43,7 @@ const drawerGroups: DrawerGroup[] = [
     overview: 'about',
     links: [
       pageLink('howItWorks'),
+      pageLink('guide'),
       pageLink('engineer'),
       // Customer reviews: only once approved reviews are published on the homepage.
       ...(approvedReviews.length > 0 ? [{ href: `${path('home', lang)}#reviews`, label: feedbackText[lang].sectionTitle, key: null }] : []),
