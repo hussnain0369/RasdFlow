@@ -5,6 +5,9 @@ import Icon from './Icon.astro';
 import { path, otherLang, type Lang, type PageKey } from '../i18n/routes';
 import { t } from '../i18n/ui';
 import { contact, isDemoContact } from '../config/business';
+import { feedbackEnabled } from '../config/site';
+import { approvedReviews } from '../data/reviews';
+import { feedbackText } from '../content/feedback';
 
 interface Props {
   lang: Lang;
@@ -19,6 +22,44 @@ const serviceKeys: PageKey[] = ['plumbing', 'detection', 'hidden', 'underground'
 const serviceLabel = (key: PageKey) => (key === 'plumbing' ? ui.plumbingLong : ui.nav[key]);
 const inServices = page !== null && serviceKeys.includes(page);
 const afterServices: PageKey[] = ['howItWorks', 'areas', 'about', 'contact'];
+
+// Drawer: Home, then three accordion groups built only from pages that exist.
+type DrawerLink = { href: string; label: string; key: PageKey | null };
+type DrawerGroup = { id: string; label: string; overview: PageKey | null; links: DrawerLink[] };
+const pageLink = (key: PageKey, label = ui.nav[key]): DrawerLink => ({ href: path(key, lang), label, key });
+const drawerGroups: DrawerGroup[] = [
+  {
+    id: 'drawer-services',
+    label: ui.services,
+    overview: null, // there is no services overview page, so the whole row expands
+    // main detection link, then the specialist detection pages, then repair, then plumbing
+    links: (['detection', 'hidden', 'underground', 'repair', 'pipeRepair', 'plumbing'] as PageKey[]).map((key) =>
+      pageLink(key, serviceLabel(key)),
+    ),
+  },
+  {
+    id: 'drawer-about',
+    label: ui.aboutUs,
+    overview: 'about',
+    links: [
+      pageLink('howItWorks'),
+      pageLink('engineer'),
+      // Customer reviews: only once approved reviews are published on the homepage.
+      ...(approvedReviews.length > 0 ? [{ href: `${path('home', lang)}#reviews`, label: feedbackText[lang].sectionTitle, key: null }] : []),
+    ],
+  },
+  {
+    id: 'drawer-contact',
+    label: ui.contactUs,
+    overview: 'contact',
+    links: [
+      pageLink('areas'),
+      // Private feedback page exists only when email delivery is configured.
+      ...(feedbackEnabled ? [pageLink('feedback')] : []),
+    ],
+  },
+];
+const groupIsCurrent = (g: DrawerGroup) => page !== null && (g.overview === page || g.links.some((l) => l.key === page));
 ---
 <div class="topbar">
   <div class="wrap topbar-inner">
@@ -113,30 +154,49 @@ const afterServices: PageKey[] = ['howItWorks', 'areas', 'about', 'contact'];
         <li>
           <a href={path('home', lang)} aria-current={page === 'home' ? 'page' : undefined}>{ui.nav.home}</a>
         </li>
-        <li class="has-sub">
-          <button class="sub-toggle" type="button" aria-expanded={inServices ? 'true' : 'false'} aria-controls="drawer-services">
-            <span>{ui.services}</span>
-            <Icon name="chevron" class="chev" />
-          </button>
-          <ul id="drawer-services" class="sub" hidden={!inServices}>
-            {
-              serviceKeys.map((key) => (
-                <li>
-                  <a href={path(key, lang)} aria-current={key === page ? 'page' : undefined}>{serviceLabel(key)}</a>
-                </li>
-              ))
-            }
-          </ul>
-        </li>
         {
-          afterServices.map((key) => (
-            <li>
-              <a href={path(key, lang)} aria-current={key === page ? 'page' : undefined}>{ui.nav[key]}</a>
-            </li>
-          ))
+          drawerGroups.map((g) => {
+            const open = groupIsCurrent(g);
+            return (
+              <li class="group">
+                {g.overview ? (
+                  <div class="group-row">
+                    <a class="group-link" href={path(g.overview, lang)} aria-current={g.overview === page ? 'page' : undefined}>
+                      {g.label}
+                    </a>
+                    <button
+                      class="sub-toggle chev-only"
+                      type="button"
+                      aria-expanded={open ? 'true' : 'false'}
+                      aria-controls={g.id}
+                      aria-label={`${g.label}: ${ui.subMore}`}
+                    >
+                      <Icon name="chevron" class="chev" />
+                    </button>
+                  </div>
+                ) : (
+                  <button class="sub-toggle" type="button" aria-expanded={open ? 'true' : 'false'} aria-controls={g.id}>
+                    <span>{g.label}</span>
+                    <Icon name="chevron" class="chev" />
+                  </button>
+                )}
+                <ul id={g.id} class="sub" hidden={!open}>
+                  {g.links.map((l) => (
+                    <li>
+                      <a href={l.href} aria-current={l.key !== null && l.key === page ? 'page' : undefined}>{l.label}</a>
+                    </li>
+                  ))}
+                </ul>
+              </li>
+            );
+          })
         }
       </ul>
     </nav>
+    <a class="drawer-lang" href={switchHref} hreflang={alt} lang={alt} aria-label={ui.switchLabel}>
+      <Icon name="globe" />
+      <span>{ui.switchTo}</span>
+    </a>
   </div>
 </div>
 
@@ -174,14 +234,20 @@ const afterServices: PageKey[] = ['howItWorks', 'areas', 'about', 'contact'];
     // Selecting a link closes the drawer (the page then navigates).
     drawer.querySelectorAll('a[href]').forEach((a) => a.addEventListener('click', () => close(false)));
 
-    // Services submenu
-    const sub = drawer.querySelector<HTMLButtonElement>('.sub-toggle');
-    const list = drawer.querySelector<HTMLElement>('#drawer-services');
-    sub?.addEventListener('click', () => {
-      const expanded = sub.getAttribute('aria-expanded') === 'true';
-      sub.setAttribute('aria-expanded', String(!expanded));
-      if (list) list.hidden = expanded;
-    });
+    // Accordion groups: one open at a time.
+    const groupToggles = [...drawer.querySelectorAll<HTMLButtonElement>('.sub-toggle')];
+    const setGroup = (btn: HTMLButtonElement, open: boolean) => {
+      btn.setAttribute('aria-expanded', String(open));
+      const panel = document.getElementById(btn.getAttribute('aria-controls') ?? '');
+      if (panel) panel.hidden = !open;
+    };
+    groupToggles.forEach((btn) =>
+      btn.addEventListener('click', () => {
+        const open = btn.getAttribute('aria-expanded') !== 'true';
+        groupToggles.forEach((other) => other !== btn && setGroup(other, false));
+        setGroup(btn, open);
+      }),
+    );
 
     // Escape closes; Tab stays inside the open drawer.
     document.addEventListener('keydown', (event) => {
@@ -660,6 +726,47 @@ const afterServices: PageKey[] = ['howItWorks', 'areas', 'about', 'contact'];
   .sub-toggle span {
     flex: 1;
   }
+  /* Group whose parent is an overview page: the label links to it, the chevron expands the group. */
+  .group-row {
+    display: flex;
+    align-items: stretch;
+  }
+  .group-row .group-link {
+    flex: 1;
+    min-width: 0;
+  }
+  .sub-toggle.chev-only {
+    flex: none;
+    width: 44px;
+    justify-content: center;
+    padding: 0;
+    border-inline-start: 1px solid var(--line);
+  }
+  .drawer-lang {
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+    min-height: 44px;
+    margin-block-start: 1rem;
+    padding: 0.5rem 0.75rem;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-m);
+    color: var(--navy);
+    font-weight: 600;
+    text-decoration: none;
+    overflow-wrap: anywhere;
+  }
+  .drawer-lang:lang(ar) {
+    font-family: var(--font-ar);
+  }
+  .drawer-lang:lang(en) {
+    font-family: var(--font);
+  }
+  .drawer-lang :global(svg) {
+    flex: none;
+    width: 1.1rem;
+    height: 1.1rem;
+  }
   .sub-toggle :global(.chev) {
     flex: none;
     width: 1.1rem;
@@ -669,9 +776,10 @@ const afterServices: PageKey[] = ['howItWorks', 'areas', 'about', 'contact'];
   .sub-toggle[aria-expanded='true'] :global(.chev) {
     transform: rotate(180deg);
   }
-  .sub {
+  /* Child links: directly under their parent, slightly indented, thin divider above. */
+  .drawer-nav .sub {
     border-block-start: 1px solid var(--line);
-    padding-inline-start: 0.6rem;
+    padding-inline-start: 0.75rem;
   }
   .sub li:last-child {
     border-block-end: 0;

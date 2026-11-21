@@ -10,6 +10,9 @@ export const ui = {
     menuClose: 'Close menu',
     menuOpen: 'Open menu',
     services: 'Services',
+    aboutUs: 'About Us',
+    contactUs: 'Contact Us',
+    subMore: 'show the pages in this group',
     plumbingLong: 'Plumbing Services',
     mainNav: 'Main',
     nav: {
@@ -106,7 +109,10 @@ export const ui = {
     menu: 'القائمة',
     menuClose: 'إغلاق القائمة',
     menuOpen: 'فتح القائمة',
-    services: 'الخدمات',
+    services: 'خدماتنا',
+    aboutUs: 'من نحن',
+    contactUs: 'تواصل معنا',
+    subMore: 'عرض صفحات هذه المجموعة',
     plumbingLong: 'خدمات السباكة',
     mainNav: 'القائمة الرئيسية',
     nav: {
