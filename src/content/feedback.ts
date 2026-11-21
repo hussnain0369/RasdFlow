@@ -3,7 +3,17 @@ import type { Lang } from '../i18n/routes';
 /** Wording for the reviews section and the private feedback form. */
 export const feedbackText = {
   en: {
-    // Homepage reviews section
+    // Homepage "Reviews & Feedback" section
+    sectionTitle: 'Reviews & Feedback',
+    googleReviewBtn: 'Leave a Google Review',
+    privateBtn: 'Send Private Feedback',
+    quickPrompt: 'How was your visit?',
+    quickComment: 'Comment',
+    quickPrivacy: 'Private: only LeakFix sees this. No account, name, phone number or email needed.',
+    quickSubmit: 'Send Feedback',
+    quickSuccessTitle: 'Thank you',
+    quickSuccess: 'Your feedback has been sent to LeakFix.',
+    waFeedbackBtn: 'Send Feedback on WhatsApp',
     reviewsTitle: 'Customer Reviews',
     emptyText: 'Have you used LeakFix? Tell us how your visit went.',
     leaveFeedback: 'Leave Feedback',
@@ -67,6 +77,16 @@ export const feedbackText = {
     },
   },
   ar: {
+    sectionTitle: 'التقييمات والملاحظات',
+    googleReviewBtn: 'اكتب تقييمًا على Google',
+    privateBtn: 'أرسل ملاحظاتك',
+    quickPrompt: 'كيف كانت تجربتك معنا؟',
+    quickComment: 'تعليق',
+    quickPrivacy: 'خاصة: لا يطّلع عليها إلا LeakFix، ولا تحتاج إلى حساب أو اسم أو رقم جوال أو بريد إلكتروني.',
+    quickSubmit: 'إرسال الملاحظات',
+    quickSuccessTitle: 'شكرًا لك',
+    quickSuccess: 'وصلت ملاحظاتك إلى LeakFix.',
+    waFeedbackBtn: 'أرسل ملاحظاتك عبر واتساب',
     reviewsTitle: 'آراء العملاء',
     emptyText: 'هل سبق أن استخدمت خدمات ليك فكس؟ شاركنا رأيك في الزيارة.',
     leaveFeedback: 'شاركنا رأيك',
@@ -131,6 +151,6 @@ export const feedbackText = {
 
 /** WhatsApp message used when the form is not available. */
 export const whatsappFeedbackText = {
-  en: 'Hello LeakFix, I would like to share feedback about my visit.',
-  ar: 'السلام عليكم، أبي أشارك رأيي في زيارة LeakFix.',
+  en: "Hi LeakFix, I'd like to share feedback about my visit.",
+  ar: 'السلام عليكم، حاب أشارككم ملاحظاتي عن الزيارة.',
 } satisfies Record<Lang, string>;

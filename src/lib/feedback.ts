@@ -13,6 +13,8 @@ export interface Feedback {
   /** 'name' to publish under displayName, 'anonymous' otherwise. Only used when publish is true. */
   display: 'name' | 'anonymous';
   displayName: string;
+  /** Short homepage form: rating required, comment optional, never published. */
+  quick: boolean;
 }
 export type FeedbackError = 'rating' | 'message' | 'contact' | 'displayName' | 'tooLong';
 export type FeedbackErrors = Partial<Record<keyof Feedback, FeedbackError>>;
@@ -23,7 +25,9 @@ const clean = (v: unknown) =>
     .trim();
 
 export function validateFeedback(raw: Record<string, unknown>): { data: Feedback; errors: FeedbackErrors } {
-  const publish = ['on', 'true', '1', 'yes'].includes(clean(raw.publish).toLowerCase());
+  const quick = clean(raw.quick) === '1';
+  // The short homepage form has no publication option, so its feedback is always private.
+  const publish = !quick && ['on', 'true', '1', 'yes'].includes(clean(raw.publish).toLowerCase());
   const data: Feedback = {
     rating: Number(clean(raw.rating)),
     message: clean(raw.message),
@@ -33,10 +37,11 @@ export function validateFeedback(raw: Record<string, unknown>): { data: Feedback
     publish,
     display: clean(raw.display) === 'name' ? 'name' : 'anonymous',
     displayName: clean(raw.displayName),
+    quick,
   };
   const errors: FeedbackErrors = {};
   if (!Number.isInteger(data.rating) || data.rating < 1 || data.rating > 5) errors.rating = 'rating';
-  if (data.message.length < 5) errors.message = 'message';
+  if (data.message.length < 5 && !(quick && data.message.length === 0)) errors.message = 'message';
   else if (data.message.length > FEEDBACK_LIMITS.message) errors.message = 'tooLong';
   if (data.name.length > FEEDBACK_LIMITS.name) errors.name = 'tooLong';
   if (data.contact) {

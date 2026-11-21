@@ -48,13 +48,13 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
 
   const shownAs = data.publish ? (data.display === 'name' ? data.displayName : 'Anonymous') : '—';
   const text = [
-    `New feedback from the LeakFix website (${lang === 'ar' ? 'Arabic' : 'English'} page)`,
+    `New feedback from the LeakFix website (${lang === 'ar' ? 'Arabic' : 'English'} ${data.quick ? 'homepage quick form' : 'feedback page'})`,
     '',
     `Rating: ${data.rating} out of 5`,
     `Service: ${data.service ? serviceName[data.service] : 'Not given'}`,
     '',
     'Feedback:',
-    data.message,
+    data.message || '(No comment, rating only)',
     '',
     `Permission to publish: ${data.publish ? 'YES' : 'NO'}`,
     `Display name if published: ${shownAs}`,

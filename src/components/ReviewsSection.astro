@@ -1,16 +1,21 @@
 ---
 /**
- * Homepage "Customer Reviews". Shows up to three approved reviews from
- * src/data/reviews.ts (newest first). With none, shows the invitation copy.
- * No Review/AggregateRating structured data is added: the text stays in plain HTML.
+ * Homepage "Reviews & Feedback" (just above the final contact section).
+ * - Up to three approved reviews from src/data/reviews.ts (newest first), only if any exist.
+ * - "Leave a Google Review": shown to everyone once googleReviewUrl is configured.
+ * - "Send Private Feedback": reveals a short private form (rating required, comment optional)
+ *   delivered by /api/feedback/. Without configured delivery, a WhatsApp link replaces it.
+ * No Review/AggregateRating structured data is added.
  */
 import Icon from './Icon.astro';
 import Stars from './Stars.astro';
+import StarInput from './StarInput.astro';
 import { approvedReviews, reviewSummary } from '../data/reviews';
 import { feedbackText, whatsappFeedbackText } from '../content/feedback';
 import { business, contact } from '../config/business';
 import { feedbackEnabled } from '../config/site';
-import { path, type Lang } from '../i18n/routes';
+import { FEEDBACK_LIMITS } from '../lib/feedback';
+import { path, withBase, type Lang } from '../i18n/routes';
 import { t } from '../i18n/ui';
 
 interface Props {
@@ -19,15 +24,12 @@ interface Props {
 const { lang } = Astro.props;
 const f = feedbackText[lang];
 const ui = t(lang);
-const other: Lang = lang === 'ar' ? 'en' : 'ar';
-// The three newest approved reviews, whatever language they were written in (no picking).
-// Each is shown in the customer's own words and marked with its language.
 const reviews = [...approvedReviews]
   .filter((r) => r.text.en || r.text.ar)
   .sort((a, b) => b.date.localeCompare(a.date))
   .slice(0, 3)
   .map((r) => {
-    const textLang: Lang = r.text[lang] ? lang : other;
+    const textLang: Lang = r.text[lang] ? lang : lang === 'ar' ? 'en' : 'ar';
     return { ...r, shown: r.text[textLang]!, textLang };
   });
 const waFeedback =
@@ -35,10 +37,10 @@ const waFeedback =
     ? `${contact.whatsapp.href}?text=${encodeURIComponent(whatsappFeedbackText[lang])}`
     : null;
 ---
-<section class="section reviews-band" aria-labelledby="reviews-title">
+<section class="rf" aria-labelledby="rf-title">
   <div class="wrap">
-    <div class="head">
-      <h2 id="reviews-title">{f.reviewsTitle}</h2>
+    <div class="rf-head">
+      <h2 id="rf-title">{f.sectionTitle}</h2>
       {
         reviewSummary && (
           <p class="summary">
@@ -50,10 +52,11 @@ const waFeedback =
           </p>
         )
       }
+      <p class="intro">{f.emptyText}</p>
     </div>
 
     {
-      reviews.length > 0 ? (
+      reviews.length > 0 && (
         <ul class="cards">
           {reviews.map((r) => (
             <li class="card">
@@ -63,57 +66,193 @@ const waFeedback =
               </blockquote>
               <p class="who">
                 <span class="name">{r.author ?? f.anonymous}</span>
-                {r.service && (
-                  <span class="svc">
-                    {f.serviceLabel}: {ui.nav[r.service]}
-                  </span>
-                )}
+                {r.service && <span class="svc">{f.serviceLabel}: {ui.nav[r.service]}</span>}
               </p>
             </li>
           ))}
         </ul>
-      ) : (
-        <p class="empty">{f.emptyText}</p>
       )
     }
 
-    <div class="actions">
+    <div class="rf-actions">
+      {
+        business.googleReviewUrl && (
+          <a class="btn btn--ghost" href={business.googleReviewUrl} rel="noopener" target="_blank" data-feedback="google">
+            {f.googleReviewBtn}
+          </a>
+        )
+      }
       {
         feedbackEnabled ? (
-          <a class="btn" href={path('feedback', lang)}>
-            {f.leaveFeedback}
-          </a>
+          <button class="btn" type="button" aria-expanded="false" aria-controls="qf" data-qf-toggle>
+            {f.privateBtn}
+          </button>
         ) : (
           waFeedback && (
-            <a class="btn" href={waFeedback} rel="noopener" target="_blank" data-contact="whatsapp">
+            <a class="btn" href={waFeedback} rel="noopener" target="_blank" data-contact="whatsapp" data-feedback="whatsapp">
               <Icon name="chat" />
-              <span>{f.whatsappFeedback}</span>
+              <span>{f.waFeedbackBtn}</span>
             </a>
           )
         )
       }
-      {
-        business.googleReviewUrl && (
-          <a class="btn btn--ghost" href={business.googleReviewUrl} rel="noopener" target="_blank">
-            {f.googleReview}
-          </a>
-        )
-      }
     </div>
+
+    {
+      feedbackEnabled && (
+        <div id="qf" class="qf" data-qf-panel>
+          <form
+            class="qf-form"
+            method="post"
+            action={withBase('/api/feedback/')}
+            novalidate
+            data-errors={JSON.stringify(f.form.errors)}
+            data-msg-send={f.form.errorSend}
+            data-msg-rate={f.form.errorRate}
+            data-msg-summary={f.form.errorSummary}
+            data-msg-sending={f.form.sending}
+          >
+            <div class="status" role="alert" tabindex="-1" hidden />
+            <input type="hidden" name="lang" value={lang} />
+            <input type="hidden" name="quick" value="1" />
+            <input type="hidden" name="started_at" value="" />
+            <div class="hp" aria-hidden="true">
+              <label for="qf-website">{f.form.honeypot}</label>
+              <input id="qf-website" name="website" type="text" tabindex="-1" autocomplete="off" />
+            </div>
+
+            <StarInput lang={lang} legend={f.quickPrompt} note={f.form.required} idPrefix="qf" />
+
+            <div class="qf-field">
+              <label for="qf-message">
+                {f.quickComment} <span class="req">({f.form.optional})</span>
+              </label>
+              <textarea id="qf-message" name="message" rows="3" maxlength={FEEDBACK_LIMITS.message} aria-describedby="qf-e-message" />
+              <p class="error" id="qf-e-message" hidden />
+            </div>
+
+            <div class="qf-submit">
+              <button class="btn btn--blue" type="submit">{f.quickSubmit}</button>
+              <p class="qf-privacy">
+                {f.quickPrivacy} <a href={path('privacy', lang)}>{f.form.privacyLink}</a>.
+              </p>
+            </div>
+          </form>
+          <div class="qf-done" role="status" tabindex="-1" hidden>
+            <p>
+              <strong>{f.quickSuccessTitle}.</strong> {f.quickSuccess}
+            </p>
+          </div>
+        </div>
+      )
+    }
   </div>
 </section>
 
-<style>
-  .reviews-band {
-    background: var(--mist);
+<script>
+  import { validateFeedback } from '../lib/feedback';
+
+  const toggle = document.querySelector<HTMLButtonElement>('[data-qf-toggle]');
+  const panel = document.querySelector<HTMLElement>('[data-qf-panel]');
+  const form = panel?.querySelector<HTMLFormElement>('form');
+  if (toggle && panel && form) {
+    // Collapsed until asked for; without JavaScript the form simply stays visible.
+    panel.hidden = true;
+    toggle.addEventListener('click', () => {
+      const open = toggle.getAttribute('aria-expanded') !== 'true';
+      toggle.setAttribute('aria-expanded', String(open));
+      panel.hidden = !open;
+      if (open) panel.querySelector<HTMLInputElement>('input[name="rating"]')?.focus();
+    });
+
+    const started = form.querySelector<HTMLInputElement>('input[name="started_at"]');
+    if (started) started.value = String(Date.now());
+    const messages = JSON.parse(form.dataset.errors ?? '{}') as Record<string, string>;
+    const status = form.querySelector<HTMLElement>('.status')!;
+    const button = form.querySelector<HTMLButtonElement>('button[type="submit"]')!;
+    const label = button.textContent ?? '';
+    let pending = false;
+
+    const show = (text: string) => {
+      status.hidden = false;
+      status.textContent = text;
+      status.focus();
+    };
+    const mark = (errors: Record<string, string | undefined>) => {
+      let first: HTMLElement | null = null;
+      for (const name of ['rating', 'message']) {
+        const el = form.querySelector<HTMLElement>(`#qf-e-${name}`);
+        const code = errors[name];
+        if (el) {
+          el.hidden = !code;
+          el.textContent = code ? messages[code] ?? '' : '';
+        }
+        const inputs = form.querySelectorAll<HTMLElement>(`[name="${name}"]`);
+        inputs.forEach((i) => i.setAttribute('aria-invalid', code ? 'true' : 'false'));
+        if (code && !first) first = inputs[0] ?? null;
+      }
+      return first as HTMLElement | null;
+    };
+
+    form.addEventListener('change', () => {
+      if (![...form.querySelectorAll<HTMLElement>('.error')].some((e) => !e.hidden)) status.hidden = true;
+    });
+
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      if (pending) return;
+      const first = mark(validateFeedback(Object.fromEntries(new FormData(form))).errors);
+      if (first) {
+        show(form.dataset.msgSummary ?? '');
+        first.focus();
+        return;
+      }
+      pending = true;
+      button.disabled = true;
+      button.textContent = form.dataset.msgSending ?? '';
+      try {
+        const res = await fetch(form.action, { method: 'POST', headers: { accept: 'application/json' }, body: new FormData(form) });
+        const body = await res.json().catch(() => ({}));
+        if (res.ok && body.ok === true) {
+          form.reset();
+          form.hidden = true;
+          const done = panel.querySelector<HTMLElement>('.qf-done')!;
+          done.hidden = false;
+          done.focus();
+          return;
+        }
+        // Keep the rating and comment so the customer can retry.
+        if (res.status === 400 && body.fields) {
+          mark(body.fields);
+          show(form.dataset.msgSummary ?? '');
+        } else show(res.status === 429 ? form.dataset.msgRate ?? '' : form.dataset.msgSend ?? '');
+      } catch {
+        show(form.dataset.msgSend ?? '');
+      } finally {
+        pending = false;
+        button.disabled = false;
+        button.textContent = label;
+      }
+    });
   }
-  .head {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: baseline;
-    justify-content: space-between;
-    gap: 0.5rem 2rem;
-    margin-block-end: 1.75rem;
+</script>
+
+<style>
+  .rf {
+    padding-block: clamp(2.5rem, 1.75rem + 2.5vw, 4rem);
+    background: var(--mist);
+    border-block-start: 1px solid var(--line);
+  }
+  .rf-head {
+    display: grid;
+    gap: 0.5rem;
+    margin-block-end: 1.25rem;
+  }
+  .rf-head h2 {
+    font-size: var(--step-2);
+  }
+  .intro {
+    max-width: 40rem;
   }
   .summary {
     display: flex;
@@ -129,17 +268,17 @@ const waFeedback =
   }
   .cards {
     list-style: none;
-    margin: 0 0 2rem;
+    margin: 0 0 1.5rem;
     padding: 0;
     display: grid;
     gap: 1rem;
-    grid-template-columns: repeat(auto-fit, minmax(min(18rem, 100%), 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(min(17rem, 100%), 1fr));
   }
   .card {
     display: flex;
     flex-direction: column;
-    gap: 0.75rem;
-    padding: 1.25rem;
+    gap: 0.6rem;
+    padding: 1.1rem 1.25rem;
     background: var(--white);
     border: 1px solid var(--line);
     border-radius: var(--radius-m);
@@ -164,14 +303,89 @@ const waFeedback =
   .svc {
     color: var(--ink-soft);
   }
-  .empty {
-    font-size: var(--step-lede);
-    max-width: 40rem;
-    margin-block-end: 1.5rem;
-  }
-  .actions {
+  .rf-actions {
     display: flex;
     flex-wrap: wrap;
     gap: 0.75rem;
+  }
+  .rf-actions .btn[aria-expanded='true'] {
+    --btn-bg: var(--navy-2);
+  }
+  .qf {
+    margin-block-start: 1.25rem;
+    max-width: 38rem;
+    background: var(--white);
+    border: 1px solid var(--line);
+    border-block-start: 4px solid var(--navy);
+    border-radius: 0 0 var(--radius-m) var(--radius-m);
+    padding: clamp(1.1rem, 0.75rem + 1.5vw, 1.75rem);
+  }
+  .qf-field {
+    margin-block-end: 1.1rem;
+  }
+  .qf-field label {
+    display: block;
+    font-weight: 650;
+    color: var(--navy);
+    margin-block-end: 0.35rem;
+  }
+  .req {
+    font-weight: 400;
+    color: var(--ink-soft);
+    font-size: var(--step--1);
+  }
+  textarea {
+    width: 100%;
+    font: inherit;
+    color: var(--ink);
+    padding: 0.7rem 0.85rem;
+    border: 1.5px solid #8ea1b2;
+    border-radius: var(--radius-s);
+    background: var(--white);
+    resize: vertical;
+    min-height: 5.5rem;
+  }
+  textarea:focus-visible {
+    outline: 3px solid var(--blue);
+    outline-offset: 1px;
+    border-color: var(--navy);
+  }
+  .qf-submit {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.75rem 1.25rem;
+  }
+  .qf-privacy {
+    flex: 1 1 16rem;
+    font-size: var(--step--1);
+    color: var(--ink-soft);
+  }
+  .status {
+    padding: 0.8rem 1rem;
+    margin-block-end: 1rem;
+    border-radius: var(--radius-s);
+    border-inline-start: 4px solid var(--error);
+    background: #fdf0ef;
+    color: var(--error);
+    font-weight: 600;
+  }
+  .error {
+    color: var(--error);
+    font-size: var(--step--1);
+    font-weight: 600;
+    margin-block-start: 0.4rem;
+  }
+  .qf-done {
+    padding: 0.25rem 0;
+    border-inline-start: 4px solid var(--success);
+    padding-inline-start: 1rem;
+  }
+  .hp {
+    position: absolute;
+    inset-inline-start: -10000px;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
   }
 </style>

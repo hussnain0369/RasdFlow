@@ -198,8 +198,6 @@ const ms = methodsSection[lang];
     </div>
   </section>
 
-  <ReviewsSection lang={lang} />
-
   <section class="section coverage" aria-labelledby="coverage-title">
     <div class="wrap coverage-grid">
       <Illustration
@@ -226,6 +224,8 @@ const ms = methodsSection[lang];
   <ProofSections lang={lang} />
 
   <Faq faqs={c.faqs} title={ui.faqTitle} />
+
+  <ReviewsSection lang={lang} />
 
   <CtaBand lang={lang} title={c.finalCta.title} text={c.finalCta.text} />
 </BaseLayout>
