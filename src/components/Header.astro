@@ -13,9 +13,8 @@ interface Props {
 const { lang, page } = Astro.props;
 const ui = t(lang);
 const alt = otherLang(lang);
-const navKeys: PageKey[] = ['home', 'plumbing', 'detection', 'repair', 'howItWorks', 'areas', 'about', 'contact'];
 const switchHref = path(page ?? 'home', alt);
-// Drawer menu: same order as the desktop menu, with the service pages grouped under "Services".
+// Desktop bar and drawer share one structure: Home, Services (all service pages), then the other pages.
 const serviceKeys: PageKey[] = ['plumbing', 'detection', 'hidden', 'underground', 'repair', 'pipeRepair'];
 const serviceLabel = (key: PageKey) => (key === 'plumbing' ? ui.plumbingLong : ui.nav[key]);
 const inServices = page !== null && serviceKeys.includes(page);
@@ -67,12 +66,28 @@ const afterServices: PageKey[] = ['howItWorks', 'areas', 'about', 'contact'];
 
     <nav id="site-nav" class="site-nav" aria-label={ui.mainNav}>
       <ul>
+        <li>
+          <a href={path('home', lang)} aria-current={page === 'home' ? 'page' : undefined}>{ui.nav.home}</a>
+        </li>
+        <li class="has-drop">
+          <button class="drop-toggle" class:list={{ 'is-current': inServices }} type="button" aria-expanded="false" aria-controls="nav-services">
+            <span>{ui.services}</span>
+            <Icon name="chevron" class="chev" />
+          </button>
+          <ul id="nav-services" class="drop">
+            {
+              serviceKeys.map((key) => (
+                <li>
+                  <a href={path(key, lang)} aria-current={key === page ? 'page' : undefined}>{serviceLabel(key)}</a>
+                </li>
+              ))
+            }
+          </ul>
+        </li>
         {
-          navKeys.map((key) => (
+          afterServices.map((key) => (
             <li>
-              <a href={path(key, lang)} aria-current={key === page ? 'page' : undefined}>
-                {ui.nav[key]}
-              </a>
+              <a href={path(key, lang)} aria-current={key === page ? 'page' : undefined}>{ui.nav[key]}</a>
             </li>
           ))
         }
@@ -81,7 +96,7 @@ const afterServices: PageKey[] = ['howItWorks', 'areas', 'about', 'contact'];
   </div>
 </header>
 
-<!-- Mobile/tablet drawer (below 1360px). Outside the sticky header so it stacks above the floating contact controls. -->
+<!-- Mobile/tablet drawer (below 1024px). Outside the sticky header so it stacks above the floating contact controls. -->
 <div class="drawer-root" data-drawer hidden>
   <div class="drawer-backdrop" data-drawer-close></div>
   <div id="nav-drawer" class="drawer" role="dialog" aria-modal="true" aria-label={ui.mainNav}>
@@ -188,7 +203,32 @@ const afterServices: PageKey[] = ['howItWorks', 'areas', 'about', 'contact'];
       }
     });
     // Leaving the collapsed-menu width closes the drawer.
-    window.matchMedia('(min-width: 85rem)').addEventListener('change', (e) => e.matches && close(false));
+    window.matchMedia('(min-width: 64rem)').addEventListener('change', (e) => e.matches && close(false));
+  }
+
+  // Desktop "Services" dropdown: opens on click or tap; Escape, a click elsewhere or tabbing away closes it.
+  const dropItem = document.querySelector<HTMLElement>('.site-nav .has-drop');
+  const dropBtn = dropItem?.querySelector<HTMLButtonElement>('.drop-toggle');
+  if (dropItem && dropBtn) {
+    const setOpen = (open: boolean) => {
+      dropBtn.setAttribute('aria-expanded', String(open));
+      dropItem.classList.toggle('is-open', open);
+    };
+    const isOpen = () => dropBtn.getAttribute('aria-expanded') === 'true';
+    dropBtn.addEventListener('click', () => setOpen(!isOpen()));
+    document.addEventListener('click', (event) => {
+      if (isOpen() && !dropItem.contains(event.target as Node)) setOpen(false);
+    });
+    dropItem.addEventListener('focusout', (event) => {
+      if (isOpen() && !dropItem.contains(event.relatedTarget as Node | null) && event.relatedTarget) setOpen(false);
+    });
+    dropItem.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape' && isOpen()) {
+        event.stopPropagation();
+        setOpen(false);
+        dropBtn.focus();
+      }
+    });
   }
 </script>
 
@@ -314,7 +354,7 @@ const afterServices: PageKey[] = ['howItWorks', 'areas', 'about', 'contact'];
     order: 3;
     flex-basis: 100%;
   }
-  /* Below 1360px the drawer replaces the inline menu; without JavaScript the inline menu stays visible. */
+  /* Below 1024px the drawer replaces the inline menu; without JavaScript the inline menu stays visible. */
   :global(.js) .site-nav {
     display: none;
   }
@@ -375,7 +415,16 @@ const afterServices: PageKey[] = ['howItWorks', 'areas', 'about', 'contact'];
     }
   }
 
-  @media (min-width: 85rem) {
+  /* Services dropdown: without JavaScript its links are shown in the list itself. */
+  .drop-toggle {
+    display: none;
+  }
+  :global(.no-js) .has-drop,
+  :global(.no-js) .drop {
+    display: contents;
+  }
+
+  @media (min-width: 64rem) {
     .header-inner {
       flex-wrap: nowrap;
       gap: 0.75rem 1rem;
@@ -390,26 +439,108 @@ const afterServices: PageKey[] = ['howItWorks', 'areas', 'about', 'contact'];
       order: 1;
       flex-basis: auto;
     }
-    .site-nav ul {
+    .site-nav > ul {
       display: flex;
-      gap: 0.05rem;
+      align-items: center;
+      gap: 0.1rem;
       padding: 0;
     }
-    .site-nav a {
+    .site-nav a,
+    .drop-toggle {
       border: 0;
-      padding: 0.5rem 0.5rem;
+      padding: 0.5rem 0.55rem;
       border-radius: var(--radius-s);
       font-size: 0.95rem;
       white-space: nowrap;
     }
-    .site-nav a:hover {
+    .site-nav a:hover,
+    .drop-toggle:hover {
       color: var(--blue-text);
     }
     .site-nav a[aria-current='page'],
-    :global([dir='rtl']) .site-nav a[aria-current='page'] {
+    :global([dir='rtl']) .site-nav a[aria-current='page'],
+    .drop-toggle.is-current {
+      color: var(--blue-text);
       box-shadow: inset 0 -3px 0 var(--blue);
-      padding-inline-start: 0.5rem;
+      padding-inline-start: 0.55rem;
       border-radius: 0;
+    }
+    :global(.js) .has-drop {
+      position: relative;
+    }
+    :global(.js) .drop-toggle {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      min-height: 2.75rem;
+      background: none;
+      color: var(--navy);
+      font-family: inherit;
+      font-weight: 600;
+      line-height: inherit;
+      cursor: pointer;
+    }
+    .drop-toggle :global(.chev) {
+      flex: none;
+      width: 1rem;
+      height: 1rem;
+      transition: transform 0.2s ease;
+    }
+    .drop-toggle[aria-expanded='true'] :global(.chev) {
+      transform: rotate(180deg);
+    }
+    :global(.js) .drop {
+      display: none;
+      position: absolute;
+      inset-block-start: calc(100% + 0.35rem);
+      inset-inline-start: 0;
+      z-index: 45;
+      min-width: 15rem;
+      margin: 0;
+      padding: 0.35rem;
+      list-style: none;
+      background: var(--white);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-m);
+      box-shadow: 0 12px 28px rgba(7, 38, 65, 0.16);
+    }
+    :global(.js) .has-drop.is-open .drop {
+      display: block;
+    }
+    .site-nav .drop a {
+      display: block;
+      padding: 0.65rem 0.75rem;
+      border-radius: var(--radius-s);
+    }
+    .site-nav .drop a:hover {
+      background: var(--mist);
+    }
+    .site-nav .drop a[aria-current='page'] {
+      background: var(--blue-tint);
+      box-shadow: inset 3px 0 0 var(--blue);
+      padding-inline-start: 0.75rem;
+    }
+    :global([dir='rtl']) .site-nav .drop a[aria-current='page'] {
+      box-shadow: inset -3px 0 0 var(--blue);
+    }
+  }
+  /* Small laptops and tablets in landscape: tighter spacing so the bar stays on one line. */
+  @media (min-width: 64rem) and (max-width: 74.99rem) {
+    .brand-tag {
+      display: none;
+    }
+    .header-inner {
+      gap: 0.75rem 0.6rem;
+    }
+    .site-nav a,
+    .drop-toggle,
+    .site-nav a[aria-current='page'],
+    :global([dir='rtl']) .site-nav a[aria-current='page'],
+    .drop-toggle.is-current {
+      padding-inline: 0.45rem;
+    }
+    .header-call {
+      padding-inline: 1rem;
     }
   }
 
