@@ -175,6 +175,17 @@ const wa = whatsappHref(lang);
       background: #138b4f;
     }
   }
+  /* Very narrow phones: drop the icons so both labels fit inside the screen */
+  @media (max-width: 22.5rem) {
+    .bottom-bar a {
+      min-width: 0;
+      gap: 0.3rem;
+      font-size: 0.9375rem;
+    }
+    .bottom-bar :global(svg) {
+      display: none;
+    }
+  }
   @media (min-width: 48rem) and (max-width: 84.99rem) {
     .bottom-bar {
       justify-content: center;

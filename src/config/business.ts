@@ -105,7 +105,7 @@ export const business: BusinessConfig = {
   city: { en: 'Riyadh', ar: 'الرياض' },
   phone: '+966 59 221 7510',
   whatsapp: '+966 59 221 7510',
-  email: null,
+  email: 'hussnainhh369@gmail.com',
   privacyEmail: null,
   legalName: null,
   registrationNumber: null,

@@ -87,13 +87,17 @@ const any = contact.phone || wa || contact.email;
     color: var(--blue);
     flex: none;
   }
+  li > div {
+    min-width: 0;
+  }
   .label {
     display: block;
     font-size: var(--step--1);
     color: var(--ink-soft);
   }
   li a {
-    font-size: var(--step-1);
+    /* sized so a long email address stays on one line on 320px phones */
+    font-size: clamp(1rem, 0.8rem + 1.2vw, 1.25rem);
     font-weight: 650;
     color: var(--navy);
   }

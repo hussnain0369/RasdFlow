@@ -212,6 +212,9 @@ img {
   direction: ltr;
   unicode-bidi: isolate;
   display: inline-block;
+  /* long email addresses wrap instead of widening narrow screens */
+  max-width: 100%;
+  overflow-wrap: anywhere;
 }
 
 /* ---------- Buttons ---------- */
