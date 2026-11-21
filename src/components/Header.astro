@@ -15,6 +15,11 @@ const ui = t(lang);
 const alt = otherLang(lang);
 const navKeys: PageKey[] = ['home', 'plumbing', 'detection', 'repair', 'howItWorks', 'areas', 'about', 'contact'];
 const switchHref = path(page ?? 'home', alt);
+// Drawer menu: same order as the desktop menu, with the service pages grouped under "Services".
+const serviceKeys: PageKey[] = ['plumbing', 'detection', 'hidden', 'underground', 'repair', 'pipeRepair'];
+const serviceLabel = (key: PageKey) => (key === 'plumbing' ? ui.plumbingLong : ui.nav[key]);
+const inServices = page !== null && serviceKeys.includes(page);
+const afterServices: PageKey[] = ['howItWorks', 'areas', 'about', 'contact'];
 ---
 <div class="topbar">
   <div class="wrap topbar-inner">
@@ -54,10 +59,9 @@ const switchHref = path(page ?? 'home', alt);
           </a>
         )
       }
-      <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="site-nav" data-open-label={ui.menu} data-close-label={ui.menuClose}>
-        <Icon name="menu" class="icon-open" />
-        <Icon name="close" class="icon-close" />
-        <span class="menu-label">{ui.menu}</span>
+      <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="nav-drawer" aria-haspopup="dialog" aria-label={ui.menuOpen}>
+        <Icon name="menu" />
+        <span class="menu-label" aria-hidden="true">{ui.menu}</span>
       </button>
     </div>
 
@@ -77,24 +81,114 @@ const switchHref = path(page ?? 'home', alt);
   </div>
 </header>
 
+<!-- Mobile/tablet drawer (below 1360px). Outside the sticky header so it stacks above the floating contact controls. -->
+<div class="drawer-root" data-drawer hidden>
+  <div class="drawer-backdrop" data-drawer-close></div>
+  <div id="nav-drawer" class="drawer" role="dialog" aria-modal="true" aria-label={ui.mainNav}>
+    <div class="drawer-top">
+      <button class="drawer-close" type="button" data-drawer-close aria-label={ui.menuClose}>
+        <Icon name="close" />
+      </button>
+    </div>
+    <a class="drawer-logo" href={path('home', lang)}>
+      <Image src={logo} alt="LeakFix" width={132} densities={[1, 2]} />
+    </a>
+    <nav class="drawer-nav" aria-label={ui.mainNav}>
+      <ul>
+        <li>
+          <a href={path('home', lang)} aria-current={page === 'home' ? 'page' : undefined}>{ui.nav.home}</a>
+        </li>
+        <li class="has-sub">
+          <button class="sub-toggle" type="button" aria-expanded={inServices ? 'true' : 'false'} aria-controls="drawer-services">
+            <span>{ui.services}</span>
+            <Icon name="chevron" class="chev" />
+          </button>
+          <ul id="drawer-services" class="sub" hidden={!inServices}>
+            {
+              serviceKeys.map((key) => (
+                <li>
+                  <a href={path(key, lang)} aria-current={key === page ? 'page' : undefined}>{serviceLabel(key)}</a>
+                </li>
+              ))
+            }
+          </ul>
+        </li>
+        {
+          afterServices.map((key) => (
+            <li>
+              <a href={path(key, lang)} aria-current={key === page ? 'page' : undefined}>{ui.nav[key]}</a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+  </div>
+</div>
+
 <script>
   const toggle = document.querySelector<HTMLButtonElement>('.menu-toggle');
-  const nav = document.getElementById('site-nav');
-  if (toggle && nav) {
-    const label = toggle.querySelector('.menu-label');
-    const setOpen = (open: boolean) => {
-      toggle.setAttribute('aria-expanded', String(open));
-      nav.classList.toggle('is-open', open);
-      if (label) label.textContent = (open ? toggle.dataset.closeLabel : toggle.dataset.openLabel) ?? '';
+  const root = document.querySelector<HTMLElement>('[data-drawer]');
+  const drawer = root?.querySelector<HTMLElement>('.drawer');
+  if (toggle && root && drawer) {
+    const html = document.documentElement;
+    const focusables = () =>
+      [...drawer.querySelectorAll<HTMLElement>('a[href], button:not([disabled])')].filter((el) => el.offsetParent !== null);
+    let closing: number | undefined;
+
+    const open = () => {
+      window.clearTimeout(closing);
+      root.hidden = false;
+      // next frame so the slide-in transition runs
+      requestAnimationFrame(() => root.classList.add('is-open'));
+      html.classList.add('drawer-open');
+      toggle.setAttribute('aria-expanded', 'true');
+      drawer.querySelector<HTMLElement>('.drawer-close')?.focus();
     };
-    toggle.addEventListener('click', () => setOpen(toggle.getAttribute('aria-expanded') !== 'true'));
+    const close = (restoreFocus = true) => {
+      if (root.hidden) return;
+      root.classList.remove('is-open');
+      html.classList.remove('drawer-open');
+      toggle.setAttribute('aria-expanded', 'false');
+      const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      closing = window.setTimeout(() => (root.hidden = true), reduce ? 0 : 250);
+      if (restoreFocus) toggle.focus({ preventScroll: true });
+    };
+
+    toggle.addEventListener('click', open);
+    root.querySelectorAll('[data-drawer-close]').forEach((el) => el.addEventListener('click', () => close()));
+    // Selecting a link closes the drawer (the page then navigates).
+    drawer.querySelectorAll('a[href]').forEach((a) => a.addEventListener('click', () => close(false)));
+
+    // Services submenu
+    const sub = drawer.querySelector<HTMLButtonElement>('.sub-toggle');
+    const list = drawer.querySelector<HTMLElement>('#drawer-services');
+    sub?.addEventListener('click', () => {
+      const expanded = sub.getAttribute('aria-expanded') === 'true';
+      sub.setAttribute('aria-expanded', String(!expanded));
+      if (list) list.hidden = expanded;
+    });
+
+    // Escape closes; Tab stays inside the open drawer.
     document.addEventListener('keydown', (event) => {
-      if (event.key === 'Escape' && toggle.getAttribute('aria-expanded') === 'true') {
-        setOpen(false);
-        toggle.focus();
+      if (root.hidden) return;
+      if (event.key === 'Escape') {
+        event.preventDefault();
+        close();
+      } else if (event.key === 'Tab') {
+        const items = focusables();
+        const first = items[0];
+        const last = items[items.length - 1];
+        if (event.shiftKey && document.activeElement === first) {
+          event.preventDefault();
+          last.focus();
+        } else if (!event.shiftKey && document.activeElement === last) {
+          event.preventDefault();
+          first.focus();
+        }
       }
     });
-    window.matchMedia('(min-width: 85rem)').addEventListener('change', (e) => e.matches && setOpen(false));
+    // Leaving the collapsed-menu width closes the drawer.
+    window.matchMedia('(min-width: 85rem)').addEventListener('change', (e) => e.matches && close(false));
   }
 </script>
 
@@ -216,19 +310,12 @@ const switchHref = path(page ?? 'home', alt);
     width: 1.25rem;
     height: 1.25rem;
   }
-  .menu-toggle :global(.icon-close),
-  .menu-toggle[aria-expanded='true'] :global(.icon-open) {
-    display: none;
-  }
-  .menu-toggle[aria-expanded='true'] :global(.icon-close) {
-    display: block;
-  }
   .site-nav {
     order: 3;
     flex-basis: 100%;
   }
-  /* Without JavaScript the menu stays visible; with it, the toggle controls it. */
-  :global(.js) .site-nav:not(.is-open) {
+  /* Below 1360px the drawer replaces the inline menu; without JavaScript the inline menu stays visible. */
+  :global(.js) .site-nav {
     display: none;
   }
   :global(.no-js) .menu-toggle {
@@ -293,11 +380,12 @@ const switchHref = path(page ?? 'home', alt);
       flex-wrap: nowrap;
       gap: 0.75rem 1rem;
     }
-    .menu-toggle {
+    .menu-toggle,
+    .drawer-root {
       display: none;
     }
     .site-nav,
-    :global(.js) .site-nav:not(.is-open) {
+    :global(.js) .site-nav {
       display: block;
       order: 1;
       flex-basis: auto;
@@ -323,5 +411,151 @@ const switchHref = path(page ?? 'home', alt);
       padding-inline-start: 0.5rem;
       border-radius: 0;
     }
+  }
+
+  /* ---------- Drawer (mobile and tablet) ---------- */
+  .drawer-root {
+    position: fixed;
+    inset: 0;
+    z-index: 80; /* above the sticky header (40) and the floating contact controls (50) */
+  }
+  .drawer-backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(4, 26, 46, 0.55);
+    opacity: 0;
+    transition: opacity 0.25s ease;
+  }
+  /* Anchored to the physical right edge in both languages. */
+  .drawer {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: 50vw;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    background: var(--white);
+    border-left: 1px solid var(--line);
+    box-shadow: -8px 0 24px rgba(7, 38, 65, 0.18);
+    padding: max(0.5rem, env(safe-area-inset-top, 0px)) 0.75rem max(1rem, env(safe-area-inset-bottom, 0px));
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    transform: translateX(100%);
+    transition: transform 0.25s ease;
+  }
+  .drawer-root.is-open .drawer {
+    transform: translateX(0);
+  }
+  .drawer-root.is-open .drawer-backdrop {
+    opacity: 1;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .drawer,
+    .drawer-backdrop {
+      transition: none;
+    }
+  }
+  /* The page behind does not scroll while the drawer is open. */
+  :global(html.drawer-open),
+  :global(html.drawer-open body) {
+    overflow: hidden;
+  }
+  .drawer-top {
+    display: flex;
+    direction: ltr; /* close button sits top-right in both languages */
+    justify-content: flex-end;
+  }
+  .drawer-close {
+    display: grid;
+    place-items: center;
+    width: 2.75rem;
+    height: 2.75rem;
+    border: 1px solid var(--navy);
+    border-radius: var(--radius-m);
+    background: var(--white);
+    color: var(--navy);
+    cursor: pointer;
+  }
+  .drawer-close :global(svg) {
+    width: 1.25rem;
+    height: 1.25rem;
+  }
+  .drawer-logo {
+    display: flex;
+    justify-content: center;
+    padding-block: 0.35rem 0.75rem;
+  }
+  .drawer-logo :global(img) {
+    width: min(118px, 100%);
+    height: auto;
+  }
+  .drawer-nav ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .drawer-nav > ul {
+    border-block-start: 1px solid var(--line);
+  }
+  .drawer-nav li {
+    border-block-end: 1px solid var(--line);
+  }
+  .drawer-nav a,
+  .sub-toggle {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    width: 100%;
+    min-height: 44px;
+    padding: 0.55rem 0.25rem;
+    box-sizing: border-box;
+    color: var(--navy);
+    font: inherit;
+    font-weight: 600;
+    line-height: 1.3;
+    text-align: start;
+    text-decoration: none;
+    overflow-wrap: anywhere;
+    background: none;
+    border: 0;
+    cursor: pointer;
+  }
+  .drawer-nav a:hover,
+  .sub-toggle:hover {
+    color: var(--blue-text);
+  }
+  .sub-toggle span {
+    flex: 1;
+  }
+  .sub-toggle :global(.chev) {
+    flex: none;
+    width: 1.1rem;
+    height: 1.1rem;
+    transition: transform 0.2s ease;
+  }
+  .sub-toggle[aria-expanded='true'] :global(.chev) {
+    transform: rotate(180deg);
+  }
+  .sub {
+    border-block-start: 1px solid var(--line);
+    padding-inline-start: 0.6rem;
+  }
+  .sub li:last-child {
+    border-block-end: 0;
+  }
+  .sub a {
+    font-weight: 500;
+    font-size: var(--step--1);
+  }
+  /* Existing active-page style: blue text with a bar on the reading-start side. */
+  .drawer-nav a[aria-current='page'] {
+    color: var(--blue-text);
+    box-shadow: inset 3px 0 0 var(--blue);
+    padding-inline-start: 0.6rem;
+  }
+  :global([dir='rtl']) .drawer-nav a[aria-current='page'] {
+    box-shadow: inset -3px 0 0 var(--blue);
   }
 </style>

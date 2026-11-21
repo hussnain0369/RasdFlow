@@ -8,6 +8,9 @@ export const ui = {
     skip: 'Skip to main content',
     menu: 'Menu',
     menuClose: 'Close menu',
+    menuOpen: 'Open menu',
+    services: 'Services',
+    plumbingLong: 'Plumbing Services',
     mainNav: 'Main',
     nav: {
       home: 'Home',
@@ -102,6 +105,9 @@ export const ui = {
     skip: 'انتقل إلى المحتوى الرئيسي',
     menu: 'القائمة',
     menuClose: 'إغلاق القائمة',
+    menuOpen: 'فتح القائمة',
+    services: 'الخدمات',
+    plumbingLong: 'خدمات السباكة',
     mainNav: 'القائمة الرئيسية',
     nav: {
       home: 'الرئيسية',
