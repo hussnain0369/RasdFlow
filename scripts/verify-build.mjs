@@ -124,8 +124,9 @@ const robots = existsSync(join(root, 'robots.txt')) ? readFileSync(join(root, 'r
 const indexable = /Allow: \//.test(robots);
 for (const [url, html] of pages) {
   const robotsMeta = html.match(/<meta name="robots" content="([^"]+)"/)?.[1] ?? '';
-  if (url === `${base}/404.html`) {
-    if (!robotsMeta.includes('noindex')) fail(url, '404 page should be noindex');
+  if (url === `${base}/404.html` || /\/feedback\/$/.test(url)) {
+    // 404 and the private feedback page are always noindex and stay out of the sitemap.
+    if (!robotsMeta.includes('noindex')) fail(url, 'page should be noindex');
   } else if (indexable === robotsMeta.includes('noindex')) {
     fail(url, `robots meta "${robotsMeta}" disagrees with robots.txt`);
   }

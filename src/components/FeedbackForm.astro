@@ -1,0 +1,460 @@
+---
+/**
+ * Private feedback form. Rendered only when delivery is configured (feedbackEnabled).
+ * The rating is a native radio group: arrow keys move between stars in reading order
+ * (left-to-right in English, right-to-left in Arabic) and each star has a spoken label.
+ */
+import { path, withBase, type Lang } from '../i18n/routes';
+import { t } from '../i18n/ui';
+import { feedbackText } from '../content/feedback';
+import { FEEDBACK_LIMITS } from '../lib/feedback';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const f = feedbackText[lang].form;
+const ui = t(lang);
+const services = ['detection', 'hidden', 'underground', 'repair', 'pipeRepair'] as const;
+const req = f.required;
+const opt = f.optional;
+---
+<form
+  id="feedback"
+  class="fb"
+  method="post"
+  action={withBase('/api/feedback/')}
+  novalidate
+  data-errors={JSON.stringify(f.errors)}
+  data-msg-summary={f.errorSummary}
+  data-msg-send={f.errorSend}
+  data-msg-rate={f.errorRate}
+  data-msg-sending={f.sending}
+>
+  <div class="status" role="alert" tabindex="-1" hidden></div>
+
+  <input type="hidden" name="lang" value={lang} />
+  <input type="hidden" name="started_at" value="" />
+  <div class="hp" aria-hidden="true">
+    <label for="fb-website">{f.honeypot}</label>
+    <input id="fb-website" name="website" type="text" tabindex="-1" autocomplete="off" />
+  </div>
+
+  <fieldset class="field" aria-describedby="fb-h-rating fb-e-rating">
+    <legend>{f.rating} <span class="req">({req})</span></legend>
+    <p class="hint" id="fb-h-rating">{f.ratingHint}</p>
+    <div class="rate">
+      {
+        [1, 2, 3, 4, 5].map((n) => (
+          <label class="star">
+            <input type="radio" name="rating" value={n} required />
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M12 2.8l2.8 5.9 6.4.8-4.7 4.4 1.2 6.4L12 17.2l-5.7 3.1 1.2-6.4L2.8 9.5l6.4-.8z" />
+            </svg>
+            <span class="visually-hidden">{f.starLabel(n)}</span>
+          </label>
+        ))
+      }
+      <span class="rate-value" aria-hidden="true"></span>
+    </div>
+    <p class="error" id="fb-e-rating" hidden></p>
+  </fieldset>
+
+  <div class="field">
+    <label for="fb-message">{f.message} <span class="req">({req})</span></label>
+    <p class="hint" id="fb-h-message">{f.messageHint}</p>
+    <textarea id="fb-message" name="message" rows="6" required maxlength={FEEDBACK_LIMITS.message} aria-describedby="fb-h-message fb-e-message"></textarea>
+    <p class="error" id="fb-e-message" hidden></p>
+  </div>
+
+  <div class="field">
+    <label for="fb-service">{f.service} <span class="req">({opt})</span></label>
+    <select id="fb-service" name="service">
+      <option value="">{f.serviceNone}</option>
+      {services.map((s) => <option value={s}>{ui.nav[s]}</option>)}
+      <option value="other">{f.serviceOther}</option>
+    </select>
+  </div>
+
+  <div class="two">
+    <div class="field">
+      <label for="fb-name">{f.name} <span class="req">({opt})</span></label>
+      <input id="fb-name" name="name" type="text" autocomplete="name" maxlength={FEEDBACK_LIMITS.name} aria-describedby="fb-e-name" />
+      <p class="error" id="fb-e-name" hidden></p>
+    </div>
+    <div class="field">
+      <label for="fb-contact">{f.contact} <span class="req">({opt})</span></label>
+      <p class="hint" id="fb-h-contact">{f.contactHint}</p>
+      <input id="fb-contact" name="contact" type="text" inputmode="email" autocomplete="tel" dir="ltr" maxlength={FEEDBACK_LIMITS.contact} aria-describedby="fb-h-contact fb-e-contact" />
+      <p class="error" id="fb-e-contact" hidden></p>
+    </div>
+  </div>
+
+  <div class="field consent">
+    <label class="check">
+      <input id="fb-publish" type="checkbox" name="publish" value="yes" />
+      <span>{f.publish}</span>
+    </label>
+  </div>
+
+  <fieldset class="field display" id="fb-display">
+    <legend>{f.displayLegend}</legend>
+    <div class="choices">
+      <label class="choice"><input type="radio" name="display" value="anonymous" checked /><span>{f.displayAnon}</span></label>
+      <label class="choice"><input type="radio" name="display" value="name" /><span>{f.displayName}</span></label>
+    </div>
+    <div class="field display-name" id="fb-display-name">
+      <label for="fb-displayName">{f.displayNameLabel}</label>
+      <p class="hint" id="fb-h-displayName">{f.displayNameHint}</p>
+      <input id="fb-displayName" name="displayName" type="text" maxlength={FEEDBACK_LIMITS.displayName} aria-describedby="fb-h-displayName fb-e-displayName" />
+      <p class="error" id="fb-e-displayName" hidden></p>
+    </div>
+  </fieldset>
+
+  <div class="submit-row">
+    <button class="btn btn--blue submit" type="submit">{f.submit}</button>
+    <p class="privacy">
+      {f.privacy} <a href={path('privacy', lang)}>{f.privacyLink}</a>.
+    </p>
+  </div>
+</form>
+
+<div id="feedback-done" class="done" role="status" tabindex="-1" hidden>
+  <h2>{f.successTitle}</h2>
+  <p>{f.success}</p>
+  <p class="done-contact" hidden>{f.successContact}</p>
+</div>
+
+<script>
+  import { validateFeedback } from '../lib/feedback';
+
+  const form = document.querySelector<HTMLFormElement>('form.fb');
+  if (form) {
+    const started = form.querySelector<HTMLInputElement>('input[name="started_at"]');
+    if (started) started.value = String(Date.now());
+
+    const messages = JSON.parse(form.dataset.errors ?? '{}') as Record<string, string>;
+    const status = form.querySelector<HTMLElement>('.status')!;
+    const button = form.querySelector<HTMLButtonElement>('button[type="submit"]')!;
+    const buttonText = button.textContent ?? '';
+    const publish = form.querySelector<HTMLInputElement>('#fb-publish')!;
+    const display = form.querySelector<HTMLElement>('#fb-display')!;
+    const displayName = form.querySelector<HTMLElement>('#fb-display-name')!;
+    const rateValue = form.querySelector<HTMLElement>('.rate-value')!;
+    const fields = ['rating', 'message', 'name', 'contact', 'displayName'] as const;
+    let pending = false;
+
+    // Show the display-name choice only once permission is given.
+    const syncDisplay = () => {
+      display.hidden = !publish.checked;
+      const byName = form.querySelector<HTMLInputElement>('input[name="display"][value="name"]')!.checked;
+      displayName.hidden = !byName;
+    };
+    publish.addEventListener('change', syncDisplay);
+    form.querySelectorAll('input[name="display"]').forEach((r) => r.addEventListener('change', syncDisplay));
+    syncDisplay();
+
+    // Visible text for the chosen rating, matching the spoken star label.
+    form.querySelectorAll<HTMLInputElement>('input[name="rating"]').forEach((r) =>
+      r.addEventListener('change', () => {
+        rateValue.textContent = r.parentElement?.querySelector('.visually-hidden')?.textContent ?? '';
+      }),
+    );
+
+    const showStatus = (text: string) => {
+      status.hidden = false;
+      status.textContent = text;
+      status.focus();
+    };
+
+    const setFieldErrors = (errors: Record<string, string | undefined>) => {
+      let first: HTMLElement | null = null;
+      for (const name of fields) {
+        const errorEl = form.querySelector<HTMLElement>(`#fb-e-${name}`);
+        const inputs = form.querySelectorAll<HTMLInputElement | HTMLTextAreaElement>(`[name="${name}"]`);
+        const code = errors[name];
+        if (errorEl) {
+          errorEl.hidden = !code;
+          errorEl.textContent = code ? messages[code] ?? '' : '';
+        }
+        inputs.forEach((el) => el.setAttribute('aria-invalid', code ? 'true' : 'false'));
+        if (code && !first) first = inputs[0] ?? null;
+      }
+      return first as HTMLElement | null;
+    };
+
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      if (pending) return; // no duplicate submissions while one is in flight
+      const { errors } = validateFeedback(Object.fromEntries(new FormData(form)));
+      const first = setFieldErrors(errors);
+      if (first) {
+        showStatus(form.dataset.msgSummary ?? '');
+        first.focus();
+        return;
+      }
+      pending = true;
+      button.disabled = true;
+      button.textContent = form.dataset.msgSending ?? '';
+      try {
+        const res = await fetch(form.action, { method: 'POST', headers: { accept: 'application/json' }, body: new FormData(form) });
+        const body = await res.json().catch(() => ({}));
+        if (res.ok && body.ok === true) {
+          const leftContact = (form.querySelector<HTMLInputElement>('#fb-contact')?.value ?? '').trim() !== '';
+          form.reset();
+          form.hidden = true;
+          const done = document.getElementById('feedback-done')!;
+          done.querySelector<HTMLElement>('.done-contact')!.hidden = !leftContact;
+          done.hidden = false;
+          done.focus();
+          return;
+        }
+        // Failure: keep every answer in the form so the customer can retry.
+        if (res.status === 400 && body.fields) {
+          setFieldErrors(body.fields);
+          showStatus(form.dataset.msgSummary ?? '');
+        } else if (res.status === 429) {
+          showStatus(form.dataset.msgRate ?? '');
+        } else {
+          showStatus(form.dataset.msgSend ?? '');
+        }
+      } catch {
+        showStatus(form.dataset.msgSend ?? '');
+      } finally {
+        pending = false;
+        button.disabled = false;
+        button.textContent = buttonText;
+      }
+    });
+  }
+</script>
+
+<style>
+  .fb {
+    background: var(--white);
+    border: 1px solid var(--line);
+    border-block-start: 4px solid var(--navy);
+    border-radius: 0 0 var(--radius-m) var(--radius-m);
+    padding: clamp(1.25rem, 0.75rem + 2vw, 2.25rem);
+    max-width: 44rem;
+  }
+  .field {
+    margin: 0 0 1.35rem;
+    padding: 0;
+    border: 0;
+    min-width: 0;
+  }
+  label,
+  legend {
+    display: block;
+    font-weight: 650;
+    color: var(--navy);
+    margin-block-end: 0.35rem;
+    padding: 0;
+  }
+  .req {
+    font-weight: 400;
+    color: var(--ink-soft);
+    font-size: var(--step--1);
+  }
+  .hint {
+    font-size: var(--step--1);
+    color: var(--ink-soft);
+    margin-block-end: 0.4rem;
+  }
+  input[type='text'],
+  textarea,
+  select {
+    width: 100%;
+    font: inherit;
+    color: var(--ink);
+    padding: 0.7rem 0.85rem;
+    min-height: 3rem;
+    border: 1.5px solid #8ea1b2;
+    border-radius: var(--radius-s);
+    background: var(--white);
+  }
+  :global([dir='rtl']) input[dir='ltr'] {
+    text-align: right;
+  }
+  textarea {
+    resize: vertical;
+    min-height: 8rem;
+  }
+  input:focus-visible,
+  textarea:focus-visible,
+  select:focus-visible {
+    outline: 3px solid var(--blue);
+    outline-offset: 1px;
+    border-color: var(--navy);
+  }
+  [aria-invalid='true'] {
+    border-color: var(--error) !important;
+  }
+
+  /* Star rating: radios in reading order; stars up to the chosen one are filled. */
+  .rate {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    flex-wrap: wrap;
+  }
+  .star {
+    position: relative;
+    margin: 0;
+    padding: 0.2rem;
+    cursor: pointer;
+    border-radius: var(--radius-s);
+    line-height: 0;
+  }
+  .star input {
+    position: absolute;
+    opacity: 0;
+    inset: 0;
+    margin: 0;
+    cursor: pointer;
+  }
+  .star svg {
+    width: 2.6rem;
+    height: 2.6rem;
+    fill: var(--white);
+    stroke: #8a6516;
+    stroke-width: 1.4;
+    stroke-linejoin: round;
+    transition: fill 0.1s ease;
+  }
+  .star:has(input:focus-visible) {
+    outline: 3px solid var(--blue);
+    outline-offset: 1px;
+  }
+  /* hover preview: this star and the ones before it */
+  .rate:hover .star:has(~ .star:hover) svg,
+  .rate .star:hover svg {
+    fill: #f3d58f;
+  }
+  .rate:has(input[value='1']:checked) .star:nth-child(-n + 1) svg,
+  .rate:has(input[value='2']:checked) .star:nth-child(-n + 2) svg,
+  .rate:has(input[value='3']:checked) .star:nth-child(-n + 3) svg,
+  .rate:has(input[value='4']:checked) .star:nth-child(-n + 4) svg,
+  .rate:has(input[value='5']:checked) .star:nth-child(-n + 5) svg {
+    fill: #d99a1e;
+  }
+  .rate-value {
+    margin-inline-start: 0.6rem;
+    font-weight: 650;
+    color: var(--navy);
+  }
+
+  .two {
+    display: grid;
+    gap: 0 1.25rem;
+    grid-template-columns: repeat(auto-fit, minmax(min(15rem, 100%), 1fr));
+  }
+  .check {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 0.75rem;
+    align-items: start;
+    font-weight: 500;
+    color: var(--ink);
+    cursor: pointer;
+  }
+  .check input {
+    width: 1.3rem;
+    height: 1.3rem;
+    margin: 0.15rem 0 0;
+    accent-color: var(--navy);
+  }
+  .display {
+    padding: 1rem 1.1rem;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-s);
+    background: var(--mist);
+  }
+  .choices {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+    margin-block-end: 0.75rem;
+  }
+  .choice {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    min-height: 2.75rem;
+    padding: 0.4rem 0.9rem;
+    border: 1.5px solid #8ea1b2;
+    border-radius: var(--radius-m);
+    background: var(--white);
+    font-weight: 500;
+    color: var(--ink);
+    cursor: pointer;
+    margin: 0;
+  }
+  .choice:has(input:checked) {
+    border-color: var(--navy);
+    background: var(--blue-tint);
+  }
+  .choice input {
+    accent-color: var(--navy);
+    margin: 0;
+  }
+  .display-name {
+    margin: 0;
+  }
+  .error {
+    color: var(--error);
+    font-size: var(--step--1);
+    font-weight: 600;
+    margin-block-start: 0.4rem;
+  }
+  .status {
+    padding: 1rem 1.25rem;
+    margin-block-end: 1.5rem;
+    border-radius: var(--radius-s);
+    border-inline-start: 4px solid var(--error);
+    background: #fdf0ef;
+    color: var(--error);
+    font-weight: 600;
+  }
+  .submit-row {
+    display: grid;
+    gap: 1rem;
+  }
+  .submit {
+    justify-self: start;
+    min-width: 12rem;
+  }
+  .privacy {
+    font-size: var(--step--1);
+    color: var(--ink-soft);
+    max-width: 36rem;
+  }
+  .hp {
+    position: absolute;
+    inset-inline-start: -10000px;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+  }
+  .done {
+    max-width: 44rem;
+    border: 1px solid var(--line);
+    border-block-start: 4px solid var(--success);
+    padding: clamp(1.25rem, 0.75rem + 2vw, 2.25rem);
+    background: var(--white);
+  }
+  .done p {
+    margin-block-start: 0.75rem;
+  }
+  @media (max-width: 30rem) {
+    .star svg {
+      width: 2.35rem;
+      height: 2.35rem;
+    }
+    .submit {
+      width: 100%;
+      justify-self: stretch;
+    }
+  }
+</style>

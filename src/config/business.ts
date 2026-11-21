@@ -61,10 +61,12 @@ export interface BusinessConfig {
   reinstatement: 'included' | 'separate' | null;
   /** Completed jobs approved for publication. Empty = section hidden. */
   projects: ProjectExample[];
-  /** Customer reviews published with permission. Empty = section hidden. */
-  reviews: Review[];
-  /** Link to a verified public review profile (e.g. Google Business Profile). null = not shown. */
-  reviewProfileUrl: string | null;
+  /**
+   * Google "write a review" link from the verified Google Business Profile
+   * (Profile > Ask for reviews). Shown to every visitor alike. null = not shown.
+   * Approved reviews themselves live in src/data/reviews.ts.
+   */
+  googleReviewUrl: string | null;
   /** Verified inspection fee wording in Saudi riyals, e.g. { en: 'SAR 250 for a standard villa visit', ar: '...' }. null = not shown. */
   inspectionFee: Bi | null;
   /** Riyadh districts the business confirms it serves. Empty = coverage described as Riyadh with availability checked per enquiry. */
@@ -95,13 +97,6 @@ export interface ProjectExample {
   photoAlt: Bi | null;
 }
 
-export interface Review {
-  /** First name or initials, as the customer agreed. */
-  author: string;
-  text: Bi | { en: string; ar?: undefined } | { ar: string; en?: undefined };
-  /** Where the review was originally published, if public. */
-  sourceUrl: string | null;
-}
 
 export const business: BusinessConfig = {
   name: 'LeakFix',
@@ -131,8 +126,7 @@ export const business: BusinessConfig = {
   methods: { acoustic: true, thermal: true, pressure: true, underground: true },
   reinstatement: null,
   projects: [],
-  reviews: [],
-  reviewProfileUrl: null,
+  googleReviewUrl: null,
   inspectionFee: null,
   serviceDistricts: [],
   sampleReport: null,

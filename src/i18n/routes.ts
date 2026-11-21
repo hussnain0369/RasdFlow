@@ -12,6 +12,7 @@ export type PageKey =
   | 'about'
   | 'engineer'
   | 'contact'
+  | 'feedback'
   | 'privacy';
 
 const slugs: Record<PageKey, string> = {
@@ -27,10 +28,15 @@ const slugs: Record<PageKey, string> = {
   about: 'about/',
   engineer: 'our-engineer/',
   contact: 'contact/',
+  feedback: 'feedback/',
   privacy: 'privacy-policy/',
 };
 
 export const pageKeys = Object.keys(slugs) as PageKey[];
+
+/** Pages kept out of search and the sitemap (private forms). */
+export const noindexPages: PageKey[] = ['feedback'];
+export const indexedPageKeys = pageKeys.filter((k) => !noindexPages.includes(k));
 
 /** Site base path, e.g. "" at a domain root or "/RasdFlow" on GitHub Pages. No trailing slash. */
 export const basePath = (import.meta.env.BASE_URL ?? '/').replace(/\/+$/, '');

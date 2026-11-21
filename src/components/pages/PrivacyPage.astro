@@ -10,7 +10,7 @@ import PageHero from '../PageHero.astro';
 import Sections from '../Sections.astro';
 import type { Section } from '../../content/pages';
 import type { Lang } from '../../i18n/routes';
-import { formEnabled } from '../../config/site';
+import { formEnabled, feedbackEnabled } from '../../config/site';
 import { business, realContact as contact } from '../../config/business';
 
 interface Props {
@@ -43,6 +43,9 @@ const en = {
         ...(formEnabled
           ? ['If you use the enquiry form, we receive your name, telephone number, Riyadh district, the service you are asking about and your description of the issue.']
           : []),
+        ...(feedbackEnabled
+          ? ['If you use the feedback form, we receive your rating and feedback, and, if you choose to give them, the service you received, your name, a phone number or email address, and whether you allow us to publish your feedback.']
+          : []),
         directMethods.length
           ? `If you contact us by ${directMethods.join(' or ')}, we receive your contact details and whatever you choose to tell us or send us, such as photos of the affected area.`
           : 'When you contact us, we receive your contact details and whatever you choose to tell us or send us, such as photos of the affected area.',
@@ -52,13 +55,16 @@ const en = {
       title: 'How we use it',
       body: [
         'We use this information to respond to your enquiry, discuss the problem with you and, if you ask, arrange a visit to your property.',
+        ...(feedbackEnabled
+          ? ['Feedback is used to improve our service. It is published on this website only if you give permission and we approve it, and then only with your rating, your words and the display name you chose, or anonymously. Your phone number and email address are never published.']
+          : []),
       ],
     },
     {
       title: 'Services that handle your information',
       body: [
-        ...(formEnabled
-          ? ['Enquiries sent through the form are delivered to LeakFix by email using Resend, an email delivery service.']
+        ...(formEnabled || feedbackEnabled
+          ? ['Enquiries and feedback sent through the website forms are delivered to LeakFix by email using Resend, an email delivery service.']
           : []),
         business.hostingProvider
           ? `This website is hosted by ${business.hostingProvider}, which processes the technical information needed to deliver web pages, such as your IP address.`
@@ -118,6 +124,9 @@ const arText: typeof en = {
         ...(formEnabled
           ? ['عند استخدام نموذج الاستفسار، يصلنا اسمك ورقم جوالك والحي الذي يقع فيه العقار في الرياض والخدمة التي تسأل عنها ووصفك للمشكلة.']
           : []),
+        ...(feedbackEnabled
+          ? ['عند استخدام نموذج الرأي، يصلنا تقييمك ورأيك، وإن اخترت ذلك: الخدمة التي حصلت عليها واسمك ورقم جوال أو بريد إلكتروني، وما إذا كنت تسمح لنا بنشر رأيك.']
+          : []),
         directMethods.length
           ? `عند تواصلك معنا عبر ${directMethods.join(' أو ')}، تصلنا بيانات التواصل الخاصة بك وأي معلومات تختار مشاركتها، مثل صور المكان المتضرر.`
           : 'عند تواصلك معنا، تصلنا بيانات التواصل الخاصة بك وأي معلومات تختار مشاركتها، مثل صور المكان المتضرر.',
@@ -125,12 +134,17 @@ const arText: typeof en = {
     },
     {
       title: 'كيف نستخدمها',
-      body: ['نستخدم هذه المعلومات للرد على استفسارك ومناقشة المشكلة معك، وترتيب زيارة لعقارك إذا طلبت ذلك.'],
+      body: [
+        'نستخدم هذه المعلومات للرد على استفسارك ومناقشة المشكلة معك، وترتيب زيارة لعقارك إذا طلبت ذلك.',
+        ...(feedbackEnabled
+          ? ['نستخدم الآراء لتحسين خدمتنا، ولا تُنشر على هذا الموقع إلا بإذنك وبعد موافقتنا، وعندها يظهر تقييمك وكلماتك والاسم الذي اخترته فقط أو دون اسم. ولا يُنشر رقم جوالك أو بريدك الإلكتروني أبدًا.']
+          : []),
+      ],
     },
     {
       title: 'الخدمات التي تتعامل مع معلوماتك',
       body: [
-        ...(formEnabled ? ['تُرسَل الاستفسارات المقدَّمة عبر النموذج إلى LeakFix بالبريد الإلكتروني باستخدام Resend، وهي خدمة لإرسال البريد الإلكتروني.'] : []),
+        ...(formEnabled || feedbackEnabled ? ['تُرسَل الاستفسارات والآراء المقدَّمة عبر نماذج الموقع إلى LeakFix بالبريد الإلكتروني باستخدام Resend، وهي خدمة لإرسال البريد الإلكتروني.'] : []),
         business.hostingProvider
           ? `يستضيف هذا الموقعَ ${business.hostingProvider}، ويعالج المعلومات التقنية اللازمة لعرض الصفحات، مثل عنوان IP الخاص بك.`
           : 'يعالج مزوّد استضافة الموقع المعلومات التقنية اللازمة لعرض الصفحات، مثل عنوان IP الخاص بك. جارٍ تأكيد اسم المزوّد وسيُضاف هنا.',

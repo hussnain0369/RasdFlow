@@ -62,6 +62,14 @@ Arabic pages use the same paths under `/ar/`. Each page links to its equivalent 
 - **Equipment photos**: the homepage shows the acoustic listening photo and the Leak Detection page the thermal camera photo, as the business asked. The page text does not name or promise specific equipment.
 - **Privacy policy**: the wording follows the configuration. It mentions the form provider only when the form is on, and states clearly where the hosting provider, retention period and privacy contact are still being confirmed.
 
+## Customer reviews and feedback
+
+- **Homepage "Customer Reviews" section** (after the visit steps): shows the three newest reviews from `src/data/reviews.ts`. With none, it shows "Have you used LeakFix? Tell us how your visit went." An average rating and count appear only if `reviewSummary` is filled in from a real, named source (e.g. Google) with the date it was read. No `Review` or `AggregateRating` structured data is added.
+- **Feedback page** (`/feedback/`, `/ar/feedback/`): private form with a 1–5 star rating, feedback, optional service, name, phone or email, and an unchecked permission box. It is always `noindex` and left out of the sitemap. It appears only when email delivery is configured (`RESEND_API_KEY`, `ENQUIRY_FROM_EMAIL`, and `FEEDBACK_TO_EMAIL` or `ENQUIRY_TO_EMAIL`). Until then the reviews section offers "Share Feedback on WhatsApp".
+- **Where feedback goes:** every submission, whatever the rating, is emailed to the owner by `/api/feedback/`. Nothing is stored on the site, and the response never repeats the customer's details. The same spam protection as the enquiry form applies.
+- **Publishing a review:** only when the email says "Permission to publish: YES" and the owner approves. Copy the rating, the customer's words and the chosen display name into `src/data/reviews.ts` (instructions at the top of that file), never the phone or email. Commit; the site rebuilds.
+- **Google reviews:** once the Google Business Profile is verified, put its "write a review" link in `googleReviewUrl` in `src/config/business.ts`. "Review Us on Google" then shows to everyone, whatever their rating.
+
 ## Enquiry form security
 
 Server-side validation shared with the browser, a hidden honeypot field, a minimum time on the page, a per-IP rate limit (5 per 10 minutes), a cross-site origin check against `SITE_URL`, and length limits on every field. No file uploads. Without JavaScript the form still works and the server returns a plain result page.

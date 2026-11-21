@@ -4,6 +4,7 @@ import logo from '../assets/brand/leakfix-logo.png';
 import { path, type Lang } from '../i18n/routes';
 import { t } from '../i18n/ui';
 import { business, contact, whatsappHref } from '../config/business';
+import { feedbackEnabled } from '../config/site';
 
 interface Props {
   lang: Lang;
@@ -42,6 +43,7 @@ const year = new Date().getFullYear();
         <li><a href={path('about', lang)}>{ui.nav.about}</a></li>
         <li><a href={path('engineer', lang)}>{ui.nav.engineer}</a></li>
         <li><a href={path('contact', lang)}>{ui.nav.contact}</a></li>
+        {feedbackEnabled && <li><a href={path('feedback', lang)}>{ui.nav.feedback}</a></li>}
         <li><a href={path('privacy', lang)}>{ui.nav.privacy}</a></li>
       </ul>
     </nav>

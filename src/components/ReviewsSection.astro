@@ -1,0 +1,177 @@
+---
+/**
+ * Homepage "Customer Reviews". Shows up to three approved reviews from
+ * src/data/reviews.ts (newest first). With none, shows the invitation copy.
+ * No Review/AggregateRating structured data is added: the text stays in plain HTML.
+ */
+import Icon from './Icon.astro';
+import Stars from './Stars.astro';
+import { approvedReviews, reviewSummary } from '../data/reviews';
+import { feedbackText, whatsappFeedbackText } from '../content/feedback';
+import { business, contact } from '../config/business';
+import { feedbackEnabled } from '../config/site';
+import { path, type Lang } from '../i18n/routes';
+import { t } from '../i18n/ui';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const f = feedbackText[lang];
+const ui = t(lang);
+const other: Lang = lang === 'ar' ? 'en' : 'ar';
+// The three newest approved reviews, whatever language they were written in (no picking).
+// Each is shown in the customer's own words and marked with its language.
+const reviews = [...approvedReviews]
+  .filter((r) => r.text.en || r.text.ar)
+  .sort((a, b) => b.date.localeCompare(a.date))
+  .slice(0, 3)
+  .map((r) => {
+    const textLang: Lang = r.text[lang] ? lang : other;
+    return { ...r, shown: r.text[textLang]!, textLang };
+  });
+const waFeedback =
+  contact.whatsapp && !contact.whatsapp.demo
+    ? `${contact.whatsapp.href}?text=${encodeURIComponent(whatsappFeedbackText[lang])}`
+    : null;
+---
+<section class="section reviews-band" aria-labelledby="reviews-title">
+  <div class="wrap">
+    <div class="head">
+      <h2 id="reviews-title">{f.reviewsTitle}</h2>
+      {
+        reviewSummary && (
+          <p class="summary">
+            <Stars lang={lang} rating={Math.round(reviewSummary.average)} />
+            <a href={reviewSummary.url} rel="noopener">
+              {f.summary(reviewSummary.average.toFixed(1), reviewSummary.count, reviewSummary.source)}
+            </a>
+            <span class="asof">({f.summarySeen(reviewSummary.asOf)})</span>
+          </p>
+        )
+      }
+    </div>
+
+    {
+      reviews.length > 0 ? (
+        <ul class="cards">
+          {reviews.map((r) => (
+            <li class="card">
+              <Stars lang={lang} rating={r.rating} />
+              <blockquote lang={r.textLang} dir={r.textLang === 'ar' ? 'rtl' : 'ltr'}>
+                <p>{r.shown}</p>
+              </blockquote>
+              <p class="who">
+                <span class="name">{r.author ?? f.anonymous}</span>
+                {r.service && (
+                  <span class="svc">
+                    {f.serviceLabel}: {ui.nav[r.service]}
+                  </span>
+                )}
+              </p>
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <p class="empty">{f.emptyText}</p>
+      )
+    }
+
+    <div class="actions">
+      {
+        feedbackEnabled ? (
+          <a class="btn" href={path('feedback', lang)}>
+            {f.leaveFeedback}
+          </a>
+        ) : (
+          waFeedback && (
+            <a class="btn" href={waFeedback} rel="noopener" target="_blank" data-contact="whatsapp">
+              <Icon name="chat" />
+              <span>{f.whatsappFeedback}</span>
+            </a>
+          )
+        )
+      }
+      {
+        business.googleReviewUrl && (
+          <a class="btn btn--ghost" href={business.googleReviewUrl} rel="noopener" target="_blank">
+            {f.googleReview}
+          </a>
+        )
+      }
+    </div>
+  </div>
+</section>
+
+<style>
+  .reviews-band {
+    background: var(--mist);
+  }
+  .head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 0.5rem 2rem;
+    margin-block-end: 1.75rem;
+  }
+  .summary {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 600;
+  }
+  .asof {
+    color: var(--ink-soft);
+    font-weight: 400;
+    font-size: var(--step--1);
+  }
+  .cards {
+    list-style: none;
+    margin: 0 0 2rem;
+    padding: 0;
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: repeat(auto-fit, minmax(min(18rem, 100%), 1fr));
+  }
+  .card {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    padding: 1.25rem;
+    background: var(--white);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-m);
+  }
+  blockquote {
+    margin: 0;
+    flex: 1;
+  }
+  blockquote p {
+    overflow-wrap: anywhere;
+  }
+  .who {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem 0.75rem;
+    font-size: var(--step--1);
+  }
+  .name {
+    font-weight: 700;
+    color: var(--navy);
+  }
+  .svc {
+    color: var(--ink-soft);
+  }
+  .empty {
+    font-size: var(--step-lede);
+    max-width: 40rem;
+    margin-block-end: 1.5rem;
+  }
+  .actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+</style>

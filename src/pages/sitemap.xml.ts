@@ -1,5 +1,5 @@
 import type { APIRoute } from 'astro';
-import { pageKeys, path } from '../i18n/routes';
+import { indexedPageKeys as pageKeys, path } from '../i18n/routes';
 import { indexable, siteUrl } from '../config/site';
 
 /** Lists canonical, indexable pages with their language alternates. Empty until production is configured. */

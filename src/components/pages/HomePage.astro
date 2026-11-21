@@ -9,6 +9,7 @@ import Illustration from '../Illustration.astro';
 import MethodList from '../MethodList.astro';
 import ServiceCards from '../ServiceCards.astro';
 import ProofSections from '../ProofSections.astro';
+import ReviewsSection from '../ReviewsSection.astro';
 import { methodsFor, methodsSection } from '../../content/services';
 import { guideTeaser } from '../../content/extra';
 import heroPhoto from '../../assets/photos/equipment-acoustic.jpg';
@@ -196,6 +197,8 @@ const ms = methodsSection[lang];
       </p>
     </div>
   </section>
+
+  <ReviewsSection lang={lang} />
 
   <section class="section coverage" aria-labelledby="coverage-title">
     <div class="wrap coverage-grid">

@@ -30,3 +30,8 @@ export const formEnabled = Boolean(enquiryDelivery.apiKey && enquiryDelivery.to 
 export function absoluteUrl(path: string): string | undefined {
   return siteUrl ? `${siteUrl}${path}` : undefined;
 }
+
+/** The feedback form is shown only when feedback can actually be delivered to the owner. */
+export const feedbackEnabled = Boolean(
+  enquiryDelivery.apiKey && enquiryDelivery.from && (env('FEEDBACK_TO_EMAIL') || enquiryDelivery.to),
+);

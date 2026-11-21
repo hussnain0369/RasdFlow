@@ -5,7 +5,7 @@ import '../styles/global.css';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import ContactBar from '../components/ContactBar.astro';
-import { path, withBase, type Lang, type PageKey } from '../i18n/routes';
+import { path, withBase, noindexPages, type Lang, type PageKey } from '../i18n/routes';
 import { t } from '../i18n/ui';
 import { absoluteUrl, indexable, siteUrl } from '../config/site';
 import { business, contact, realContact, isDemoContact } from '../config/business';
@@ -26,7 +26,7 @@ interface Props {
 const { lang, page, title, description, jsonLd = [], noindex = false } = Astro.props;
 const ui = t(lang);
 const dir = lang === 'ar' ? 'rtl' : 'ltr';
-const robots = !indexable || noindex ? 'noindex, nofollow' : 'index, follow';
+const robots = !indexable || noindex || (page && noindexPages.includes(page)) ? 'noindex, nofollow' : 'index, follow';
 
 const canonical = page ? absoluteUrl(path(page, lang)) : undefined;
 const alternates = page

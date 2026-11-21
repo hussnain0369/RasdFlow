@@ -1,0 +1,72 @@
+---
+/**
+ * Private feedback page. Always noindex and left out of the sitemap.
+ * The form appears only when feedback delivery is configured; otherwise the page
+ * offers the configured WhatsApp/call options and the Google review link.
+ */
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHero from '../PageHero.astro';
+import FeedbackForm from '../FeedbackForm.astro';
+import Icon from '../Icon.astro';
+import { feedbackText, whatsappFeedbackText } from '../../content/feedback';
+import { business, contact } from '../../config/business';
+import { feedbackEnabled } from '../../config/site';
+import type { Lang } from '../../i18n/routes';
+import { t } from '../../i18n/ui';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const f = feedbackText[lang];
+const ui = t(lang);
+const wa = contact.whatsapp && !contact.whatsapp.demo ? `${contact.whatsapp.href}?text=${encodeURIComponent(whatsappFeedbackText[lang])}` : null;
+const phone = contact.phone && !contact.phone.demo ? contact.phone : null;
+---
+<BaseLayout lang={lang} page="feedback" title={f.meta.title} description={f.meta.description}>
+  <PageHero lang={lang} page="feedback" h1={f.h1} intro={f.intro} actions={false} />
+  <section class="section">
+    <div class="wrap">
+      {
+        feedbackEnabled ? (
+          <FeedbackForm lang={lang} />
+        ) : (
+          <div class="unavailable">
+            <h2>{f.unavailableTitle}</h2>
+            <p>{f.unavailableText}</p>
+            <div class="btn-row">
+              {wa && (
+                <a class="btn" href={wa} rel="noopener" target="_blank" data-contact="whatsapp">
+                  <Icon name="chat" />
+                  <span>{f.whatsappFeedback}</span>
+                </a>
+              )}
+              {phone && (
+                <a class="btn btn--ghost" href={phone.href} data-contact="call">
+                  <Icon name="phone" />
+                  <span>{ui.call}</span>
+                </a>
+              )}
+              {business.googleReviewUrl && (
+                <a class="btn btn--ghost" href={business.googleReviewUrl} rel="noopener" target="_blank">
+                  {f.googleReview}
+                </a>
+              )}
+            </div>
+          </div>
+        )
+      }
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .unavailable {
+    display: grid;
+    gap: 1rem;
+    max-width: 40rem;
+  }
+  .unavailable h2 {
+    font-size: var(--step-2);
+  }
+</style>
