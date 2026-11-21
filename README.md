@@ -43,7 +43,9 @@ SITE_URL=https://www.example.com DEPLOY_ENV=production npm run build && npm run 
 | URL map | `src/i18n/routes.ts` |
 | Photos and logo | `src/assets/` |
 
-English pages (13): `/`, `/water-leak-detection/`, `/hidden-water-leak-detection/`, `/underground-water-leak-detection/`, `/water-leak-repair/`, `/pipe-leak-repair/`, `/how-it-works/`, `/water-leak-guide/`, `/areas-we-cover/`, `/about/`, `/our-engineer/`, `/contact/`, `/privacy-policy/`.
+English pages (16 indexed): `/`, `/plumbing-services/`, `/water-leak-detection/`, `/hidden-water-leak-detection/`, `/underground-water-leak-detection/`, `/water-leak-repair/`, `/pipe-leak-repair/`, `/how-it-works/`, `/water-leak-guide/`, `/areas-we-cover/`, `/about/`, `/our-engineer/`, `/customer-reviews/`, `/contact/`, `/faqs/`, `/privacy-policy/`, plus the noindex `/feedback/` form.
+
+**Menu** (`src/i18n/menu.ts`, used by the desktop bar and the mobile drawer): Home · Services (detection, its specialist pages, repair, pipe repair, plumbing) · About Us (links to the About page; Meet Our Engineer, Customer Reviews & Feedback, How It Works, Leak Guide) · Contact Us (Contact LeakFix, Riyadh Service Areas, FAQs, Call and WhatsApp using the configured number). A Completed Projects page and menu link are not built yet: add them once a genuine job can be described.
 Arabic pages use the same paths under `/ar/`. Each page links to its equivalent through the language switcher and reciprocal `hreflang` tags.
 
 ## Confirmed content switches (`src/config/business.ts`)

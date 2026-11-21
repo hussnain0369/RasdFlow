@@ -187,12 +187,13 @@ export const isDemoContact = Boolean(contact.phone?.demo || contact.whatsapp?.de
 export const hasDirectContact = Boolean(contact.phone || contact.whatsapp || contact.email);
 
 /** Pre-filled WhatsApp text so the business knows where the enquiry came from. */
-export function whatsappHref(lang: 'en' | 'ar'): string | null {
+export function whatsappHref(lang: 'en' | 'ar', message?: string): string | null {
   if (!contact.whatsapp) return null;
   if (contact.whatsapp.demo) return contact.whatsapp.href;
   const text =
-    lang === 'ar'
+    message ??
+    (lang === 'ar'
       ? 'السلام عليكم، أبي أستفسر عن تسرب مياه في الرياض.'
-      : 'Hello LeakFix, I would like to ask about a water leak in Riyadh.';
+      : 'Hello LeakFix, I would like to ask about a water leak in Riyadh.');
   return `${contact.whatsapp.href}?text=${encodeURIComponent(text)}`;
 }

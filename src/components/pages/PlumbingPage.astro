@@ -8,7 +8,7 @@ import CtaBand from '../CtaBand.astro';
 import Icon from '../Icon.astro';
 import repairPhoto from '../../assets/photos/repair-valve.jpg';
 import { plumbing } from '../../content/plumbing';
-import { business } from '../../config/business';
+import { business, contact, whatsappHref } from '../../config/business';
 import { path, type Lang } from '../../i18n/routes';
 import { t } from '../../i18n/ui';
 import { absoluteUrl, siteUrl } from '../../config/site';
@@ -23,6 +23,18 @@ const ui = t(lang);
 const fee = business.inspectionFee?.[lang];
 const before = { ...c.beforeWork, after: fee ? [lang === 'ar' ? `رسوم الفحص: ${fee}.` : `Inspection fee: ${fee}.`] : undefined };
 const noticeLabel = lang === 'ar' ? 'ما قد تلاحظه:' : 'What you might notice:';
+// A way to enquire about each service: WhatsApp with the service named, otherwise Call, otherwise the contact page.
+const askLabel = lang === 'ar' ? 'استفسر عن هذه الخدمة' : 'Ask about this';
+const askHref = (title: string) => {
+  const msg =
+    lang === 'ar'
+      ? `السلام عليكم، أبي أستفسر عن: ${title}. أنا في حي [الحي]، ولاحظت [المشكلة] في [المكان].`
+      : `Hello LeakFix, I'd like to ask about: ${title}. I'm in [district]. I noticed [problem] in [location].`;
+  const wa = contact.whatsapp && !contact.whatsapp.demo ? whatsappHref(lang, msg) : null;
+  if (wa) return { href: wa, kind: 'whatsapp' as const };
+  if (contact.phone && !contact.phone.demo) return { href: contact.phone.href, kind: 'call' as const };
+  return { href: path('contact', lang), kind: 'page' as const };
+};
 const service = serviceJsonLd({ name: c.h1, description: c.meta.description, url: absoluteUrl(path('plumbing', lang)), siteUrl, lang });
 ---
 <BaseLayout lang={lang} page="plumbing" title={c.meta.title} description={c.meta.description} jsonLd={[service]}>
@@ -40,6 +52,21 @@ const service = serviceJsonLd({ name: c.h1, description: c.meta.description, url
                 <h3>{w.title}</h3>
                 <p class="notice"><span>{noticeLabel}</span> {w.notice}</p>
                 <p>{w.text}</p>
+                {(() => {
+                  const ask = askHref(w.title);
+                  return (
+                    <a
+                      class="ask"
+                      href={ask.href}
+                      data-contact={ask.kind === 'page' ? undefined : ask.kind}
+                      rel={ask.kind === 'whatsapp' ? 'noopener' : undefined}
+                      target={ask.kind === 'whatsapp' ? '_blank' : undefined}
+                    >
+                      <Icon name={ask.kind === 'call' ? 'phone' : 'chat'} />
+                      <span>{askLabel}</span>
+                    </a>
+                  );
+                })()}
               </div>
             </li>
           ))
@@ -72,6 +99,21 @@ const service = serviceJsonLd({ name: c.h1, description: c.meta.description, url
 </BaseLayout>
 
 <style>
+  .ask {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    min-height: 2.75rem;
+    margin-block-start: 0.5rem;
+    color: var(--blue-text);
+    font-weight: 650;
+    text-underline-offset: 0.2em;
+  }
+  .ask :global(svg) {
+    width: 1.15rem;
+    height: 1.15rem;
+    flex: none;
+  }
   .work-title {
     margin-block-end: 1.75rem;
   }

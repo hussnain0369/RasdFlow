@@ -6,13 +6,15 @@ import EnquiryForm from '../EnquiryForm.astro';
 import { content } from '../../content/pages';
 import type { Lang } from '../../i18n/routes';
 import { formEnabled } from '../../config/site';
-import { hasDirectContact } from '../../config/business';
+import { hasDirectContact, contact, whatsappHref } from '../../config/business';
+import Icon from '../Icon.astro';
 
 interface Props {
   lang: Lang;
 }
 const { lang } = Astro.props;
 const c = content[lang].contact;
+const starterWa = contact.whatsapp && !contact.whatsapp.demo ? whatsappHref(lang, c.starter) : null;
 ---
 <BaseLayout lang={lang} page="contact" title={c.meta.title} description={c.meta.description}>
   <PageHero lang={lang} page="contact" h1={c.h1} intro={c.intro} />
@@ -30,6 +32,19 @@ const c = content[lang].contact;
             </div>
           )
         }
+        <div class="starter">
+          <h2>{c.starterTitle}</h2>
+          <p>{c.starterText}</p>
+          <p class="starter-text"><q>{c.starter}</q></p>
+          {
+            starterWa && (
+              <a class="btn btn--ghost" href={starterWa} data-contact="whatsapp" rel="noopener" target="_blank">
+                <Icon name="chat" />
+                <span>{c.starterBtn}</span>
+              </a>
+            )
+          }
+        </div>
       </div>
       {formEnabled && <div><EnquiryForm lang={lang} /></div>}
     </div>
@@ -51,6 +66,21 @@ const c = content[lang].contact;
   .side {
     display: grid;
     gap: 2.5rem;
+  }
+  .starter h2 {
+    font-size: var(--step-1);
+    margin-block-end: 0.5rem;
+  }
+  .starter-text {
+    margin-block: 0.75rem 1rem;
+    padding: 1rem 1.25rem;
+    background: var(--mist);
+    border-inline-start: 3px solid var(--blue);
+    font-weight: 600;
+    color: var(--navy);
+  }
+  .starter-text q {
+    quotes: none;
   }
   .tips h2 {
     font-size: var(--step-1);

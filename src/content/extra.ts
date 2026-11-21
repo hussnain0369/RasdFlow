@@ -22,9 +22,9 @@ const engineerEn: EngineerPage = {
     description:
       'Engineer Muhammad Faisal of LeakFix has 25 years of experience in plumbing, water leak detection and repair. See his role on inspections and repairs in Riyadh.',
   },
-  h1: 'Engineer Muhammad Faisal',
+  h1: 'Meet Our Engineer: Muhammad Faisal',
   intro:
-    'Engineer Muhammad Faisal carries out LeakFix\'s plumbing, leak investigation and repair work in Riyadh. He has 25 years of experience in plumbing, water leak detection and repair.',
+    'Engineer Muhammad Faisal carries out LeakFix\'s plumbing, leak investigation and repair work in Riyadh. Our engineer has 25 years of experience in plumbing, water leak detection and repair.',
   role: 'Engineer, LeakFix',
   facts: [],
   sections: [
@@ -60,9 +60,9 @@ const engineerAr: EngineerPage = {
     description:
       'المهندس محمد فيصل من LeakFix لديه 25 عامًا من الخبرة في أعمال السباكة وكشف تسربات المياه وإصلاحها. تعرّف على دوره في الفحص والإصلاح بالرياض.',
   },
-  h1: 'المهندس محمد فيصل',
+  h1: 'تعرّف على مهندسنا: المهندس محمد فيصل',
   intro:
-    'يتولى المهندس محمد فيصل أعمال السباكة وفحص تسربات المياه وإصلاحها لدى LeakFix في الرياض. لديه 25 عامًا من الخبرة في أعمال السباكة وكشف تسربات المياه وإصلاحها.',
+    'يتولى المهندس محمد فيصل أعمال السباكة وفحص تسربات المياه وإصلاحها لدى LeakFix في الرياض. لدى مهندسنا 25 عامًا من الخبرة في أعمال السباكة وكشف تسربات المياه وإصلاحها.',
   role: 'مهندس، LeakFix',
   facts: [],
   sections: [
@@ -102,6 +102,8 @@ export interface HowPage {
   intro: string;
   imageAlt: string;
   steps: { title: string; text: string; points?: string[] }[];
+  /** What to send on WhatsApp before the visit. */
+  whatsapp: { title: string; intro: string; items: string[]; photos: string };
   faqs: Faq[];
   cta: { title: string; text: string };
 }
@@ -119,7 +121,7 @@ const howEn: HowPage = {
   steps: [
     {
       title: 'Tell us what you have noticed',
-      text: 'Send your district in Riyadh, the property type and a short description of the problem.',
+      text: 'Send your district in Riyadh, the property type and a short description of the problem. WhatsApp is the quickest way, because you can add photos in the same message.',
       points: ['Where the water or damp appears.', 'When it started and whether it comes and goes.', 'Photos or a short video, if you have them.'],
     },
     {
@@ -129,10 +131,16 @@ const howEn: HowPage = {
     {
       title: 'The inspection visit',
       text: 'The inspection focuses on the areas you described and the pipework that can be reached. How it is carried out depends on the property and the symptoms.',
+      points: [
+        'The engineer goes over what you reported and looks at the affected areas.',
+        'The water meter and the pipework and connections that can be reached are checked.',
+        'Detection methods are chosen to suit the property and symptoms, and their results are compared before any conclusion.',
+        'You are told what the findings point to and what, if anything, remains uncertain.',
+      ],
     },
     {
       title: 'Findings and proposed work',
-      text: 'You hear what was found and what is proposed next. If a repair is needed, the scope, any opening of surfaces, parts and the price are explained so you can decide.',
+      text: 'You hear what was found and what is proposed next. If a repair is needed, the scope, any opening of surfaces, parts and the price are explained so you can decide. This is the point where repair options are discussed: once the findings are known, not before.',
     },
     {
       title: 'Repair, once you agree',
@@ -143,6 +151,20 @@ const howEn: HowPage = {
       text: 'The repaired area is checked for continuing leakage in a way that suits the repair. Anything still unresolved is explained, along with the options.',
     },
   ],
+  whatsapp: {
+    title: 'What to Send on WhatsApp',
+    intro: 'A single message with these details helps us understand the problem and plan the visit:',
+    items: [
+      'Your district in Riyadh and whether it is a villa, apartment or commercial property.',
+      'What you have noticed: damp, dripping, a rising bill, a sound of running water or a blocked fixture.',
+      'Where it is: the room, and whether it is on a wall, floor, ceiling or under a sink.',
+      'When it started, and whether it is constant or comes and goes.',
+      'Whether the source is already known, or another contractor has looked at it.',
+      'Any access arrangements, such as a building manager or a tenant who needs notice.',
+    ],
+    photos:
+      'Photos help: one wide shot of the room, one close-up of the damp or drip, the pipework under the sink if relevant, and the water meter if you have checked it.',
+  },
   faqs: [
     {
       q: 'Does someone need to be at the property during the visit?',
@@ -176,7 +198,7 @@ const howAr: HowPage = {
   steps: [
     {
       title: 'أخبرنا بما لاحظته',
-      text: 'أرسل لنا اسم الحي في الرياض ونوع العقار ووصفًا مختصرًا للمشكلة.',
+      text: 'أرسل لنا اسم الحي في الرياض ونوع العقار ووصفًا مختصرًا للمشكلة. واتساب هو الطريقة الأسرع، لأنك تستطيع إرفاق الصور في الرسالة نفسها.',
       points: ['أين تظهر المياه أو الرطوبة.', 'متى بدأت المشكلة، وهل تظهر وتختفي.', 'صور أو مقطع فيديو قصير إن توفر.'],
     },
     {
@@ -186,10 +208,16 @@ const howAr: HowPage = {
     {
       title: 'زيارة الفحص',
       text: 'يركّز الفحص على الأماكن التي وصفتها والتمديدات التي يمكن الوصول إليها، وتعتمد طريقته على العقار والأعراض.',
+      points: [
+        'يراجع المهندس ما أبلغت عنه ويعاين الأماكن المتأثرة.',
+        'يُفحَص عدّاد المياه والتمديدات والوصلات التي يمكن الوصول إليها.',
+        'تُختار طرق الكشف المناسبة للعقار والأعراض، وتُقارَن نتائجها قبل الوصول إلى أي استنتاج.',
+        'نوضّح لك إلامَ تشير النتائج، وما الذي ما يزال غير مؤكد إن وُجد.',
+      ],
     },
     {
       title: 'النتائج والأعمال المقترحة',
-      text: 'نشرح لك ما تم التوصل إليه والخطوة التالية المقترحة. وإذا احتاج الأمر إلى إصلاح، نوضّح النطاق وأي فتح للأسطح والقطع اللازمة والسعر لتتخذ قرارك.',
+      text: 'نشرح لك ما تم التوصل إليه والخطوة التالية المقترحة. وإذا احتاج الأمر إلى إصلاح، نوضّح النطاق وأي فتح للأسطح والقطع اللازمة والسعر لتتخذ قرارك. في هذه المرحلة تحديدًا نناقش خيارات الإصلاح، أي بعد معرفة النتائج لا قبلها.',
     },
     {
       title: 'الإصلاح بعد موافقتك',
@@ -200,6 +228,20 @@ const howAr: HowPage = {
       text: 'يُفحَص المكان الذي أُصلِح للتأكد من عدم استمرار التسرب بالطريقة المناسبة لنوع الإصلاح، ونوضّح لك أي أمر لم يُحَل والخيارات المتاحة.',
     },
   ],
+  whatsapp: {
+    title: 'ماذا ترسل عبر واتساب',
+    intro: 'رسالة واحدة تتضمن هذه التفاصيل تساعدنا على فهم المشكلة والتخطيط للزيارة:',
+    items: [
+      'اسم الحي في الرياض، وهل العقار فيلا أو شقة أو منشأة تجارية.',
+      'ما الذي لاحظته: رطوبة، أو تنقيط، أو ارتفاع في الفاتورة، أو صوت جريان مياه، أو انسداد في إحدى الأدوات الصحية.',
+      'مكان المشكلة: الغرفة، وهل هي في جدار أو أرضية أو سقف أو تحت مغسلة.',
+      'متى بدأت، وهل هي مستمرة أو تظهر وتختفي.',
+      'هل المصدر معروف مسبقًا، أو فحصه مقاول آخر.',
+      'أي ترتيبات للدخول، مثل إدارة المبنى أو مستأجر يحتاج إلى إشعار مسبق.',
+    ],
+    photos:
+      'الصور تساعدنا: صورة عامة للغرفة، وصورة قريبة للرطوبة أو التنقيط، وصورة للتمديدات أسفل المغسلة إن كان ذلك مناسبًا، وصورة لعدّاد المياه إن كنت قد راجعته.',
+  },
   faqs: [
     {
       q: 'هل يجب أن يكون أحد موجودًا في العقار أثناء الزيارة؟',

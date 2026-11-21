@@ -43,7 +43,9 @@ const year = new Date().getFullYear();
       <ul>
         <li><a href={path('about', lang)}>{ui.nav.about}</a></li>
         <li><a href={path('engineer', lang)}>{ui.nav.engineer}</a></li>
+        <li><a href={path('reviews', lang)}>{ui.nav.reviews}</a></li>
         <li><a href={path('contact', lang)}>{ui.nav.contact}</a></li>
+        <li><a href={path('faqs', lang)}>{ui.nav.faqs}</a></li>
         {feedbackEnabled && <li><a href={path('feedback', lang)}>{ui.nav.feedback}</a></li>}
         <li><a href={path('privacy', lang)}>{ui.nav.privacy}</a></li>
       </ul>

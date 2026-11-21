@@ -15,8 +15,10 @@ interface Props {
   callLabel?: string;
   whatsappLabel?: string;
   fallback?: string | false;
+  /** One enquiry button only: WhatsApp when configured, otherwise Call. */
+  single?: boolean;
 }
-const { lang, tone = 'light', callLabel, whatsappLabel, fallback } = Astro.props;
+const { lang, tone = 'light', callLabel, whatsappLabel, fallback, single = false } = Astro.props;
 const ui = t(lang);
 const wa = whatsappHref(lang);
 const primary = tone === 'dark' ? 'btn btn--on-dark' : 'btn';
@@ -26,14 +28,14 @@ const fallbackLabel = fallback === undefined ? ui.nav.contact : fallback;
 {
   (contact.phone || wa) ? (
     <div class="btn-row">
-      {contact.phone && (
+      {contact.phone && !(single && wa) && (
         <a class={primary} href={contact.phone.href} data-contact="call">
           <Icon name="phone" />
           <span>{callLabel ?? ui.call}</span>
         </a>
       )}
       {wa && (
-        <a class={contact.phone ? secondary : primary} href={wa} data-contact="whatsapp" rel="noopener" target="_blank">
+        <a class={contact.phone && !single ? secondary : primary} href={wa} data-contact="whatsapp" rel="noopener" target="_blank">
           <Icon name="chat" />
           <span>{whatsappLabel ?? ui.whatsapp}</span>
         </a>

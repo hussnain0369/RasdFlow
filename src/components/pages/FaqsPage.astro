@@ -1,0 +1,74 @@
+---
+/** FAQs page. Questions are grouped; each answer links to the page with more detail. No FAQPage markup. */
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHero from '../PageHero.astro';
+import CtaBand from '../CtaBand.astro';
+import Icon from '../Icon.astro';
+import { faqsPage } from '../../content/faqs';
+import { path, type Lang } from '../../i18n/routes';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const c = faqsPage[lang];
+---
+<BaseLayout lang={lang} page="faqs" title={c.meta.title} description={c.meta.description}>
+  <PageHero lang={lang} page="faqs" h1={c.h1} intro={c.intro} actions={false} />
+
+  {
+    c.groups.map((g, gi) => (
+      <section class:list={['section', 'faq-group', { 'section--mist': gi % 2 === 1 }]} aria-labelledby={`faq-g${gi}`}>
+        <div class="wrap faq-layout">
+          <h2 id={`faq-g${gi}`}>{g.title}</h2>
+          <div class="faq">
+            {g.items.map((item) => (
+              <details>
+                <summary>
+                  <span>{item.q}</span>
+                  <span class="faq-icon" aria-hidden="true" />
+                </summary>
+                <div class="faq-answer">
+                  <p>{item.a}</p>
+                  <p class="faq-links">
+                    {item.links.map((l) => (
+                      <a class="link-arrow" href={path(l.page, lang)}>
+                        <span>{l.label}</span>
+                        <Icon name="arrow" />
+                      </a>
+                    ))}
+                  </p>
+                </div>
+              </details>
+            ))}
+          </div>
+        </div>
+      </section>
+    ))
+  }
+
+  <CtaBand lang={lang} title={c.moreTitle} text={c.moreText} />
+</BaseLayout>
+
+<style>
+  .faq-layout {
+    display: grid;
+    gap: 1.5rem;
+  }
+  @media (min-width: 64rem) {
+    .faq-layout {
+      grid-template-columns: 1fr 2fr;
+      gap: 4rem;
+      align-items: start;
+    }
+  }
+  h2 {
+    font-size: var(--step-2);
+  }
+  .faq-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 1.5rem;
+    margin-block-start: 0.75rem;
+  }
+</style>

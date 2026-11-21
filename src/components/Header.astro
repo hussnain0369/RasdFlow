@@ -5,9 +5,7 @@ import Icon from './Icon.astro';
 import { path, otherLang, type Lang, type PageKey } from '../i18n/routes';
 import { t } from '../i18n/ui';
 import { contact, isDemoContact } from '../config/business';
-import { feedbackEnabled } from '../config/site';
-import { approvedReviews } from '../data/reviews';
-import { feedbackText } from '../content/feedback';
+import { buildMenu, type MenuGroup, type MenuLink } from '../i18n/menu';
 
 interface Props {
   lang: Lang;
@@ -17,50 +15,16 @@ const { lang, page } = Astro.props;
 const ui = t(lang);
 const alt = otherLang(lang);
 const switchHref = path(page ?? 'home', alt);
-// Desktop bar and drawer share one structure: Home, Services (all service pages), then the other pages.
-const serviceKeys: PageKey[] = ['plumbing', 'detection', 'hidden', 'underground', 'repair', 'pipeRepair'];
-const serviceLabel = (key: PageKey) => (key === 'plumbing' ? ui.plumbingLong : ui.nav[key]);
-const inServices = page !== null && serviceKeys.includes(page);
-const afterServices: PageKey[] = ['howItWorks', 'areas', 'about', 'contact'];
-
-// Drawer: Home, then three accordion groups built only from pages that exist.
-type DrawerLink = { href: string; label: string; key: PageKey | null };
-type DrawerGroup = { id: string; label: string; overview: PageKey | null; links: DrawerLink[] };
-const pageLink = (key: PageKey, label = ui.nav[key]): DrawerLink => ({ href: path(key, lang), label, key });
-const drawerGroups: DrawerGroup[] = [
-  {
-    id: 'drawer-services',
-    label: ui.services,
-    overview: null, // there is no services overview page, so the whole row expands
-    // main detection link, then the specialist detection pages, then repair, then plumbing
-    links: (['detection', 'hidden', 'underground', 'repair', 'pipeRepair', 'plumbing'] as PageKey[]).map((key) =>
-      pageLink(key, serviceLabel(key)),
-    ),
-  },
-  {
-    id: 'drawer-about',
-    label: ui.aboutUs,
-    overview: 'about',
-    links: [
-      pageLink('howItWorks'),
-      pageLink('guide'),
-      pageLink('engineer'),
-      // Customer reviews: only once approved reviews are published on the homepage.
-      ...(approvedReviews.length > 0 ? [{ href: `${path('home', lang)}#reviews`, label: feedbackText[lang].sectionTitle, key: null }] : []),
-    ],
-  },
-  {
-    id: 'drawer-contact',
-    label: ui.contactUs,
-    overview: 'contact',
-    links: [
-      pageLink('areas'),
-      // Private feedback page exists only when email delivery is configured.
-      ...(feedbackEnabled ? [pageLink('feedback')] : []),
-    ],
-  },
-];
-const groupIsCurrent = (g: DrawerGroup) => page !== null && (g.overview === page || g.links.some((l) => l.key === page));
+// One menu for the desktop bar and the mobile drawer: Home, Services, About Us, Contact Us.
+const menu = buildMenu(lang);
+const isCurrent = (g: MenuGroup) => page !== null && (g.overview === page || g.links.some((l) => l.key === page));
+const current = (l: MenuLink) => (l.key !== null && l.key === page ? 'page' : undefined);
+const linkAttrs = (l: MenuLink) =>
+  l.action === 'whatsapp'
+    ? { 'data-contact': 'whatsapp', rel: 'noopener', target: '_blank' }
+    : l.action === 'call'
+      ? { 'data-contact': 'call' }
+      : {};
 ---
 <div class="topbar">
   <div class="wrap topbar-inner">
@@ -109,27 +73,31 @@ const groupIsCurrent = (g: DrawerGroup) => page !== null && (g.overview === page
     <nav id="site-nav" class="site-nav" aria-label={ui.mainNav}>
       <ul>
         <li>
-          <a href={path('home', lang)} aria-current={page === 'home' ? 'page' : undefined}>{ui.nav.home}</a>
-        </li>
-        <li class="has-drop">
-          <button class="drop-toggle" class:list={{ 'is-current': inServices }} type="button" aria-expanded="false" aria-controls="nav-services">
-            <span>{ui.services}</span>
-            <Icon name="chevron" class="chev" />
-          </button>
-          <ul id="nav-services" class="drop">
-            {
-              serviceKeys.map((key) => (
-                <li>
-                  <a href={path(key, lang)} aria-current={key === page ? 'page' : undefined}>{serviceLabel(key)}</a>
-                </li>
-              ))
-            }
-          </ul>
+          <a href={menu.home.href} aria-current={current(menu.home)}>{menu.home.label}</a>
         </li>
         {
-          afterServices.map((key) => (
-            <li>
-              <a href={path(key, lang)} aria-current={key === page ? 'page' : undefined}>{ui.nav[key]}</a>
+          menu.groups.map((g) => (
+            <li class="has-drop">
+              <button class="drop-toggle" class:list={{ 'is-current': isCurrent(g) }} type="button" aria-expanded="false" aria-controls={`nav-${g.id}`}>
+                <span>{g.label}</span>
+                <Icon name="chevron" class="chev" />
+              </button>
+              <ul id={`nav-${g.id}`} class="drop">
+                {g.overview && (
+                  <li>
+                    <a href={path(g.overview, lang)} aria-current={g.overview === page ? 'page' : undefined}>
+                      {ui.menuLabels[g.overview] ?? ui.nav[g.overview]}
+                    </a>
+                  </li>
+                )}
+                {g.links.map((l) => (
+                  <li>
+                    <a href={l.href} aria-current={current(l)} {...linkAttrs(l)}>
+                      {l.label}
+                    </a>
+                  </li>
+                ))}
+              </ul>
             </li>
           ))
         }
@@ -153,11 +121,12 @@ const groupIsCurrent = (g: DrawerGroup) => page !== null && (g.overview === page
     <nav class="drawer-nav" aria-label={ui.mainNav}>
       <ul>
         <li>
-          <a href={path('home', lang)} aria-current={page === 'home' ? 'page' : undefined}>{ui.nav.home}</a>
+          <a href={menu.home.href} aria-current={current(menu.home)}>{menu.home.label}</a>
         </li>
         {
-          drawerGroups.map((g) => {
-            const open = groupIsCurrent(g);
+          menu.groups.map((g) => {
+            const open = isCurrent(g);
+            const id = `drawer-${g.id}`;
             return (
               <li class="group">
                 {g.overview ? (
@@ -169,22 +138,25 @@ const groupIsCurrent = (g: DrawerGroup) => page !== null && (g.overview === page
                       class="sub-toggle chev-only"
                       type="button"
                       aria-expanded={open ? 'true' : 'false'}
-                      aria-controls={g.id}
+                      aria-controls={id}
                       aria-label={`${g.label}: ${ui.subMore}`}
                     >
                       <Icon name="chevron" class="chev" />
                     </button>
                   </div>
                 ) : (
-                  <button class="sub-toggle" type="button" aria-expanded={open ? 'true' : 'false'} aria-controls={g.id}>
+                  <button class="sub-toggle" type="button" aria-expanded={open ? 'true' : 'false'} aria-controls={id}>
                     <span>{g.label}</span>
                     <Icon name="chevron" class="chev" />
                   </button>
                 )}
-                <ul id={g.id} class="sub" hidden={!open}>
+                <ul id={id} class="sub" hidden={!open}>
                   {g.links.map((l) => (
                     <li>
-                      <a href={l.href} aria-current={l.key !== null && l.key === page ? 'page' : undefined}>{l.label}</a>
+                      <a href={l.href} aria-current={current(l)} class:list={{ action: !!l.action }} {...linkAttrs(l)}>
+                        {l.action && <Icon name={l.action === 'call' ? 'phone' : 'chat'} />}
+                        <span>{l.label}</span>
+                      </a>
                     </li>
                   ))}
                 </ul>
@@ -273,30 +245,37 @@ const groupIsCurrent = (g: DrawerGroup) => page !== null && (g.overview === page
     window.matchMedia('(min-width: 64rem)').addEventListener('change', (e) => e.matches && close(false));
   }
 
-  // Desktop "Services" dropdown: opens on click or tap; Escape, a click elsewhere or tabbing away closes it.
-  const dropItem = document.querySelector<HTMLElement>('.site-nav .has-drop');
-  const dropBtn = dropItem?.querySelector<HTMLButtonElement>('.drop-toggle');
-  if (dropItem && dropBtn) {
-    const setOpen = (open: boolean) => {
-      dropBtn.setAttribute('aria-expanded', String(open));
-      dropItem.classList.toggle('is-open', open);
-    };
-    const isOpen = () => dropBtn.getAttribute('aria-expanded') === 'true';
-    dropBtn.addEventListener('click', () => setOpen(!isOpen()));
-    document.addEventListener('click', (event) => {
-      if (isOpen() && !dropItem.contains(event.target as Node)) setOpen(false);
+  // Desktop dropdowns (Services, About Us, Contact Us): one open at a time; click or tap toggles,
+  // Escape, a click elsewhere or tabbing away closes.
+  const dropItems = [...document.querySelectorAll<HTMLElement>('.site-nav .has-drop')];
+  const dropBtn = (item: HTMLElement) => item.querySelector<HTMLButtonElement>('.drop-toggle')!;
+  const setDrop = (item: HTMLElement, open: boolean) => {
+    dropBtn(item).setAttribute('aria-expanded', String(open));
+    item.classList.toggle('is-open', open);
+  };
+  const dropOpen = (item: HTMLElement) => item.classList.contains('is-open');
+  dropItems.forEach((item) => {
+    const btn = dropBtn(item);
+    btn.addEventListener('click', () => {
+      const next = !dropOpen(item);
+      dropItems.forEach((other) => other !== item && setDrop(other, false));
+      setDrop(item, next);
     });
-    dropItem.addEventListener('focusout', (event) => {
-      if (isOpen() && !dropItem.contains(event.relatedTarget as Node | null) && event.relatedTarget) setOpen(false);
+    item.addEventListener('focusout', (event) => {
+      const to = event.relatedTarget as Node | null;
+      if (dropOpen(item) && to && !item.contains(to)) setDrop(item, false);
     });
-    dropItem.addEventListener('keydown', (event) => {
-      if (event.key === 'Escape' && isOpen()) {
+    item.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape' && dropOpen(item)) {
         event.stopPropagation();
-        setOpen(false);
-        dropBtn.focus();
+        setDrop(item, false);
+        btn.focus();
       }
     });
-  }
+  });
+  document.addEventListener('click', (event) => {
+    dropItems.forEach((item) => dropOpen(item) && !item.contains(event.target as Node) && setDrop(item, false));
+  });
 </script>
 
 <style>
@@ -742,6 +721,12 @@ const groupIsCurrent = (g: DrawerGroup) => page !== null && (g.overview === page
     justify-content: center;
     padding: 0;
     border-inline-start: 1px solid var(--line);
+  }
+  .drawer-nav a.action :global(svg) {
+    flex: none;
+    width: 1.1rem;
+    height: 1.1rem;
+    color: var(--blue-text);
   }
   .drawer-lang {
     display: flex;

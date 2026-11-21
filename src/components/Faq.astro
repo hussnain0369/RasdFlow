@@ -1,11 +1,14 @@
 ---
 import type { Faq } from '../content/pages';
+import Icon from './Icon.astro';
 interface Props {
   faqs: Faq[];
   title: string;
   id?: string;
+  /** Optional link to a page with more questions. */
+  more?: { href: string; label: string };
 }
-const { faqs, title, id = 'faq' } = Astro.props;
+const { faqs, title, id = 'faq', more } = Astro.props;
 ---
 <section class="section" aria-labelledby={`${id}-title`}>
   <div class="wrap faq-layout">
@@ -24,11 +27,22 @@ const { faqs, title, id = 'faq' } = Astro.props;
           </details>
         ))
       }
+      {more && (
+        <p class="faq-more">
+          <a class="link-arrow" href={more.href}>
+            <span>{more.label}</span>
+            <Icon name="arrow" />
+          </a>
+        </p>
+      )}
     </div>
   </div>
 </section>
 
 <style>
+  .faq-more {
+    margin-block-start: 1.5rem;
+  }
   .faq-layout {
     display: grid;
     gap: 2rem;

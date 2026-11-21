@@ -1,0 +1,238 @@
+---
+/**
+ * Customer Reviews & Feedback. Public reviews (approved, with permission) and private feedback
+ * are labelled separately. No Review or AggregateRating structured data.
+ */
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHero from '../PageHero.astro';
+import Stars from '../Stars.astro';
+import Icon from '../Icon.astro';
+import RelatedLinks from '../RelatedLinks.astro';
+import { reviewsPage } from '../../content/reviews';
+import { feedbackText, whatsappFeedbackText } from '../../content/feedback';
+import { approvedReviews, reviewSummary } from '../../data/reviews';
+import { business, contact } from '../../config/business';
+import { feedbackEnabled } from '../../config/site';
+import { path, type Lang } from '../../i18n/routes';
+import { t } from '../../i18n/ui';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const c = reviewsPage[lang];
+const f = feedbackText[lang];
+const ui = t(lang);
+const reviews = [...approvedReviews]
+  .filter((r) => r.text.en || r.text.ar)
+  .sort((a, b) => b.date.localeCompare(a.date))
+  .map((r) => {
+    const textLang: Lang = r.text[lang] ? lang : lang === 'ar' ? 'en' : 'ar';
+    return { ...r, shown: r.text[textLang]!, textLang };
+  });
+const waFeedback =
+  contact.whatsapp && !contact.whatsapp.demo
+    ? `${contact.whatsapp.href}?text=${encodeURIComponent(whatsappFeedbackText[lang])}`
+    : null;
+const phone = contact.phone && !contact.phone.demo ? contact.phone : null;
+---
+<BaseLayout lang={lang} page="reviews" title={c.meta.title} description={c.meta.description}>
+  <PageHero lang={lang} page="reviews" h1={c.h1} intro={c.intro} actions={false} />
+
+  <section class="section" aria-labelledby="private-title">
+    <div class="wrap panel panel--private">
+      <p class="badge badge--private"><Icon name="mail" /><span>{c.privateBadge}</span></p>
+      <h2 id="private-title">{c.privateTitle}</h2>
+      <p>{c.privateText}</p>
+      {
+        feedbackEnabled ? (
+          <>
+            <p>{c.privateFormText}</p>
+            <div class="btn-row">
+              <a class="btn" href={path('feedback', lang)}>
+                <span>{f.leaveFeedback}</span>
+              </a>
+            </div>
+          </>
+        ) : (
+          <>
+            <div class="btn-row">
+              {waFeedback && (
+                <a class="btn" href={waFeedback} rel="noopener" target="_blank" data-contact="whatsapp" data-feedback="whatsapp">
+                  <Icon name="chat" />
+                  <span>{f.whatsappFeedback}</span>
+                </a>
+              )}
+              {phone && (
+                <a class="btn btn--ghost" href={phone.href} data-contact="call">
+                  <Icon name="phone" />
+                  <span>{ui.call}</span>
+                </a>
+              )}
+            </div>
+            {waFeedback && <p class="note">{c.privateWaNote}</p>}
+          </>
+        )
+      }
+    </div>
+  </section>
+
+  <section class="section section--mist" aria-labelledby="public-title">
+    <div class="wrap">
+      <p class="badge badge--public"><Icon name="globe" /><span>{c.publicBadge}</span></p>
+      <h2 id="public-title">{c.publicTitle}</h2>
+      {
+        reviewSummary && (
+          <p class="summary">
+            <Stars lang={lang} rating={Math.round(reviewSummary.average)} />
+            <a href={reviewSummary.url} rel="noopener">
+              {f.summary(reviewSummary.average.toFixed(1), reviewSummary.count, reviewSummary.source)}
+            </a>
+            <span>({f.summarySeen(reviewSummary.asOf)})</span>
+          </p>
+        )
+      }
+      {
+        reviews.length > 0 ? (
+          <ul class="cards">
+            {reviews.map((r) => (
+              <li class="card">
+                <Stars lang={lang} rating={r.rating} />
+                <blockquote lang={r.textLang} dir={r.textLang === 'ar' ? 'rtl' : 'ltr'}>
+                  <p>{r.shown}</p>
+                </blockquote>
+                <p class="who">
+                  <span class="name">{r.author ?? f.anonymous}</span>
+                  {r.service && <span class="svc">{f.serviceLabel}: {ui.nav[r.service]}</span>}
+                </p>
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p class="empty">{c.publicEmpty}</p>
+        )
+      }
+      {
+        business.googleReviewUrl && (
+          <div class="google">
+            <p>{c.googleText}</p>
+            <a class="btn btn--ghost" href={business.googleReviewUrl} rel="noopener" target="_blank" data-feedback="google">
+              {f.googleReviewBtn}
+            </a>
+          </div>
+        )
+      }
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="how-title">
+    <div class="wrap">
+      <h2 id="how-title">{c.howTitle}</h2>
+      <ul class="how">
+        {c.how.map((item) => <li>{item}</li>)}
+      </ul>
+      <RelatedLinks lang={lang} pages={['engineer', 'howItWorks', 'contact', 'privacy']} />
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .panel {
+    max-width: 52rem;
+  }
+  h2 {
+    font-size: var(--step-2);
+    margin-block-end: 0.75rem;
+  }
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    margin-block-end: 0.75rem;
+    padding: 0.3rem 0.7rem;
+    border-radius: 999px;
+    font-size: var(--step--1);
+    font-weight: 650;
+  }
+  .badge :global(svg) {
+    width: 1rem;
+    height: 1rem;
+    flex: none;
+  }
+  .badge--private {
+    background: var(--navy);
+    color: var(--white);
+  }
+  .badge--public {
+    background: var(--blue-tint);
+    color: var(--blue-text);
+  }
+  .btn-row {
+    margin-block-start: 1.25rem;
+  }
+  .note {
+    margin-block-start: 1rem;
+    color: var(--ink-soft);
+    font-size: var(--step--1);
+    max-width: 44rem;
+  }
+  .empty {
+    max-width: 48rem;
+  }
+  .summary {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    align-items: center;
+    margin-block-end: 1.5rem;
+  }
+  .cards {
+    list-style: none;
+    margin: 1.5rem 0 0;
+    padding: 0;
+    display: grid;
+    gap: 1rem;
+  }
+  @media (min-width: 48rem) {
+    .cards {
+      grid-template-columns: repeat(auto-fill, minmax(18rem, 1fr));
+    }
+  }
+  .card {
+    background: var(--white);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-m);
+    padding: 1.25rem;
+  }
+  blockquote {
+    margin: 0.75rem 0;
+  }
+  .who {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem 0.75rem;
+    font-size: var(--step--1);
+    color: var(--ink-soft);
+  }
+  .name {
+    font-weight: 650;
+    color: var(--navy);
+  }
+  .google {
+    margin-block-start: 2rem;
+  }
+  .google p {
+    margin-block-end: 0.75rem;
+  }
+  .how {
+    padding-inline-start: 1.25rem;
+    margin: 0;
+    max-width: 48rem;
+  }
+  .how li + li {
+    margin-block-start: 0.4rem;
+  }
+  .how li::marker {
+    color: var(--blue);
+  }
+</style>

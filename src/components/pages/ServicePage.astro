@@ -12,6 +12,7 @@ import thermalPhoto from '../../assets/photos/equipment-thermal.jpg';
 import { content } from '../../content/pages';
 import { findingsSection, openingSection, methodsFor, methodsSection, noBreakingSection, chargesSection, pipeworkSection } from '../../content/services';
 import ProofSections from '../ProofSections.astro';
+import Icon from '../Icon.astro';
 import { business } from '../../config/business';
 import { path, type Lang } from '../../i18n/routes';
 import { t } from '../../i18n/ui';
@@ -30,8 +31,8 @@ const image = detection ? thermalPhoto : repairPhoto;
 const m = methodsSection[lang];
 // The detailed customer process lives on How It Works; hub pages keep only what is specific to them.
 const before = detection
-  ? [c.sections[0], c.sections[2], chargesSection(lang, 'detection')]
-  : [pipeworkSection(lang), c.sections[0], c.sections[1], chargesSection(lang, 'repair')];
+  ? [c.sections[0], c.sections[1], c.sections[2], chargesSection(lang, 'detection')]
+  : [pipeworkSection(lang), c.sections[0], c.sections[1], c.sections[2], chargesSection(lang, 'repair')];
 const after = detection
   ? [noBreakingSection(lang), findingsSection(lang)]
   : [c.sections[3], openingSection(lang)];
@@ -40,6 +41,19 @@ const first = detection ? before : [...before, ...after];
 const report = detection && business.sampleReport;
 const reportLabel = lang === 'ar' ? 'اطّلع على نموذج تقرير فحص (بعد حذف بيانات العميل)' : 'See a sample inspection report (customer details removed)';
 const service = serviceJsonLd({ name: c.h1, description: c.meta.description, url: absoluteUrl(path(kind, lang)), siteUrl, lang });
+// Repair page: point customers who can see damp but not its source back to detection.
+const unknownSource =
+  lang === 'ar'
+    ? {
+        title: 'ترى رطوبة لكن لا تعرف مصدرها؟',
+        text: 'الإصلاح يبدأ بعد تحديد مصدر التسرب. إذا كانت الرطوبة أو المياه ظاهرة ولم يُعرف مصدرها بعد، فابدأ بكشف التسربات أولًا حتى يعالج الإصلاح السبب الفعلي.',
+        link: 'كشف تسربات المياه',
+      }
+    : {
+        title: 'Can you see damp but not where it comes from?',
+        text: 'A repair starts once the source has been identified. If damp or water is visible but its source is not yet known, start with leak detection so the repair addresses the actual cause.',
+        link: 'Water Leak Detection',
+      };
 const specificTitle = detection
   ? lang === 'ar' ? 'خدمات كشف متخصصة' : 'Specific Detection Services'
   : lang === 'ar' ? 'خدمة إصلاح متخصصة' : 'Specific Repair Service';
@@ -50,6 +64,18 @@ const specificTitle = detection
   <div class:list={['section', { 'section--joined': !detection }]}>
     <div class="wrap">
       <Sections sections={first} idPrefix="a" />
+      {
+        !detection && (
+          <aside class="callout" aria-labelledby="unknown-source-title">
+            <h2 id="unknown-source-title">{unknownSource.title}</h2>
+            <p>{unknownSource.text}</p>
+            <a class="link-arrow" href={path('detection', lang)}>
+              <span>{unknownSource.link}</span>
+              <Icon name="arrow" />
+            </a>
+          </aside>
+        )
+      }
     </div>
   </div>
 
@@ -99,6 +125,21 @@ const specificTitle = detection
   }
   .section--joined {
     padding-block-end: 0;
+  }
+  .callout {
+    margin-block-start: 2.5rem;
+    padding: 1.5rem;
+    background: var(--blue-tint);
+    border-inline-start: 4px solid var(--blue);
+    border-radius: var(--radius-s);
+    max-width: 48rem;
+  }
+  .callout h2 {
+    font-size: var(--step-1);
+    margin-block-end: 0.5rem;
+  }
+  .callout p {
+    margin-block-end: 0.75rem;
   }
   .report {
     padding-block: 0 2rem;

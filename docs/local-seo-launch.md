@@ -52,7 +52,7 @@ Supporting pages: `/ar/hidden-water-leak-detection/` (leaks inside walls, floors
 
 1. Set real `phone`, `whatsapp` and `email` in `src/config/business.ts`, and set `demoContact: false`.
 2. Build with `SITE_URL=https://www.<domain>`, `DEPLOY_ENV=production` and no `BASE_PATH`, then run `npm run verify`. It must report "Indexable build: yes" and "No problems found".
-3. Confirm `/sitemap.xml` lists 26 URLs (13 pages × 2 languages) on the production domain, and `/robots.txt` allows crawling and points to the sitemap.
+3. Confirm `/sitemap.xml` lists 32 URLs (16 pages × 2 languages) on the production domain, and `/robots.txt` allows crawling and points to the sitemap.
 4. Make sure the GitHub Pages preview (or any staging copy) is **not** built with `DEPLOY_ENV=production`, so it stays noindex.
 
 **After launch (needs Search Console access):**

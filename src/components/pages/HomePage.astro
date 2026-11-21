@@ -215,7 +215,7 @@ const ms = methodsSection[lang];
 
   <ProofSections lang={lang} />
 
-  <Faq faqs={c.faqs} title={ui.faqTitle} />
+  <Faq faqs={c.faqs} title={ui.faqTitle} more={{ href: path('faqs', lang), label: lang === 'ar' ? 'كل الأسئلة الشائعة' : 'See all FAQs' }} />
 
   <ReviewsSection lang={lang} />
 

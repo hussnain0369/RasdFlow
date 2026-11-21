@@ -4,6 +4,7 @@ import PageHero from '../PageHero.astro';
 import Faq from '../Faq.astro';
 import CtaBand from '../CtaBand.astro';
 import repairPhoto from '../../assets/photos/repair-valve.jpg';
+import Icon from '../Icon.astro';
 import { extra } from '../../content/extra';
 import type { Lang } from '../../i18n/routes';
 import { t } from '../../i18n/ui';
@@ -41,11 +42,26 @@ const ui = t(lang);
     </div>
   </section>
 
-  <div class="faq-wrap section--mist">
+  <section class="section section--mist wa-send" aria-labelledby="wa-send-title">
+    <div class="wrap wa-grid">
+      <div>
+        <h2 id="wa-send-title">{c.whatsapp.title}</h2>
+        <p>{c.whatsapp.intro}</p>
+      </div>
+      <div>
+        <ul class="wa-list">
+          {c.whatsapp.items.map((item) => <li><Icon name="chat" /><span>{item}</span></li>)}
+        </ul>
+        <p class="wa-photos">{c.whatsapp.photos}</p>
+      </div>
+    </div>
+  </section>
+
+  <div class="faq-wrap">
     <Faq faqs={c.faqs} title={ui.faqTitle} />
   </div>
 
-  <CtaBand lang={lang} title={c.cta.title} text={c.cta.text} />
+  <CtaBand lang={lang} title={c.cta.title} text={c.cta.text} single />
 </BaseLayout>
 
 <style>
@@ -108,5 +124,42 @@ const ui = t(lang);
   }
   .faq-wrap {
     border-block-start: 1px solid var(--line);
+  }
+  .wa-grid {
+    display: grid;
+    gap: 1.5rem 4rem;
+  }
+  @media (min-width: 64rem) {
+    .wa-grid {
+      grid-template-columns: 1fr 2fr;
+    }
+  }
+  .wa-send h2 {
+    padding-block-start: 0;
+  }
+  .wa-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 0.75rem;
+  }
+  .wa-list li {
+    display: flex;
+    gap: 0.75rem;
+    align-items: flex-start;
+  }
+  .wa-list :global(svg) {
+    flex: none;
+    width: 1.25rem;
+    height: 1.25rem;
+    margin-block-start: 0.2rem;
+    color: var(--blue-text);
+  }
+  .wa-photos {
+    margin-block-start: 1.25rem;
+    padding: 1rem 1.25rem;
+    background: var(--white);
+    border-inline-start: 3px solid var(--blue);
   }
 </style>

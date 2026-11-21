@@ -650,6 +650,10 @@ const contactEn = {
     'Where you see water or damp, and when it started.',
     'Whether the source of the leak is already known.',
   ],
+  starterTitle: 'Not sure what to write?',
+  starterText: 'Copy this message starter and fill in the brackets:',
+  starter: 'I’m in [district]. I noticed [problem] in [location].',
+  starterBtn: 'Start this message on WhatsApp',
 };
 
 const contactAr: typeof contactEn = {
@@ -666,6 +670,10 @@ const contactAr: typeof contactEn = {
     'أين تظهر المياه أو الرطوبة، ومتى بدأت المشكلة.',
     'هل مصدر التسرب معروف مسبقًا.',
   ],
+  starterTitle: 'لا تعرف ماذا تكتب؟',
+  starterText: 'انسخ بداية الرسالة هذه وأكمل ما بين الأقواس:',
+  starter: 'أنا في حي [الحي]. لاحظت [المشكلة] في [المكان].',
+  starterBtn: 'ابدأ هذه الرسالة عبر واتساب',
 };
 
 export const content = {

@@ -53,6 +53,12 @@ const waFeedback =
         )
       }
       <p class="intro">{f.emptyText}</p>
+      <p class="more">
+        <a class="link-arrow" href={path('reviews', lang)}>
+          <span>{lang === 'ar' ? 'المزيد عن التقييمات والملاحظات' : 'More about reviews and feedback'}</span>
+          <Icon name="arrow" />
+        </a>
+      </p>
     </div>
 
     {

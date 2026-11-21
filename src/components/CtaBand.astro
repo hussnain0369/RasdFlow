@@ -6,8 +6,10 @@ interface Props {
   title: string;
   text: string;
   id?: string;
+  /** One enquiry button instead of Call and WhatsApp side by side. */
+  single?: boolean;
 }
-const { lang, title, text, id = 'cta' } = Astro.props;
+const { lang, title, text, id = 'cta', single = false } = Astro.props;
 ---
 <section class="cta-band" aria-labelledby={`${id}-title`}>
   <div class="wrap cta-inner">
@@ -15,7 +17,7 @@ const { lang, title, text, id = 'cta' } = Astro.props;
       <h2 id={`${id}-title`}>{title}</h2>
       <p>{text}</p>
     </div>
-    <ContactActions lang={lang} tone="dark" />
+    <ContactActions lang={lang} tone="dark" single={single} />
   </div>
 </section>
 

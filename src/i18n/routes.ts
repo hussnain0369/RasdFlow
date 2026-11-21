@@ -12,7 +12,9 @@ export type PageKey =
   | 'areas'
   | 'about'
   | 'engineer'
+  | 'reviews'
   | 'contact'
+  | 'faqs'
   | 'feedback'
   | 'privacy';
 
@@ -29,7 +31,9 @@ const slugs: Record<PageKey, string> = {
   areas: 'areas-we-cover/',
   about: 'about/',
   engineer: 'our-engineer/',
+  reviews: 'customer-reviews/',
   contact: 'contact/',
+  faqs: 'faqs/',
   feedback: 'feedback/',
   privacy: 'privacy-policy/',
 };
